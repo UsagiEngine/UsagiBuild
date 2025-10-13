@@ -13,3 +13,6 @@
 [submodule "Project/Research"]
 	path = Project/Research
 	url = git@github.com:YukinoHayakawa/Research.git
+[submodule "Projects/MidakoIsland/MidakoFlow"]
+	path = Projects/MidakoIsland/MidakoFlow
+	url = git@github.com:MidakoIsland/lang.MidakoFlow.git
