@@ -1,43 +1,7 @@
 <Project>
-  <PropertyGroup>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Label="Vcpkg">
-    <VcpkgUseStatic>true</VcpkgUseStatic>
-	<VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows</VcpkgTriplet>
-  </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <SDLCheck>true</SDLCheck>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <SuppressStartupBanner>false</SuppressStartupBanner>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-      <WarningLevel>Level3</WarningLevel>
-      <ConformanceMode>true</ConformanceMode>
-      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
-      <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <BrowseInformation>true</BrowseInformation>
-      <DiagnosticsFormat>Caret</DiagnosticsFormat>
-    </ClCompile>
-    <Link>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AssemblyDebug>true</AssemblyDebug>
-    </Link>
-    <Manifest>
-      <EnableDpiAwareness>PerMonitorHighDPIAwareV2</EnableDpiAwareness>
-    </Manifest>
-  </ItemDefinitionGroup>
-  <Import Project="Clang.props"/>
-  <Import Project="OptimizeForSpeed.props"/>
-  <Import Project="Thirdparties.props"/>
+  <Import Project="Properties/DefaultBuild.props"/>
+  <Import Project="Properties/Vcpkg.props"/>
+  <Import Project="Properties/Clang.props"/>
+  <Import Project="Properties/OptimizeForSpeed.props"/>
+  <Import Project="Properties/Thirdparties.props"/>
 </Project>

@@ -3,15 +3,15 @@
     <PlatformToolset>ClangCL</PlatformToolset>
     <!-- <LLVMInstallDir>$(LLVM_Dir)</LLVMInstallDir> -->
     <LLVMInstallDir>C:\@Data.Transient\Dev\Tools\llvm-project\build\RelWithDebInfo\</LLVMInstallDir>
-    <LLVMToolsVersion>20.0.0</LLVMToolsVersion>
+    <LLVMToolsVersion>22.0.0</LLVMToolsVersion>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile>
-      <AdditionalOptions>-Xclang -std=c++26 -march=haswell -Wno-pragma-pack -Xclang -fno-builtin-std-forward_like -Xclang -fconstexpr-depth=25565 -Xclang -ftemplate-depth=25565 -Xclang -fconstexpr-backtrace-limit=0</AdditionalOptions>
+      <AdditionalOptions>-Xclang -std=c++26 -march=haswell -Wno-pragma-pack -Xclang -fno-builtin-std-forward_like -Xclang -fconstexpr-depth=25565 -Xclang -ftemplate-depth=25565 -Xclang -fconstexpr-backtrace-limit=0 $(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
-  <PropertyGroup Label="Vcpkg">
+  <PropertyGroup Label="Vcpkg" Condition="'$(PlatformToolset)'=='ClangCL'">
     <VcpkgAutoLink>false</VcpkgAutoLink>
   </PropertyGroup>
 </Project>
