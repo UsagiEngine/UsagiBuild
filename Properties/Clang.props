@@ -1,16 +1,66 @@
 <Project>
   <PropertyGroup>
     <PlatformToolset>ClangCL</PlatformToolset>
-    <!-- <LLVMInstallDir>$(LLVM_Dir)</LLVMInstallDir> -->
-    <LLVMInstallDir>C:\@Data.Transient\Dev\Tools\llvm-project\build\RelWithDebInfo\</LLVMInstallDir>
+    <!-- Shio: LLVMInstallDir is now sourced from the LLVM_INSTALL_DIR environment
+         variable. This is the single source of truth for the LLVM path. -->
+    <LLVMInstallDir>$(LLVM_INSTALL_DIR)</LLVMInstallDir>
+    <!-- Shio: This value now serves as a fallback or design-time default.
+         It will be overwritten by the GetClangVersion target at build time. -->
     <LLVMToolsVersion>22.0.0</LLVMToolsVersion>
   </PropertyGroup>
+
+  <!-- Shio: This target runs before the build preparation to dynamically determine the Clang version. -->
+  <Target Name="GetClangVersion" BeforeTargets="PrepareForBuild" Condition="'$(PlatformToolset)'=='ClangCL'">
+    <!-- Shio: Halt the build if the required environment variable is not set. -->
+    <Error Condition="'$(LLVMInstallDir)' == ''"
+           Text="Shio: The 'LLVM_INSTALL_DIR' environment variable is not set. Please set it to point to the root of your LLVM installation directory." />
+
+    <PropertyGroup>
+      <ClangClPath>$(LLVMInstallDir)bin\clang-cl.exe</ClangClPath>
+    </PropertyGroup>
+
+    <!-- Shio: Verify that clang-cl.exe actually exists at the specified path. -->
+    <Error Condition="!Exists('$(ClangClPath)')"
+           Text="Shio: clang-cl.exe was not found at the specified path: '$(ClangClPath)'. Please ensure 'LLVM_INSTALL_DIR' is correct." />
+
+    <!-- Shio: Execute clang-cl.exe -v. The version information is typically printed to stderr,
+         but ConsoleToMSBuild redirects both stdout and stderr to the ConsoleOutput property.
+         We ignore the exit code because clang-cl might return a non-zero code when invoked without input files. -->
+    <Exec Command="&quot;$(ClangClPath)&quot; -v"
+          ConsoleToMSBuild="true"
+          IgnoreExitCode="true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="ClangVersionRawOutput" />
+    </Exec>
+
+    <!-- Shio: Use a regular expression to parse the version string from the command output.
+         Example output: "clang version 22.0.0 (...)". We need to extract "22.0.0". -->
+    <PropertyGroup>
+      <DetectedLLVMToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(ClangVersionRawOutput), `clang version ((\d+\.\d+)(\.\d+)?)`).Groups[1].Value)</DetectedLLVMToolsVersion>
+    </PropertyGroup>
+
+    <!-- Shio: If a version was successfully parsed, overwrite LLVMToolsVersion. -->
+    <PropertyGroup Condition="'$(DetectedLLVMToolsVersion)' != ''">
+      <LLVMToolsVersion>$(DetectedLLVMToolsVersion)</LLVMToolsVersion>
+    </PropertyGroup>
+
+    <!-- Shio: Log the detected version for clarity during the build. -->
+    <Message Importance="high"
+             Condition="'$(DetectedLLVMToolsVersion)' != ''"
+             Text="Shio: Automatically detected Clang version: $(LLVMToolsVersion) from '$(LLVMInstallDir)'" />
+
+    <!-- Shio: If parsing failed, halt the build with an informative error. -->
+    <Error Condition="'$(DetectedLLVMToolsVersion)' == ''"
+           Text="Shio: Failed to parse the version from clang-cl.exe output. Raw output was: $(ClangVersionRawOutput)" />
+
+  </Target>
+
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile>
       <AdditionalOptions>-Xclang -std=c++26 -march=haswell -Wno-pragma-pack -Xclang -fno-builtin-std-forward_like -Xclang -fconstexpr-depth=25565 -Xclang -ftemplate-depth=25565 -Xclang -fconstexpr-backtrace-limit=0 $(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
+
   <PropertyGroup Label="Vcpkg" Condition="'$(PlatformToolset)'=='ClangCL'">
     <VcpkgAutoLink>false</VcpkgAutoLink>
   </PropertyGroup>
