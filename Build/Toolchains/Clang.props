@@ -41,6 +41,7 @@
     <!-- Shio: If a version was successfully parsed, overwrite LLVMToolsVersion. -->
     <PropertyGroup Condition="'$(DetectedLLVMToolsVersion)' != ''">
       <LLVMToolsVersion>$(DetectedLLVMToolsVersion)</LLVMToolsVersion>
+      <LLVMIncludeVersion>$([System.Text.RegularExpressions.Regex]::Match($(DetectedLLVMToolsVersion), `(\d+?)\..*`).Groups[1].Value)</LLVMIncludeVersion>
     </PropertyGroup>
 
     <!-- Shio: Log the detected version for clarity during the build. -->
