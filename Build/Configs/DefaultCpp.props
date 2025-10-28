@@ -23,14 +23,17 @@
 
   <!-- See details at https://github.com/bloomberg/clang-p2996/blob/p2996/P2996.md -->
   <PropertyGroup Label="CppStaticReflection">
+    <Usagi_CppEnableReflection>-freflection-latest</Usagi_CppEnableReflection>
     <!-- Shio: P3096 - Enables reflection of function parameters. -->
     <Usagi_CppEnableP3096>-fparameter-reflection</Usagi_CppEnableP3096>
     <!-- Shio: P1306 - Enables expansion statements, allowing for generative metaprogramming. -->
     <Usagi_CppEnableP1306>-fexpansion-statements</Usagi_CppEnableP1306>
     <!-- Shio: P3289 - Enables consteval blocks, which are blocks of code that are
          guaranteed to be evaluated at compile time. -->
-    <Usagi_CppEnableP3289>-fconsteval-blocks</Usagi_CppEnableP3289>
+    <!-- -fconsteval-blocks already merged into -freflection as per commit 5f705966 -->
+    <!-- <Usagi_CppEnableP3289>-fconsteval-blocks</Usagi_CppEnableP3289> -->
     <!-- Shio: P3381 - Enables the new, more concise syntax for reflection. -->
-    <Usagi_CppEnableP3381>-freflection-new-syntax</Usagi_CppEnableP3381>
+    <!-- -freflection-new-syntax has been removed as per commit 6ee75d3f -->
+    <!-- <Usagi_CppEnableP3381>-freflection-new-syntax</Usagi_CppEnableP3381> -->
   </PropertyGroup>
 </Project>

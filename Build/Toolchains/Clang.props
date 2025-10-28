@@ -83,19 +83,29 @@
 
     <!-- Shio: Add various warning flags and workarounds. -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
-    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs>
+    <!-- clang does not really support this argument and it assumes utf-8 input by default. -->
+    <!-- <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs> -->
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) /source-charset:utf-8</Usagi_ClangArgs>
     <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
 
     <!-- Shio: Add metaprogramming limits. -->
     <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
     <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
     <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
+  </PropertyGroup>
 
-    <!-- Shio: Add static reflection flags. -->
-    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3096)</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP1306)</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3289)</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3381)</Usagi_ClangArgs>
+  <!-- Shio: Add static reflection flags. -->
+  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' != ''">
+    <Usagi_ClangReflectionArgs>-Xclang $(Usagi_CppEnableReflection)</Usagi_ClangReflectionArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' == ''">
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3096)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP1306)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3381)</Usagi_ClangReflectionArgs>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Usagi_ClangArgs Condition="'$(Usagi_ClangReflectionArgs)' != ''">$(Usagi_ClangArgs) -Xclang -freflection $(Usagi_ClangReflectionArgs)</Usagi_ClangArgs>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
