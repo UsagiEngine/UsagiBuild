@@ -1,6 +1,3 @@
-#
-# Shio: This is an automatically generated file.
-#
 <#
 .SYNOPSIS
   Creates a new MSBuild project from a template.
@@ -35,9 +32,8 @@
   This command creates a new application project named 'MyNewApp' in the specified
   target folder.
 .EXAMPLE
-  .\Create-NewProject.ps1 -ProjectType StaticLib -ProjectName "MyCoolLib" -TargetFolder "Libs\MyCoolLib" -TargetSolution "MySolution.slnx" -Verbose
-  This command creates a new static library, adds it to 'MySolution.slnx', and
-  prints detailed logs of its operations.
+  .\Create-NewProject.ps1 -ProjectType StaticLib -ProjectName "MyCoolLib" -TargetFolder "Libs\MyCoolLib" -TargetSolution "MySolution.slnx"
+  This command creates a new static library and adds it to 'MySolution.slnx'.
 .EXAMPLE
   .\Create-NewProject.ps1 -ProjectType App -ProjectName "TestApp" -TargetFolder "D:\temp\TestApp" -DryRun
   This command performs a dry run, showing what would happen without creating the
@@ -66,19 +62,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-function Write-Log {
-  param([string]$Message, [string]$Level = 'INFO')
-  Write-Host "[$Level] $Message"
+Write-Host "Starting project creation process."
+if ($DryRun) {
+  Write-Warning "DRY RUN ENABLED. No changes will be made to the filesystem."
 }
 
 # --- Argument Validation and Path Resolution ---
 
-Write-Log "Starting project creation process."
-if ($DryRun) {
-  Write-Log "DRY RUN ENABLED. No changes will be made to the filesystem." -Level 'WARN'
-}
-
-Write-Log "Step 1: Validating arguments and resolving paths..."
+Write-Host "Step 1: Validating arguments and resolving paths..."
 
 # Resolve and validate TemplateFolder
 $TemplateFolder = (Resolve-Path -Path $TemplateFolder).Path
@@ -86,17 +77,22 @@ $FullTemplatePath = Join-Path -Path $TemplateFolder -ChildPath $TemplateName
 if (-not (Test-Path -Path $FullTemplatePath -PathType Container)) {
   throw "Template folder not found at '$FullTemplatePath'."
 }
-Write-Log "Template folder found: $FullTemplatePath" -Level 'VERBOSE'
+Write-Host "  [OK] Template folder found: $FullTemplatePath"
 
 # Resolve and validate TargetFolder
-$TargetFolder = (Resolve-Path -Path (Join-Path -Path $PWD -ChildPath $TargetFolder)).Path
+if (-not (Test-Path -Path $TargetFolder)) {
+    $TargetFolder = (Resolve-Path -Path (Join-Path -Path $PWD -ChildPath $TargetFolder -ErrorAction SilentlyContinue) -ErrorAction SilentlyContinue).Path
+} else {
+    $TargetFolder = (Resolve-Path -Path $TargetFolder).Path
+}
+
 if ((Test-Path -Path $TargetFolder) -and (Get-ChildItem -Path $TargetFolder)) {
   throw "Target folder '$TargetFolder' already exists and is not empty."
 }
 if (-not (Test-Path -Path (Split-Path -Path $TargetFolder -Parent))) {
     throw "Parent directory for target folder '$TargetFolder' does not exist."
 }
-Write-Log "Target folder is valid: $TargetFolder" -Level 'VERBOSE'
+Write-Host "  [OK] Target folder is valid: $TargetFolder"
 
 
 # Find and validate TargetSolution
@@ -113,19 +109,19 @@ else {
   }
   elseif ($solutions.Count -eq 1) {
     $TargetSolution = $solutions[0].FullName
-    Write-Log "Automatically detected solution file: $TargetSolution"
+    Write-Host "  [INFO] Automatically detected solution file: $TargetSolution"
   }
   else {
-    Write-Log "No solution file found in the current directory. Project will not be added to a solution." -Level 'WARN'
+    Write-Warning "No solution file found in the current directory. Project will not be added to a solution."
     $TargetSolution = $null
   }
 }
 
-Write-Log "Argument validation complete."
+Write-Host "Argument validation complete."
 
 # --- Template File Validation ---
 
-Write-Log "Step 2: Validating template files..."
+Write-Host "Step 2: Validating template files..."
 $TemplateVcxproj = Join-Path -Path $FullTemplatePath -ChildPath "$TemplateName.vcxproj"
 $TemplateFilters = Join-Path -Path $FullTemplatePath -ChildPath "$TemplateName.vcxproj.filters"
 
@@ -135,57 +131,58 @@ if (-not (Test-Path -Path $TemplateVcxproj -PathType Leaf)) {
 if (-not (Test-Path -Path $TemplateFilters -PathType Leaf)) {
   throw "Template file not found: $TemplateFilters"
 }
-Write-Log "All required template files are present."
+Write-Host "  [OK] All required template files are present."
 
 # --- Project Creation and File Copy ---
 
-Write-Log "Step 3: Creating project structure and copying files..."
+Write-Host "Step 3: Creating project structure and copying files..."
 $DestVcxproj = Join-Path $TargetFolder "$ProjectName.vcxproj"
 $DestFilters = Join-Path $TargetFolder "$ProjectName.vcxproj.filters"
 
 if (-not $DryRun) {
   if (-not (Test-Path -Path $TargetFolder)) {
+    Write-Host "  Creating directory: $TargetFolder"
     New-Item -Path $TargetFolder -ItemType Directory | Out-Null
   }
   Copy-Item -Path $TemplateVcxproj -Destination $DestVcxproj
   Copy-Item -Path $TemplateFilters -Destination $DestFilters
 }
-Write-Log "Copied '$TemplateVcxproj' to '$DestVcxproj'."
-Write-Log "Copied '$TemplateFilters' to '$DestFilters'."
+Write-Host "  Copied '$TemplateVcxproj' to '$DestVcxproj'."
+Write-Host "  Copied '$TemplateFilters' to '$DestFilters'."
 
 # --- File Content Modification ---
 
-Write-Log "Step 4: Modifying project file content..."
-$NewGuid = "[guid]::NewGuid().ToString('B').ToUpper()"
+Write-Host "Step 4: Modifying project file content..."
+$NewGuid = ([guid]::NewGuid()).ToString('B').ToUpper()
 $ConfigurationType = if ($ProjectType -eq 'StaticLib') { 'StaticLibrary' } else { 'Application' }
 
-Write-Log "New Project GUID: $NewGuid" -Level 'VERBOSE'
-Write-Log "New RootNamespace: $ProjectName" -Level 'VERBOSE'
-Write-Log "New ConfigurationType: $ConfigurationType" -Level 'VERBOSE'
+Write-Host "  New Project GUID: $NewGuid"
+Write-Host "  New RootNamespace: $ProjectName"
+Write-Host "  New ConfigurationType: $ConfigurationType"
 
 if (-not $DryRun) {
   $vcxprojContent = Get-Content -Path $DestVcxproj -Raw
-  $vcxprojContent = $vcxprojContent -replace '\$guid\$', $NewGuid
-  $vcxprojContent = $vcxprojContent -replace '\$safeprojectname\$', $ProjectName
-  $vcxprojContent = $vcxprojContent -replace '\$StaticLibrary\|Application\$', $ConfigurationType
+  $vcxprojContent = $vcxprojContent -replace '(<ProjectGuid>)(.*)(</ProjectGuid>)', "`$1$NewGuid`$3"
+  $vcxprojContent = $vcxprojContent -replace '(<RootNamespace>)(.*)(</RootNamespace>)', "`$1$ProjectName`$3"
+  $vcxprojContent = $vcxprojContent -replace '(<ConfigurationType>)(.*)(</ConfigurationType>)', "`$1$ConfigurationType`$3"
   Set-Content -Path $DestVcxproj -Value $vcxprojContent
 }
-Write-Log "Successfully updated '$DestVcxproj' with new project details."
+Write-Host "  [OK] Successfully updated '$DestVcxproj' with new project details."
 
 # --- Solution Integration ---
 
 if ($TargetSolution) {
-  Write-Log "Step 5: Adding new project to solution..."
+  Write-Host "Step 5: Adding new project to solution..."
   if ((Get-Command dotnet -ErrorAction SilentlyContinue)) {
     $dotnetCommand = "dotnet sln `"$TargetSolution`" add `"$DestVcxproj`""
-    Write-Log "Executing: $dotnetCommand"
+    Write-Host "  Executing: $dotnetCommand"
     if (-not $DryRun) {
       Invoke-Expression -Command $dotnetCommand
     }
   }
   else {
-    Write-Log "The 'dotnet' command was not found. Please add the project to the solution manually." -Level 'WARN'
+    Write-Warning "The 'dotnet' command was not found. Please add the project to the solution manually."
   }
 }
 
-Write-Log "Project '$ProjectName' created successfully at '$TargetFolder'."
+Write-Host "Project '$ProjectName' created successfully at '$TargetFolder'."
