@@ -1,442 +1,191 @@
 <Solution>
   <Configurations>
     <Platform Name="Any CPU" />
-    <Platform Name="arm64" />
     <Platform Name="x64" />
-    <Platform Name="x86" />
   </Configurations>
   <Folder Name="/Agents/">
-    <Project Path="Agents/CodingAgent/CodingAgent.vcxproj" Id="dff14632-9ca9-47b1-8c32-8b5a3b7d5e4a">
-      <Platform Solution="*|arm64" Project="x64" />
-    </Project>
+    <Project Path="Agents/CodingAgent/CodingAgent.vcxproj" Id="dff14632-9ca9-47b1-8c32-8b5a3b7d5e4a" />
   </Folder>
+  <Folder Name="/Build/" />
   <Folder Name="/Demo (Not Working)/">
-    <Project Path="Demos/DemoDummy/DemoDummy.vcxproj" Id="5b167dc3-ff65-41df-80ee-a560886d7fe0">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoGtaSaMapStreaming/DemoGtaSaMapStreaming.vcxproj" Id="f7a80961-eab1-4455-b6f2-6c280549e8ee">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Demos/DemoSudokuSolver/DemoSudokuSolver.vcxproj" Id="2d0cb381-dc92-45db-b74b-b772ebed5e46">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Demos/DemoTextRendering/DemoTextRendering.vcxproj" Id="2e17d608-0dd9-431f-8bde-01a282310db1">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Misc/Cw/Cw.vcxproj" Id="dd3e3d9d-eade-46c8-abfe-4b1d81509300">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Demos/DemoDummy/DemoDummy.vcxproj" Id="5b167dc3-ff65-41df-80ee-a560886d7fe0" />
+    <Project Path="Demos/DemoGtaSaMapStreaming/DemoGtaSaMapStreaming.vcxproj" Id="f7a80961-eab1-4455-b6f2-6c280549e8ee" />
+    <Project Path="Demos/DemoSudokuSolver/DemoSudokuSolver.vcxproj" Id="2d0cb381-dc92-45db-b74b-b772ebed5e46" />
+    <Project Path="Demos/DemoTextRendering/DemoTextRendering.vcxproj" Id="2e17d608-0dd9-431f-8bde-01a282310db1" />
+    <Project Path="Misc/Cw/Cw.vcxproj" Id="dd3e3d9d-eade-46c8-abfe-4b1d81509300" />
   </Folder>
   <Folder Name="/Demo Projects/">
-    <Project Path="Demos/DemoAssetStreaming/DemoAssetStreaming.vcxproj" Id="6b4c9e13-3c5d-41cd-a662-a784af79f5ee">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoCascadingConfig/DemoCascadingConfig.vcxproj" Id="94d9d3d5-f304-46c7-bfac-e469126cbe15">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoEcsFireworks/DemoEcsFireworks.vcxproj" Id="e5156a69-e62c-48b3-bcaf-28c58a8f4d0a">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoGraphicsInit/DemoGraphicsInit.vcxproj" Id="08e18b5c-14a4-4d4e-996d-1893279566b5">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoHeapManager/DemoHeapManager.vcxproj" Id="0a8f2012-3b44-4a3b-888b-ba7925821a23">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoHelloSwapchain/DemoHelloSwapchain.vcxproj" Id="0a7202f2-bec1-4b26-9088-9add57c9c5d9">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoImGui/DemoImGui.vcxproj" Id="b667d2a2-37e0-4662-be20-9876158555cd">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoPathTracer/DemoPathTracer.vcxproj" Id="540a764d-69fb-47e5-8f35-b0e30a2bc78e">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoScripting/DemoScripting.vcxproj" Id="632d0b20-bc2a-4186-9285-a2fe3723b83f">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoTextureRendering/DemoTextureRendering.vcxproj" Id="ccd365b3-aed3-408d-a8ce-f44f8c01889b">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Demos/DemoWindowInput/DemoWindowInput.vcxproj" Id="96949645-b59c-40fa-87b1-3573253dabe9">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Demos/DemoAssetStreaming/DemoAssetStreaming.vcxproj" Id="6b4c9e13-3c5d-41cd-a662-a784af79f5ee" />
+    <Project Path="Demos/DemoCascadingConfig/DemoCascadingConfig.vcxproj" Id="94d9d3d5-f304-46c7-bfac-e469126cbe15" />
+    <Project Path="Demos/DemoEcsFireworks/DemoEcsFireworks.vcxproj" Id="e5156a69-e62c-48b3-bcaf-28c58a8f4d0a" />
+    <Project Path="Demos/DemoGraphicsInit/DemoGraphicsInit.vcxproj" Id="08e18b5c-14a4-4d4e-996d-1893279566b5" />
+    <Project Path="Demos/DemoHeapManager/DemoHeapManager.vcxproj" Id="0a8f2012-3b44-4a3b-888b-ba7925821a23" />
+    <Project Path="Demos/DemoHelloSwapchain/DemoHelloSwapchain.vcxproj" Id="0a7202f2-bec1-4b26-9088-9add57c9c5d9" />
+    <Project Path="Demos/DemoImGui/DemoImGui.vcxproj" Id="b667d2a2-37e0-4662-be20-9876158555cd" />
+    <Project Path="Demos/DemoPathTracer/DemoPathTracer.vcxproj" Id="540a764d-69fb-47e5-8f35-b0e30a2bc78e" />
+    <Project Path="Demos/DemoScripting/DemoScripting.vcxproj" Id="632d0b20-bc2a-4186-9285-a2fe3723b83f" />
+    <Project Path="Demos/DemoTextureRendering/DemoTextureRendering.vcxproj" Id="ccd365b3-aed3-408d-a8ce-f44f8c01889b" />
+    <Project Path="Demos/DemoWindowInput/DemoWindowInput.vcxproj" Id="96949645-b59c-40fa-87b1-3573253dabe9" />
   </Folder>
   <Folder Name="/Game Projects/">
-    <Project Path="Projects/ChessboardTracker/ChessboardTracker.vcxproj" Id="ada8f78c-27ea-44a7-9542-94cc73174f8a">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Irregulars/Mobius/Mobius.vcxproj" Id="4f03f122-0b6a-4c8a-a912-01ee5641d246">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Projects/ChessboardTracker/ChessboardTracker.vcxproj" Id="ada8f78c-27ea-44a7-9542-94cc73174f8a" />
+    <Project Path="Projects/Irregulars/Mobius/Mobius.vcxproj" Id="4f03f122-0b6a-4c8a-a912-01ee5641d246" />
   </Folder>
   <Folder Name="/Projects/" />
   <Folder Name="/Projects/MidakoIsland/" />
   <Folder Name="/Projects/MidakoIsland/MidakoFlow/">
     <Project Path="Projects/MidakoIsland/MidakoFlow/libmidakoflow/libmidakoflow.vcxproj" Id="70780a7a-6100-457a-ecad-1cd06a4852f2">
-      <Platform Project="x64" />
+      <Build Solution="*|Any CPU" Project="false" />
     </Project>
     <Project Path="Projects/MidakoIsland/MidakoFlow/midakoflowc/midakoflowc.vcxproj" Id="ea95455c-a820-445c-ad08-9891991aa189">
-      <Platform Solution="*|arm64" Project="x64" />
+      <Build Solution="*|Any CPU" Project="false" />
     </Project>
   </Folder>
   <Folder Name="/Projects/Tools/" />
   <Folder Name="/Projects/Tools/System/" />
   <Folder Name="/ProjectTemplates/" />
   <Folder Name="/Research/">
-    <Project Path="Misc/VulkanPerfCounter/VulkanPerfCounter.vcxproj" Id="5f518671-fc41-45a5-8784-109a5684fcfe">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Projects/Research/ExprEvolutionaryScheduling/ExprEvolutionaryScheduling.vcxproj" Id="5d722edd-0097-412e-a8f4-05a6fe714de9">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/ExprInstanceSelector/ExprInstanceSelector.vcxproj" Id="39e2d1ad-6c10-4066-8a74-f9daea8566b4">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Projects/Research/ExprSchedulingGurobi/ExprSchedulingGurobi.vcxproj" Id="54354aec-3d49-44f1-8cf5-b53c13718659">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/ExprSchedulingGurobiEnergy/ExprSchedulingGurobiEnergy.vcxproj" Id="490cafe0-fa5f-47b8-9a77-6cc2d8fb68f0">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Projects/Research/LabScheduler/LabScheduler.vcxproj" Id="f893ad32-fb9e-4947-8185-752666d3fecb">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/SchedulerGenetic/SchedulerGenetic.vcxproj" Id="a8ed4ac3-0961-48e7-a5d4-a3533fd8519d">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/SchedulerLab/SchedulerLab.vcxproj" Id="baca0a06-7d6d-44bb-bdfc-6f044e1a3e4a">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/SchedulingLabShell/SchedulingLabShell.vcxproj" Id="5ab62736-5409-4565-8f3b-cfaddfcd1fc1">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Projects/Research/SchedulingWorkload/SchedulingWorkload.vcxproj" Id="38c64bb5-ec50-48a7-9008-2323702f7786">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Projects/Research/TestCpuPipelineBottleneck/TestCpuPipelineBottleneck.vcxproj" Id="11f17698-27e6-45a3-97f5-5317ecd2301e">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Projects/Research/TestLabScheduler/TestLabScheduler.vcxproj" Id="927e88f9-cd0a-4e86-9313-530f77524f06">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Misc/VulkanPerfCounter/VulkanPerfCounter.vcxproj" Id="5f518671-fc41-45a5-8784-109a5684fcfe" />
+    <Project Path="Projects/Research/ExprEvolutionaryScheduling/ExprEvolutionaryScheduling.vcxproj" Id="5d722edd-0097-412e-a8f4-05a6fe714de9" />
+    <Project Path="Projects/Research/ExprInstanceSelector/ExprInstanceSelector.vcxproj" Id="39e2d1ad-6c10-4066-8a74-f9daea8566b4" />
+    <Project Path="Projects/Research/ExprSchedulingGurobi/ExprSchedulingGurobi.vcxproj" Id="54354aec-3d49-44f1-8cf5-b53c13718659" />
+    <Project Path="Projects/Research/ExprSchedulingGurobiEnergy/ExprSchedulingGurobiEnergy.vcxproj" Id="490cafe0-fa5f-47b8-9a77-6cc2d8fb68f0" />
+    <Project Path="Projects/Research/LabScheduler/LabScheduler.vcxproj" Id="f893ad32-fb9e-4947-8185-752666d3fecb" />
+    <Project Path="Projects/Research/SchedulerGenetic/SchedulerGenetic.vcxproj" Id="a8ed4ac3-0961-48e7-a5d4-a3533fd8519d" />
+    <Project Path="Projects/Research/SchedulerLab/SchedulerLab.vcxproj" Id="baca0a06-7d6d-44bb-bdfc-6f044e1a3e4a" />
+    <Project Path="Projects/Research/SchedulingLabShell/SchedulingLabShell.vcxproj" Id="5ab62736-5409-4565-8f3b-cfaddfcd1fc1" />
+    <Project Path="Projects/Research/SchedulingWorkload/SchedulingWorkload.vcxproj" Id="38c64bb5-ec50-48a7-9008-2323702f7786" />
+    <Project Path="Projects/Research/TestCpuPipelineBottleneck/TestCpuPipelineBottleneck.vcxproj" Id="11f17698-27e6-45a3-97f5-5317ecd2301e" />
+    <Project Path="Projects/Research/TestLabScheduler/TestLabScheduler.vcxproj" Id="927e88f9-cd0a-4e86-9313-530f77524f06" />
   </Folder>
   <Folder Name="/Targets/">
-    <Project Path="Targets/DefaultGraphical/DefaultGraphical.vcxproj" Id="37cd9b70-e220-4bcc-aeac-a5be994a7b6b">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Targets/DefaultPlatform/DefaultPlatform.vcxproj" Id="e989bbfc-a4cd-4f94-b15b-ec7b05f80e3f">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Targets/DefaultTest/DefaultTest.vcxproj" Id="9cfb17f8-cc29-4e3b-8ab6-45ddff2d1a81">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Targets/DefaultWin32/DefaultWin32.vcxproj" Id="1a68ce6a-424d-45cb-b459-4d4783563304">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Targets/DefaultWin32Graphical/DefaultWin32Graphical.vcxproj" Id="48131c88-22a2-471c-b168-a1cd145ac2ec">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Targets/PlatformIndependent/PlatformIndependent.vcxproj" Id="93d5c590-a63b-4c06-b328-ab9a98a229da">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Targets/DefaultGraphical/DefaultGraphical.vcxproj" Id="37cd9b70-e220-4bcc-aeac-a5be994a7b6b" />
+    <Project Path="Targets/DefaultPlatform/DefaultPlatform.vcxproj" Id="e989bbfc-a4cd-4f94-b15b-ec7b05f80e3f" />
+    <Project Path="Targets/DefaultTest/DefaultTest.vcxproj" Id="9cfb17f8-cc29-4e3b-8ab6-45ddff2d1a81" />
+    <Project Path="Targets/DefaultWin32/DefaultWin32.vcxproj" Id="1a68ce6a-424d-45cb-b459-4d4783563304" />
+    <Project Path="Targets/DefaultWin32Graphical/DefaultWin32Graphical.vcxproj" Id="48131c88-22a2-471c-b168-a1cd145ac2ec" />
+    <Project Path="Targets/PlatformIndependent/PlatformIndependent.vcxproj" Id="93d5c590-a63b-4c06-b328-ab9a98a229da" />
   </Folder>
   <Folder Name="/Tests/">
-    <Project Path="Tests/TestAssetStreaming/TestAssetStreaming.vcxproj" Id="3f90f3b3-72a5-49cf-bf0b-07487223f574">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestCommonImages/TestCommonImages.vcxproj" Id="d784c455-e686-4979-a78a-1cd5eb77a1a1">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestDriver/TestDriver.vcxproj" Id="348ba8ea-703a-493e-adbf-b56ed44bf5e3">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestECSCommon/TestECSCommon.vcxproj" Id="352a83dc-42ac-4f60-b2aa-ddf94b933cfc">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestEntityIndexing/TestEntityIndexing.vcxproj" Id="5017c566-f20c-4cc9-b4b5-160e951dae5e">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestEvolutionaryAlgorithms/TestEvolutionaryAlgorithms.vcxproj" Id="eab868bd-19cd-45be-9f0b-7b73772b1c72">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestExecutor/TestExecutor.vcxproj" Id="65bb9a32-5ba4-44d6-9cbf-d06a8fdb3e15">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestFunctional/TestFunctional.vcxproj" Id="450332ec-8439-4c23-8571-954cc67990ab">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestGraphicsVulkan/TestGraphicsVulkan.vcxproj" Id="c5f4045c-a539-4859-aa55-114e2f668eec">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestHeapManager/TestHeapManager.vcxproj" Id="2cbfacb3-f586-4b6a-bedb-c8c35d0d6e21">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestJson/TestJson.vcxproj" Id="e1f721be-8f56-4911-a279-09f55cda8226">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestModuleConfig/TestModuleConfig.vcxproj" Id="5e8bca7f-b6c0-49c5-be85-c417ce977de7">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestRuntimeKeyValueStorage/TestRuntimeKeyValueStorage.vcxproj" Id="888ed81e-ae91-4eac-9d57-afdd84feb772">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestSampling/TestSampling.vcxproj" Id="20724b0a-a16e-4859-b090-52e3263a58f6">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestScheduling/TestScheduling.vcxproj" Id="1b91f218-5303-4041-a4ab-5ab20879b165">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestScript/TestScript.vcxproj" Id="b574b8b8-31a2-4bb6-bc53-499fc722e51f">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Tests/TestUsagiCore/TestUsagiCore.vcxproj" Id="5a4a3e6d-d824-44cd-8464-ca8fcb8f52f1">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Tests/TestWindowing/TestWindowing.vcxproj" Id="59105dfd-62c2-49bc-a56b-ec916dfa2a06">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Tests/TestAssetStreaming/TestAssetStreaming.vcxproj" Id="3f90f3b3-72a5-49cf-bf0b-07487223f574" />
+    <Project Path="Tests/TestCommonImages/TestCommonImages.vcxproj" Id="d784c455-e686-4979-a78a-1cd5eb77a1a1" />
+    <Project Path="Tests/TestDriver/TestDriver.vcxproj" Id="348ba8ea-703a-493e-adbf-b56ed44bf5e3" />
+    <Project Path="Tests/TestECSCommon/TestECSCommon.vcxproj" Id="352a83dc-42ac-4f60-b2aa-ddf94b933cfc" />
+    <Project Path="Tests/TestEntityIndexing/TestEntityIndexing.vcxproj" Id="5017c566-f20c-4cc9-b4b5-160e951dae5e" />
+    <Project Path="Tests/TestEvolutionaryAlgorithms/TestEvolutionaryAlgorithms.vcxproj" Id="eab868bd-19cd-45be-9f0b-7b73772b1c72" />
+    <Project Path="Tests/TestExecutor/TestExecutor.vcxproj" Id="65bb9a32-5ba4-44d6-9cbf-d06a8fdb3e15" />
+    <Project Path="Tests/TestFunctional/TestFunctional.vcxproj" Id="450332ec-8439-4c23-8571-954cc67990ab" />
+    <Project Path="Tests/TestGraphicsVulkan/TestGraphicsVulkan.vcxproj" Id="c5f4045c-a539-4859-aa55-114e2f668eec" />
+    <Project Path="Tests/TestHeapManager/TestHeapManager.vcxproj" Id="2cbfacb3-f586-4b6a-bedb-c8c35d0d6e21" />
+    <Project Path="Tests/TestJson/TestJson.vcxproj" Id="e1f721be-8f56-4911-a279-09f55cda8226" />
+    <Project Path="Tests/TestModuleConfig/TestModuleConfig.vcxproj" Id="5e8bca7f-b6c0-49c5-be85-c417ce977de7" />
+    <Project Path="Tests/TestRuntimeKeyValueStorage/TestRuntimeKeyValueStorage.vcxproj" Id="888ed81e-ae91-4eac-9d57-afdd84feb772" />
+    <Project Path="Tests/TestSampling/TestSampling.vcxproj" Id="20724b0a-a16e-4859-b090-52e3263a58f6" />
+    <Project Path="Tests/TestScheduling/TestScheduling.vcxproj" Id="1b91f218-5303-4041-a4ab-5ab20879b165" />
+    <Project Path="Tests/TestScript/TestScript.vcxproj" Id="b574b8b8-31a2-4bb6-bc53-499fc722e51f" />
+    <Project Path="Tests/TestUsagiCore/TestUsagiCore.vcxproj" Id="5a4a3e6d-d824-44cd-8464-ca8fcb8f52f1" />
+    <Project Path="Tests/TestWindowing/TestWindowing.vcxproj" Id="59105dfd-62c2-49bc-a56b-ec916dfa2a06" />
   </Folder>
   <Folder Name="/Themes/">
     <Project Path="Themes/UsagiLight/UsagiLight.csproj" Id="7eb9e719-4774-4867-92ba-d4b25d1bde57">
-      <Platform Solution="*|arm64" Project="arm64" />
       <Platform Solution="*|x64" Project="x64" />
-      <Platform Solution="*|x86" Project="x86" />
     </Project>
   </Folder>
   <Folder Name="/Tools/" />
   <Folder Name="/Usagi Components/" />
   <Folder Name="/Usagi Core/">
     <File Path="Library/Usagi/Usagi.natvis" />
-    <Project Path="Library/Usagi/Usagi.vcxproj" Id="f9061c06-bce6-416b-9aeb-31351810b7ba">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Library/Usagi/Usagi.vcxproj" Id="f9061c06-bce6-416b-9aeb-31351810b7ba" />
   </Folder>
   <Folder Name="/Usagi Modules/">
     <File Path="Library/Usagi/Usagi.natvis" />
   </Folder>
   <Folder Name="/Usagi Modules/Algorithms/" />
   <Folder Name="/Usagi Modules/Algorithms/Optimization/">
-    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/Evolutionary/Evolutionary.vcxproj" Id="d1ba161d-ff04-4adc-b3a6-f8040aff04a8">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/EvolutionaryScheduling/EvolutionaryScheduling.vcxproj" Id="655bfd7e-1cc0-4591-b70b-a713e01bdaa5">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/Scheduling/Scheduling.vcxproj" Id="f695c6ae-ebf6-4034-8bfb-99036696c974">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/Evolutionary/Evolutionary.vcxproj" Id="d1ba161d-ff04-4adc-b3a6-f8040aff04a8" />
+    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/EvolutionaryScheduling/EvolutionaryScheduling.vcxproj" Id="655bfd7e-1cc0-4591-b70b-a713e01bdaa5" />
+    <Project Path="Modules/Usagi/Modules/Algorithms/Optimization/Scheduling/Scheduling.vcxproj" Id="f695c6ae-ebf6-4034-8bfb-99036696c974" />
   </Folder>
   <Folder Name="/Usagi Modules/Algorithms/Propagation/">
-    <Project Path="Modules/Usagi/Modules/Algorithms/Algorithms/AlgoValuePropagation/AlgoValuePropagation.vcxproj" Id="557782b0-431d-42a4-9ea1-c0c0ebb25c78">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Algorithms/Algorithms/AlgoValuePropagation/AlgoValuePropagation.vcxproj" Id="557782b0-431d-42a4-9ea1-c0c0ebb25c78" />
   </Folder>
   <Folder Name="/Usagi Modules/Algorithms/Statistics/">
-    <Project Path="Modules/Usagi/Modules/Algorithms/Statistics/RandomNumbers/RandomNumbers.vcxproj" Id="63e2b274-c5d2-4a25-a488-f0571a127d9b">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Algorithms/Statistics/Sampling/Sampling.vcxproj" Id="e235b83c-6bf9-42a3-91ee-c0f5e48fc8cb">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Algorithms/Statistics/RandomNumbers/RandomNumbers.vcxproj" Id="63e2b274-c5d2-4a25-a488-f0571a127d9b" />
+    <Project Path="Modules/Usagi/Modules/Algorithms/Statistics/Sampling/Sampling.vcxproj" Id="e235b83c-6bf9-42a3-91ee-c0f5e48fc8cb" />
   </Folder>
   <Folder Name="/Usagi Modules/Asset Handlers/">
-    <Project Path="Modules/Usagi/Modules/Assets/SahProgramModule/SahProgramModule.vcxproj" Id="10c7f91a-9061-4691-a5de-c115bcc5cf50">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Assets/SahYaml/SahYaml.vcxproj" Id="55dcc671-4e2f-4d26-ab85-a99b8ecc57a1">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Assets/SahProgramModule/SahProgramModule.vcxproj" Id="10c7f91a-9061-4691-a5de-c115bcc5cf50" />
+    <Project Path="Modules/Usagi/Modules/Assets/SahYaml/SahYaml.vcxproj" Id="55dcc671-4e2f-4d26-ab85-a99b8ecc57a1" />
   </Folder>
   <Folder Name="/Usagi Modules/Common/">
-    <Project Path="Modules/Usagi/Modules/Common/Color/Color.vcxproj" Id="eb6c6b93-5b69-4056-a2ed-829f0f2fc4de">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Config/Config.vcxproj" Id="12aad8c0-60d9-4f0b-adeb-33f22fbf64f6">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Driver/Driver.vcxproj" Id="3248deb0-ca9f-4e30-9396-e6c64de14af2">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/ExecutorTaskflow/ExecutorTaskflow.vcxproj" Id="3d4e3561-33cd-4642-90b3-066396b7305b">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Functional/Functional.vcxproj" Id="7f66387b-3dc4-419b-905b-e7e71f17f289">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Indexing/Indexing.vcxproj" Id="6ee7ddd4-01bf-47f8-8eab-97a5af53c65a">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Math/Math.vcxproj" Id="d4e79012-d153-40c0-b62d-fc9b31495442">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Time/Time.vcxproj" Id="61c2c8d3-d6d1-4bea-b122-43142579ba35">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Common/Transform/Transform.vcxproj" Id="10d4cdae-af65-443b-9b55-b69df086b883">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Common/Color/Color.vcxproj" Id="eb6c6b93-5b69-4056-a2ed-829f0f2fc4de" />
+    <Project Path="Modules/Usagi/Modules/Common/Config/Config.vcxproj" Id="12aad8c0-60d9-4f0b-adeb-33f22fbf64f6" />
+    <Project Path="Modules/Usagi/Modules/Common/Driver/Driver.vcxproj" Id="3248deb0-ca9f-4e30-9396-e6c64de14af2" />
+    <Project Path="Modules/Usagi/Modules/Common/ExecutorTaskflow/ExecutorTaskflow.vcxproj" Id="3d4e3561-33cd-4642-90b3-066396b7305b" />
+    <Project Path="Modules/Usagi/Modules/Common/Functional/Functional.vcxproj" Id="7f66387b-3dc4-419b-905b-e7e71f17f289" />
+    <Project Path="Modules/Usagi/Modules/Common/Indexing/Indexing.vcxproj" Id="6ee7ddd4-01bf-47f8-8eab-97a5af53c65a" />
+    <Project Path="Modules/Usagi/Modules/Common/Math/Math.vcxproj" Id="d4e79012-d153-40c0-b62d-fc9b31495442" />
+    <Project Path="Modules/Usagi/Modules/Common/Time/Time.vcxproj" Id="61c2c8d3-d6d1-4bea-b122-43142579ba35" />
+    <Project Path="Modules/Usagi/Modules/Common/Transform/Transform.vcxproj" Id="10d4cdae-af65-443b-9b55-b69df086b883" />
   </Folder>
   <Folder Name="/Usagi Modules/Content/">
-    <Project Path="Modules/Usagi/Modules/Content/Texture/Texture.vcxproj" Id="bfa94277-1b93-480a-b67a-1c84af619497">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Content/Texture/Texture.vcxproj" Id="bfa94277-1b93-480a-b67a-1c84af619497" />
   </Folder>
   <Folder Name="/Usagi Modules/Database/">
-    <Project Path="Modules/Usagi/Modules/Database/Migration/Migration.vcxproj" Id="67fad02a-9ce9-4628-92a1-61d3a4c06528">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Database/Migration/Migration.vcxproj" Id="67fad02a-9ce9-4628-92a1-61d3a4c06528" />
   </Folder>
   <Folder Name="/Usagi Modules/Dev Utils/">
-    <Project Path="Modules/Usagi/Modules/Dev/DebugConsoleImGui/DebugConsoleImGui.vcxproj" Id="6f6a195a-927a-4dc2-82cd-80e3b96a8032">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Dev/DevConsoleAsync/DevConsoleAsync.vcxproj" Id="2d4bf581-d024-4941-9e18-bedfb682dccf">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Dev/DebugConsoleImGui/DebugConsoleImGui.vcxproj" Id="6f6a195a-927a-4dc2-82cd-80e3b96a8032" />
+    <Project Path="Modules/Usagi/Modules/Dev/DevConsoleAsync/DevConsoleAsync.vcxproj" Id="2d4bf581-d024-4941-9e18-bedfb682dccf" />
   </Folder>
   <Folder Name="/Usagi Modules/Gameplay/">
-    <Project Path="Modules/Usagi/Modules/Gameplay/Scripting/Scripting.vcxproj" Id="91a86bc8-9842-421c-b752-9e70f9c8da62">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Gameplay/Scripting/Scripting.vcxproj" Id="91a86bc8-9842-421c-b752-9e70f9c8da62" />
   </Folder>
   <Folder Name="/Usagi Modules/IO/">
-    <Project Path="Modules/Usagi/Modules/IO/Graphics/Graphics.vcxproj" Id="5ae8f2da-6b3e-4492-a009-112a62b056be">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/IO/Input/Input.vcxproj" Id="c87b711a-0036-4d0e-aa0b-501677f198fd">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/IO/Windowing/Windowing.vcxproj" Id="bdf27242-7a3c-4dd2-b7c8-62962c96ca08">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/IO/WindowSystemIntegration/WindowSystemIntegration.vcxproj" Id="07b96122-1eb3-49fa-b509-bc227d280cf8">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/IO/Graphics/Graphics.vcxproj" Id="5ae8f2da-6b3e-4492-a009-112a62b056be" />
+    <Project Path="Modules/Usagi/Modules/IO/Input/Input.vcxproj" Id="c87b711a-0036-4d0e-aa0b-501677f198fd" />
+    <Project Path="Modules/Usagi/Modules/IO/Windowing/Windowing.vcxproj" Id="bdf27242-7a3c-4dd2-b7c8-62962c96ca08" />
+    <Project Path="Modules/Usagi/Modules/IO/WindowSystemIntegration/WindowSystemIntegration.vcxproj" Id="07b96122-1eb3-49fa-b509-bc227d280cf8" />
   </Folder>
   <Folder Name="/Usagi Modules/Misc/" />
   <Folder Name="/Usagi Modules/Platforms/">
-    <Project Path="Modules/Usagi/Modules/Misc/GeneticAlgorithm/GeneticAlgorithm.vcxproj" Id="d2fed5d0-0da4-48ac-b990-28ab9cb89a04">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Misc/GeneticAlgorithm/GeneticAlgorithm.vcxproj" Id="d2fed5d0-0da4-48ac-b990-28ab9cb89a04" />
   </Folder>
   <Folder Name="/Usagi Modules/Platforms/Graphics/" />
   <Folder Name="/Usagi Modules/Platforms/Graphics/Vulkan/">
-    <Project Path="Modules/Usagi/Modules/Platforms/Vulkan/Vulkan.vcxproj" Id="e51ee650-b088-4940-bee6-108c8a0ed508">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Platforms/VulkanWSIDefault/VulkanWSIDefault.vcxproj" Id="45ceea35-4c4d-4a76-9845-95028b39a128">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Platforms/VulkanWSIWin32/VulkanWSIWin32.vcxproj" Id="834d7749-e81f-4be5-b397-7bf1c7703502">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Platforms/Vulkan/Vulkan.vcxproj" Id="e51ee650-b088-4940-bee6-108c8a0ed508" />
+    <Project Path="Modules/Usagi/Modules/Platforms/VulkanWSIDefault/VulkanWSIDefault.vcxproj" Id="45ceea35-4c4d-4a76-9845-95028b39a128" />
+    <Project Path="Modules/Usagi/Modules/Platforms/VulkanWSIWin32/VulkanWSIWin32.vcxproj" Id="834d7749-e81f-4be5-b397-7bf1c7703502" />
   </Folder>
   <Folder Name="/Usagi Modules/Platforms/Kernels/" />
   <Folder Name="/Usagi Modules/Platforms/Kernels/Windows/">
-    <Project Path="Modules/Usagi/Modules/Platforms/Win10/Win10.vcxproj" Id="ba6b6731-dfa8-4da0-b121-d3d8d584b001">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Platforms/WinCommon/WinCommon.vcxproj" Id="cd325def-b361-4cc5-87ac-bf51588dbf2d">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Platforms/Win10/Win10.vcxproj" Id="ba6b6731-dfa8-4da0-b121-d3d8d584b001" />
+    <Project Path="Modules/Usagi/Modules/Platforms/WinCommon/WinCommon.vcxproj" Id="cd325def-b361-4cc5-87ac-bf51588dbf2d" />
   </Folder>
   <Folder Name="/Usagi Modules/Resources/">
-    <Project Path="Modules/Usagi/Modules/Resources/ResCommonImages/ResCommonImages.vcxproj" Id="3a3da748-e7bf-4ea8-b596-a103062a9ec3">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResGraphicsCommon/ResGraphicsCommon.vcxproj" Id="5ac75a07-fb79-4059-b9bf-0a159a75151f">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResGraphicsVulkan/ResGraphicsVulkan.vcxproj" Id="e975bdf3-7afd-4da0-8b3e-adc22c128bff">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResJson/ResJson.vcxproj" Id="b77582cc-ec91-413a-b942-38e38cc90e16">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResScratchBuffer/ResScratchBuffer.vcxproj" Id="f325946a-f411-4311-a1fc-6a4e1582b873">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResTaskGraphs/ResTaskGraphs.vcxproj" Id="0f771c8b-246e-45fb-8678-5d8035d2478a">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResVulkanWSI/ResVulkanWSI.vcxproj" Id="720c23e6-a4db-471c-8f05-d15bdefb9a81">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Resources/ResWindowManager/ResWindowManager.vcxproj" Id="6ddf3320-ce69-436d-83d4-9848964e1eb5">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Resources/ResCommonImages/ResCommonImages.vcxproj" Id="3a3da748-e7bf-4ea8-b596-a103062a9ec3" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResGraphicsCommon/ResGraphicsCommon.vcxproj" Id="5ac75a07-fb79-4059-b9bf-0a159a75151f" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResGraphicsVulkan/ResGraphicsVulkan.vcxproj" Id="e975bdf3-7afd-4da0-8b3e-adc22c128bff" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResJson/ResJson.vcxproj" Id="b77582cc-ec91-413a-b942-38e38cc90e16" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResScratchBuffer/ResScratchBuffer.vcxproj" Id="f325946a-f411-4311-a1fc-6a4e1582b873" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResTaskGraphs/ResTaskGraphs.vcxproj" Id="0f771c8b-246e-45fb-8678-5d8035d2478a" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResVulkanWSI/ResVulkanWSI.vcxproj" Id="720c23e6-a4db-471c-8f05-d15bdefb9a81" />
+    <Project Path="Modules/Usagi/Modules/Resources/ResWindowManager/ResWindowManager.vcxproj" Id="6ddf3320-ce69-436d-83d4-9848964e1eb5" />
   </Folder>
   <Folder Name="/Usagi Modules/Runtime/">
-    <Project Path="Modules/Usagi/Modules/Common/Logging/Logging.vcxproj" Id="e13613a3-b719-4bc5-991a-507402d14c25">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/Asset/Asset.vcxproj" Id="8722e8a6-ddc8-4283-8dff-45cd15e7dc6f">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/DynamicWorkload/DynamicWorkload.vcxproj" Id="564e4377-af8f-40af-bcec-3f552993928f">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/Executive/Executive.vcxproj" Id="345cdbb7-1ec3-4e1c-ad4f-856a774430f5">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/HeapManager/HeapManager.vcxproj" Id="dd541748-d082-4558-b456-c47f9d893211">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/KeyValueStorage/KeyValueStorage.vcxproj" Id="cda3d414-f300-4761-b4ea-606c93278210">
-      <Platform Project="x64" />
-    </Project>
-    <Project Path="Modules/Usagi/Modules/Runtime/ProgramModule/ProgramModule.vcxproj" Id="e5b7e645-8062-4b01-af1c-cf462b608a6b">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Common/Logging/Logging.vcxproj" Id="e13613a3-b719-4bc5-991a-507402d14c25" />
+    <Project Path="Modules/Usagi/Modules/Runtime/Asset/Asset.vcxproj" Id="8722e8a6-ddc8-4283-8dff-45cd15e7dc6f" />
+    <Project Path="Modules/Usagi/Modules/Runtime/DynamicWorkload/DynamicWorkload.vcxproj" Id="564e4377-af8f-40af-bcec-3f552993928f" />
+    <Project Path="Modules/Usagi/Modules/Runtime/Executive/Executive.vcxproj" Id="345cdbb7-1ec3-4e1c-ad4f-856a774430f5" />
+    <Project Path="Modules/Usagi/Modules/Runtime/HeapManager/HeapManager.vcxproj" Id="dd541748-d082-4558-b456-c47f9d893211" />
+    <Project Path="Modules/Usagi/Modules/Runtime/KeyValueStorage/KeyValueStorage.vcxproj" Id="cda3d414-f300-4761-b4ea-606c93278210" />
+    <Project Path="Modules/Usagi/Modules/Runtime/ProgramModule/ProgramModule.vcxproj" Id="e5b7e645-8062-4b01-af1c-cf462b608a6b" />
   </Folder>
   <Folder Name="/Usagi Modules/Runtime/Schedulers/">
-    <Project Path="Modules/Usagi/Modules/Runtime/Schedulers/CoreAffinityScheduler/CoreAffinityScheduler.vcxproj" Id="b4c6651a-1341-45d2-9a4f-e24a1f6cf207">
-      <Platform Project="x64" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/Runtime/Schedulers/CoreAffinityScheduler/CoreAffinityScheduler.vcxproj" Id="b4c6651a-1341-45d2-9a4f-e24a1f6cf207" />
   </Folder>
   <Folder Name="/Usagi Modules/UI Modules/">
-    <Project Path="Modules/Usagi/Modules/UI/FontStash/FontStash.vcxproj" Id="c5fcecea-f915-4f47-a239-43fa19a10a5f">
-      <Platform Project="x64" />
-      <Build Solution="*|Any CPU" Project="false" />
-      <Build Solution="*|x86" Project="false" />
-    </Project>
+    <Project Path="Modules/Usagi/Modules/UI/FontStash/FontStash.vcxproj" Id="c5fcecea-f915-4f47-a239-43fa19a10a5f" />
   </Folder>
   <Properties Name="CppDepend">
     <Property Name="Project" Value="&quot;.\UsagiBuild.cdproj&quot;" />
