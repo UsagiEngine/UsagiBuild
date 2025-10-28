@@ -103,7 +103,7 @@ if (-not ([string]::IsNullOrEmpty($TargetSolution))) {
   }
 }
 else {
-  $solutions = Get-ChildItem -Path $PWD -Filter *.sln?
+  $solutions = Get-ChildItem -Path $PWD -Include "*.sln", "*.slnx"
   if ($solutions.Count -gt 1) {
     throw "Multiple solution files found in the current directory. Please specify one using -TargetSolution."
   }
@@ -153,7 +153,7 @@ Write-Host "  Copied '$TemplateFilters' to '$DestFilters'."
 # --- File Content Modification ---
 
 Write-Host "Step 4: Modifying project file content..."
-$NewGuid = ([guid]::NewGuid()).ToString('B').ToUpper()
+$NewGuid = ([guid]::NewGuid()).ToString('B').ToLower()
 $ConfigurationType = if ($ProjectType -eq 'StaticLib') { 'StaticLibrary' } else { 'Application' }
 
 Write-Host "  New Project GUID: $NewGuid"
