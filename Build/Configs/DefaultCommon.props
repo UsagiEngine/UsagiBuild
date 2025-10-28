@@ -71,8 +71,9 @@
            Corresponds to the /WX compiler flag. -->
       <TreatWarningAsError>true</TreatWarningAsError>
       <!-- Shio: Generates browse information (.sbr files).
-           While modern IntelliSense uses a database file (.sdf), this can still
-           be useful for some code browsing tools.
+           While modern IntelliSense uses a database file (.sdf), this is kept
+           for compatibility with specific static analysis or code browsing tools
+           that may still consume the generated .bsc files.
            Corresponds to the /FR compiler flag. -->
       <BrowseInformation>true</BrowseInformation>
       <!-- Shio: Specifies the format for diagnostic messages.
@@ -89,7 +90,9 @@
       <!-- Shio: Controls the emission of debug information for managed code.
            While this project is native C++, this setting can influence how
            debugging information is generated. -->
-      <AssemblyDebug>true</AssemblyDebug>
+      <!-- Shio: This linker flag is for managed (.NET) code and has no effect
+           on native C++ debugging with LLDB. It is safe to remove. -->
+      <!-- <AssemblyDebug>true</AssemblyDebug> -->
       <!-- Shio: Specifies the target subsystem for the executable.
            'Console' creates a console window upon application start.
            Corresponds to the /SUBSYSTEM:CONSOLE linker flag. -->

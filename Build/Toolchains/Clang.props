@@ -56,7 +56,8 @@
 
 <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile Condition="$(Usagi_CppEnableCpp26)">
-      <!-- Shio: This property is used to incrementally build the clang arguments. -->
+      <!-- Shio: This property is used to incrementally build the clang arguments.
+           It can be appended to in project files to add project-specific flags. -->
       <Usagi_ClangArgs>$(Usagi_ClangArgs)</Usagi_ClangArgs>
 
       <!-- Shio: Base arguments for C++26 support. -->
@@ -69,6 +70,7 @@
 
       <!-- Shio: Add various warning flags and workarounds. -->
       <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
+      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs>
       <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
 
       <!-- Shio: Add metaprogramming limits. -->
