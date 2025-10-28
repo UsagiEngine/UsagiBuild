@@ -14,7 +14,7 @@
   TemplateFolder. Defaults to 'UsagiClang'.
 .PARAMETER ProjectType
   The type of project to create. Accepts any case-insensitive, unambiguous prefix
-  of 'StaticLib' or 'App'.
+  of 'StaticLibrary' or 'Application'.
 .PARAMETER ProjectName
   The name for the new project. This name will be used for the folder, the
   .vcxproj file, and the RootNamespace inside the project file.
@@ -31,7 +31,7 @@
   .\Create-NewProject.ps1 -ProjectType App -ProjectName "MyNewApp" -TargetFolder "D:\dev\Projects"
   This command creates a new application project in 'D:\dev\Projects\MyNewApp'.
 .EXAMPLE
-  .\Create-NewProject.ps1 -ProjectType s -ProjectName "MyCoolLib" -TargetFolder "Libs" -TargetSolution "MySolution.slnx"
+  .\Create-NewProject.ps1 -ProjectType static -ProjectName "MyCoolLib" -TargetFolder "Libs" -TargetSolution "MySolution.slnx"
   This command creates a new static library named 'MyCoolLib' in the 'Libs' subfolder
   and adds it to 'MySolution.slnx'.
 #>
@@ -67,16 +67,16 @@ if ($DryRun) {
 Write-Host "Step 1: Validating arguments and resolving paths..."
 
 # Validate ProjectType with prefix matching
-$validProjectTypes = @('StaticLib', 'App')
-$matchedTypes = $validProjectTypes | Where-Object { $_ -like "$ProjectType*" }
+$validProjectTypes = @('StaticLibrary', 'Application')
+$matchedTypes = $validProjectTypes | Where-Object { $_.StartsWith($ProjectType, [System.StringComparison]::InvariantCultureIgnoreCase) }
 if ($matchedTypes.Count -eq 0) {
     throw "Invalid ProjectType '$ProjectType'. No match found. Valid types are: $($validProjectTypes -join ', ')"
 }
 if ($matchedTypes.Count -gt 1) {
     throw "Ambiguous ProjectType '$ProjectType'. It matches: $($matchedTypes -join ', '). Please be more specific."
 }
-$ProjectType = $matchedTypes[0] # Use the canonical name
-Write-Host "  [INFO] Matched project type: $ProjectType"
+$ConfigurationType = $matchedTypes[0] # Use the canonical name
+Write-Host "  [INFO] Matched project type: $ConfigurationType"
 
 # Resolve and validate TemplateFolder
 $TemplateFolder = (Resolve-Path -Path $TemplateFolder).Path
@@ -124,18 +124,7 @@ if (-not ([string]::IsNullOrEmpty($TargetSolution))) {
   }
 }
 else {
-  $solutions = Get-ChildItem -Path $PWD -Include "*.sln", "*.slnx"
-  if ($solutions.Count -gt 1) {
-    throw "Multiple solution files found in the current directory. Please specify one using -TargetSolution."
-  }
-  elseif ($solutions.Count -eq 1) {
-    $TargetSolution = $solutions[0].FullName
-    Write-Host "  [INFO] Automatically detected solution file: $TargetSolution"
-  }
-  else {
-    Write-Warning "No solution file found in the current directory. Project will not be added to a solution."
-    $TargetSolution = $null
-  }
+  $TargetSolution = & "$PSScriptRoot\Find-SolutionFile.ps1" -Directory $PWD
 }
 
 Write-Host "Argument validation complete."
@@ -175,7 +164,6 @@ Write-Host "  Copied '$TemplateFilters' to '$DestFilters'."
 
 Write-Host "Step 4: Modifying project file content..."
 $NewGuid = ([guid]::NewGuid()).ToString('B').ToLower()
-$ConfigurationType = if ($ProjectType -eq 'StaticLib') { 'StaticLibrary' } else { 'Application' }
 
 Write-Host "  New Project GUID: $NewGuid"
 Write-Host "  New RootNamespace: $ProjectName"
@@ -194,16 +182,7 @@ Write-Host "  [OK] Successfully updated '$DestVcxproj' with new project details.
 
 if ($TargetSolution) {
   Write-Host "Step 5: Adding new project to solution..."
-  if ((Get-Command dotnet -ErrorAction SilentlyContinue)) {
-    $dotnetCommand = "dotnet sln `"$TargetSolution`" add `"$DestVcxproj`""
-    Write-Host "  Executing: $dotnetCommand"
-    if (-not $DryRun) {
-      Invoke-Expression -Command $dotnetCommand
-    }
-  }
-  else {
-    Write-Warning "The 'dotnet' command was not found. Please add the project to the solution manually."
-  }
+  & "$PSScriptRoot\Add-ProjectToSolution.ps1" -SolutionPath $TargetSolution -ProjectPath $DestVcxproj -DryRun:$DryRun
 }
 
 Write-Host "Project '$ProjectName' created successfully at '$ProjectDestinationPath'."
