@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup Label="Vcpkg">
-    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <VcpkgEnableManifest>false</VcpkgEnableManifest>
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows</VcpkgTriplet>
   </PropertyGroup>
