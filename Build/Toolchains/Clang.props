@@ -16,7 +16,7 @@
            Text="Shio: The 'LLVM_INSTALL_DIR' environment variable is not set. Please set it to point to the root of your LLVM installation directory." />
 
     <PropertyGroup>
-      <ClangClPath>$(LLVMInstallDir)bin\clang-cl.exe</ClangClPath>
+      <ClangClPath>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClPath>
     </PropertyGroup>
 
     <!-- Shio: Verify that clang-cl.exe actually exists at the specified path. -->
@@ -55,7 +55,7 @@
   </Target>
 
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
-    <ClCompile>
+    <ClCompile Condition="$(Usagi_CppEnableCpp26)">
       <AdditionalOptions>-Xclang -std=c++26 -march=haswell -Wno-pragma-pack -Xclang -fno-builtin-std-forward_like -Xclang -fconstexpr-depth=25565 -Xclang -ftemplate-depth=25565 -Xclang -fconstexpr-backtrace-limit=0 $(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

@@ -1,0 +1,5 @@
+<Project>
+  <PropertyGroup>
+    <Usagi_TargetArchitecture>skylake</Usagi_TargetArchitecture>
+  </PropertyGroup>
+</Project>

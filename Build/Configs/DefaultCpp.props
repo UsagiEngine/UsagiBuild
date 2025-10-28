@@ -1,0 +1,17 @@
+<Project>
+  <PropertyGroup>
+    <Usagi_CppEnableCpp26>true</Usagi_CppEnableCpp26>
+    <Usagi_CppMaximumConstexprDepth>25565</Usagi_CppMaximumConstexprDepth>
+    <Usagi_CppMaximumTemplateDepth>25565</Usagi_CppMaximumTemplateDepth>
+    <Usagi_CppConstexprBacktraceLimit>0</Usagi_CppConstexprBacktraceLimit>
+    <Usagi_CppDisableBuiltinStdForwardLike>true</Usagi_CppDisableBuiltinStdForwardLike>
+  </PropertyGroup>
+
+  <!-- See details at https://github.com/bloomberg/clang-p2996/blob/p2996/P2996.md -->
+  <PropertyGroup>
+    <Usagi_CppEnableP3096>-fparameter-reflection</Usagi_CppEnableP3096>
+    <Usagi_CppEnableP1306>-fexpansion-statements</Usagi_CppEnableP1306>
+    <Usagi_CppEnableP3289>-fconsteval-blocks</Usagi_CppEnableP3289>
+    <Usagi_CppEnableP3381>-freflection-new-syntax</Usagi_CppEnableP3381>
+  </PropertyGroup>
+</Project>
