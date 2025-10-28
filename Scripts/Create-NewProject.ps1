@@ -13,7 +13,8 @@
   The name of the template to use. This corresponds to a subfolder within the
   TemplateFolder. Defaults to 'UsagiClang'.
 .PARAMETER ProjectType
-  The type of project to create. Must be either 'StaticLib' or 'App'.
+  The type of project to create. Accepts any case-insensitive, unambiguous prefix
+  of 'StaticLib' or 'App'.
 .PARAMETER ProjectName
   The name for the new project. This name will be used for the folder, the
   .vcxproj file, and the RootNamespace inside the project file.
@@ -22,22 +23,17 @@
   be added. If not provided, the script will search for one in the current
   directory. A warning will be issued if no solution is found.
 .PARAMETER TargetFolder
-  The path to the directory where the new project will be created. The directory
-  must be empty or not exist.
+  The parent directory where the new project folder will be created.
 .PARAMETER DryRun
   If specified, the script will log all the actions it would take without
   actually modifying any files or directories.
 .EXAMPLE
-  .\Create-NewProject.ps1 -ProjectType App -ProjectName "MyNewApp" -TargetFolder "D:\dev\MyNewApp"
-  This command creates a new application project named 'MyNewApp' in the specified
-  target folder.
+  .\Create-NewProject.ps1 -ProjectType App -ProjectName "MyNewApp" -TargetFolder "D:\dev\Projects"
+  This command creates a new application project in 'D:\dev\Projects\MyNewApp'.
 .EXAMPLE
-  .\Create-NewProject.ps1 -ProjectType StaticLib -ProjectName "MyCoolLib" -TargetFolder "Libs\MyCoolLib" -TargetSolution "MySolution.slnx"
-  This command creates a new static library and adds it to 'MySolution.slnx'.
-.EXAMPLE
-  .\Create-NewProject.ps1 -ProjectType App -ProjectName "TestApp" -TargetFolder "D:\temp\TestApp" -DryRun
-  This command performs a dry run, showing what would happen without creating the
-  'TestApp' project.
+  .\Create-NewProject.ps1 -ProjectType s -ProjectName "MyCoolLib" -TargetFolder "Libs" -TargetSolution "MySolution.slnx"
+  This command creates a new static library named 'MyCoolLib' in the 'Libs' subfolder
+  and adds it to 'MySolution.slnx'.
 #>
 [CmdletBinding()]
 param(
@@ -45,7 +41,6 @@ param(
   [string]$TemplateName = 'UsagiClang',
 
   [Parameter(Mandatory = $true)]
-  [ValidateSet('StaticLib', 'App')]
   [string]$ProjectType,
 
   [Parameter(Mandatory = $true)]
@@ -71,6 +66,18 @@ if ($DryRun) {
 
 Write-Host "Step 1: Validating arguments and resolving paths..."
 
+# Validate ProjectType with prefix matching
+$validProjectTypes = @('StaticLib', 'App')
+$matchedTypes = $validProjectTypes | Where-Object { $_ -like "$ProjectType*" }
+if ($matchedTypes.Count -eq 0) {
+    throw "Invalid ProjectType '$ProjectType'. No match found. Valid types are: $($validProjectTypes -join ', ')"
+}
+if ($matchedTypes.Count -gt 1) {
+    throw "Ambiguous ProjectType '$ProjectType'. It matches: $($matchedTypes -join ', '). Please be more specific."
+}
+$ProjectType = $matchedTypes[0] # Use the canonical name
+Write-Host "  [INFO] Matched project type: $ProjectType"
+
 # Resolve and validate TemplateFolder
 $TemplateFolder = (Resolve-Path -Path $TemplateFolder).Path
 $FullTemplatePath = Join-Path -Path $TemplateFolder -ChildPath $TemplateName
@@ -79,20 +86,34 @@ if (-not (Test-Path -Path $FullTemplatePath -PathType Container)) {
 }
 Write-Host "  [OK] Template folder found: $FullTemplatePath"
 
-# Resolve and validate TargetFolder
-if (-not (Test-Path -Path $TargetFolder)) {
-    $TargetFolder = (Resolve-Path -Path (Join-Path -Path $PWD -ChildPath $TargetFolder -ErrorAction SilentlyContinue) -ErrorAction SilentlyContinue).Path
-} else {
-    $TargetFolder = (Resolve-Path -Path $TargetFolder).Path
+# Resolve and validate TargetFolder (which is the parent)
+$ParentFolder = (Resolve-Path -Path $TargetFolder).Path
+if (-not (Test-Path -Path $ParentFolder -PathType Container)) {
+    throw "Target folder (parent) '$ParentFolder' does not exist or is not a directory."
 }
+Write-Host "  [OK] Target parent folder found: $ParentFolder"
 
-if ((Test-Path -Path $TargetFolder) -and (Get-ChildItem -Path $TargetFolder)) {
-  throw "Target folder '$TargetFolder' already exists and is not empty."
+# Define the final project path and validate it
+$ProjectDestinationPath = Join-Path -Path $ParentFolder -ChildPath $ProjectName
+if (Test-Path -Path $ProjectDestinationPath) {
+    if (-not (Get-Item -Path $ProjectDestinationPath).PSIsContainer) {
+        throw "A file with the name '$ProjectName' already exists in the target folder."
+    }
+    if (Get-ChildItem -Path $ProjectDestinationPath) {
+        throw "Project folder '$ProjectDestinationPath' already exists and is not empty."
+    }
+    Write-Host "  [INFO] Project folder already exists and is empty. It will be used."
+
+    $existingFolderName = (Get-Item -Path $ProjectDestinationPath).Name
+    if ($existingFolderName -cne $ProjectName) {
+        Write-Host "  Renaming existing folder from '$existingFolderName' to '$ProjectName' to match case."
+        if (-not $DryRun) {
+            Rename-Item -Path $ProjectDestinationPath -NewName $ProjectName
+            $ProjectDestinationPath = Join-Path -Path $ParentFolder -ChildPath $ProjectName
+        }
+    }
 }
-if (-not (Test-Path -Path (Split-Path -Path $TargetFolder -Parent))) {
-    throw "Parent directory for target folder '$TargetFolder' does not exist."
-}
-Write-Host "  [OK] Target folder is valid: $TargetFolder"
+Write-Host "  [OK] Project destination path is valid: $ProjectDestinationPath"
 
 
 # Find and validate TargetSolution
@@ -136,13 +157,13 @@ Write-Host "  [OK] All required template files are present."
 # --- Project Creation and File Copy ---
 
 Write-Host "Step 3: Creating project structure and copying files..."
-$DestVcxproj = Join-Path $TargetFolder "$ProjectName.vcxproj"
-$DestFilters = Join-Path $TargetFolder "$ProjectName.vcxproj.filters"
+$DestVcxproj = Join-Path $ProjectDestinationPath "$ProjectName.vcxproj"
+$DestFilters = Join-Path $ProjectDestinationPath "$ProjectName.vcxproj.filters"
 
 if (-not $DryRun) {
-  if (-not (Test-Path -Path $TargetFolder)) {
-    Write-Host "  Creating directory: $TargetFolder"
-    New-Item -Path $TargetFolder -ItemType Directory | Out-Null
+  if (-not (Test-Path -Path $ProjectDestinationPath)) {
+    Write-Host "  Creating directory: $ProjectDestinationPath"
+    New-Item -Path $ProjectDestinationPath -ItemType Directory | Out-Null
   }
   Copy-Item -Path $TemplateVcxproj -Destination $DestVcxproj
   Copy-Item -Path $TemplateFilters -Destination $DestFilters
@@ -162,9 +183,9 @@ Write-Host "  New ConfigurationType: $ConfigurationType"
 
 if (-not $DryRun) {
   $vcxprojContent = Get-Content -Path $DestVcxproj -Raw
-  $vcxprojContent = $vcxprojContent -replace '(<ProjectGuid>)(.*)(</ProjectGuid>)', "`$1$NewGuid`$3"
-  $vcxprojContent = $vcxprojContent -replace '(<RootNamespace>)(.*)(</RootNamespace>)', "`$1$ProjectName`$3"
-  $vcxprojContent = $vcxprojContent -replace '(<ConfigurationType>)(.*)(</ConfigurationType>)', "`$1$ConfigurationType`$3"
+  $vcxprojContent = $vcxprojContent -replace '(<ProjectGuid>)(.*)(<\/ProjectGuid>)', "`$1$NewGuid`$3"
+  $vcxprojContent = $vcxprojContent -replace '(<RootNamespace>)(.*)(<\/RootNamespace>)', "`$1$ProjectName`$3"
+  $vcxprojContent = $vcxprojContent -replace '(<ConfigurationType>)(.*)(<\/ConfigurationType>)', "`$1$ConfigurationType`$3"
   Set-Content -Path $DestVcxproj -Value $vcxprojContent
 }
 Write-Host "  [OK] Successfully updated '$DestVcxproj' with new project details."
@@ -185,4 +206,4 @@ if ($TargetSolution) {
   }
 }
 
-Write-Host "Project '$ProjectName' created successfully at '$TargetFolder'."
+Write-Host "Project '$ProjectName' created successfully at '$ProjectDestinationPath'."
