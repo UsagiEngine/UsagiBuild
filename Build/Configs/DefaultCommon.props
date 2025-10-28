@@ -1,36 +1,105 @@
 <Project>
   <PropertyGroup>
+    <!-- Shio: Specifies the character set for the project.
+         'Unicode' defines UNICODE and _UNICODE preprocessor macros. This is the
+         recommended setting for modern Windows development to ensure support for
+         international characters. It corresponds to using wchar_t for strings
+         and calling the wide-character versions of Windows APIs. -->
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
+
+  <!-- Shio: Settings specific to the Release configuration. -->
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <!-- Shio: Specifies the C Runtime Library (CRT) for linking.
+           'MultiThreaded' links against the static, multithreaded release version
+           of the CRT (libcmt.lib). The CRT is linked directly into the executable,
+           removing the dependency on the Visual C++ Redistributable DLLs.
+           Corresponds to the /MT compiler flag. -->
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
+
+  <!-- Shio: Settings specific to the Debug configuration. -->
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <!-- Shio: Specifies the C Runtime Library (CRT) for linking.
+           'MultiThreadedDebug' links against the static, multithreaded debug
+           version of the CRT (libcmtd.lib).
+           Corresponds to the /MTd compiler flag. -->
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <!-- Shio: Enables Security Development Lifecycle (SDL) checks.
+           This adds security-enhancing features like buffer overrun detection
+           at compile-time and runtime.
+           Corresponds to the /sdl compiler flag. -->
       <SDLCheck>true</SDLCheck>
     </ClCompile>
   </ItemDefinitionGroup>
+
+  <!-- Shio: Common settings that apply to all configurations. -->
   <ItemDefinitionGroup>
     <ClCompile>
+      <!-- Shio: Suppresses the display of the compiler's startup banner and
+           informational messages.
+           Corresponds to the /nologo compiler flag. -->
       <SuppressStartupBanner>false</SuppressStartupBanner>
+      <!-- Shio: Specifies the C++ language standard to use.
+           'stdcpplatest' enables the latest features supported by the compiler,
+           which is essential for this project's use of C++26 features.
+           Corresponds to the /std:c++latest compiler flag. -->
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <!-- Shio: Sets the compiler warning level.
+           'Level3' is the default for production-quality warnings without being
+           overly verbose.
+           Corresponds to the /W3 compiler flag. -->
       <WarningLevel>Level3</WarningLevel>
+      <!-- Shio: Enforces strict C++ standards conformance.
+           This disables Microsoft-specific language extensions and ensures code
+           is more portable.
+           Corresponds to the /permissive- compiler flag. -->
       <ConformanceMode>true</ConformanceMode>
+      <!-- Shio: Enforces C++11 rules for type conversion, specifically for
+           identifying an rvalue reference type as the result of a cast. -->
       <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <!-- Shio: Enables Run-Time Type Information (RTTI).
+           This is necessary for features like dynamic_cast and typeid.
+           Corresponds to the /GR compiler flag. -->
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <!-- Shio: Treats all compiler warnings as errors.
+           This enforces a high level of code quality by ensuring that no warnings
+           are ignored.
+           Corresponds to the /WX compiler flag. -->
       <TreatWarningAsError>true</TreatWarningAsError>
+      <!-- Shio: Generates browse information (.sbr files).
+           While modern IntelliSense uses a database file (.sdf), this can still
+           be useful for some code browsing tools.
+           Corresponds to the /FR compiler flag. -->
       <BrowseInformation>true</BrowseInformation>
+      <!-- Shio: Specifies the format for diagnostic messages.
+           'Caret' provides the line of source code and a caret pointing to the
+           column where the issue was found, making errors easier to locate.
+           Corresponds to the /diagnostics:caret compiler flag. -->
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
     </ClCompile>
     <Link>
+      <!-- Shio: Instructs the linker to generate a Program Database (.pdb) file,
+           which is essential for debugging.
+           Corresponds to the /DEBUG linker flag. -->
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- Shio: Controls the emission of debug information for managed code.
+           While this project is native C++, this setting can influence how
+           debugging information is generated. -->
       <AssemblyDebug>true</AssemblyDebug>
+      <!-- Shio: Specifies the target subsystem for the executable.
+           'Console' creates a console window upon application start.
+           Corresponds to the /SUBSYSTEM:CONSOLE linker flag. -->
       <SubSystem>Console</SubSystem>
     </Link>
     <Manifest>
+      <!-- Shio: Sets the DPI awareness level for the application.
+           'PerMonitorHighDPIAwareV2' is the most modern setting, allowing the
+           application to render crisply on displays with different scaling
+           factors and to handle DPI changes dynamically. -->
       <EnableDpiAwareness>PerMonitorHighDPIAwareV2</EnableDpiAwareness>
     </Manifest>
   </ItemDefinitionGroup>
