@@ -7,7 +7,7 @@
     <!-- Shio: This value now serves as a fallback or design-time default.
          It will be overwritten by the GetClangVersion target at build time.
          A plausible default is needed for IntelliSense to function correctly. -->
-    <LLVMToolsVersion>22.0.0</LLVMToolsVersion>
+    <LLVMToolsVersion>21.0.0</LLVMToolsVersion>
   </PropertyGroup>
 
   <!-- Shio: This target runs before the build preparation to dynamically determine
@@ -57,11 +57,11 @@
     <!-- Shio: Because this target runs after initial property evaluation, we must
          now explicitly correct properties that were built with the default version. -->
     <PropertyGroup>
-      <_CorrectedClangResourceDir>$(LLVMInstallDir)\lib\clang\$(LLVMToolsVersion)</_CorrectedClangResourceDir>
+      <_CorrectedClangResourceDir>$(LLVMInstallDir)\lib\clang\$(LLVMIncludeVersion)</_CorrectedClangResourceDir>
       <!-- Shio: Override the Clang resource directory, which contains built-in headers. -->
       <ClangResourceDir>$(_CorrectedClangResourceDir)</ClangResourceDir>
       <!-- Shio: Prepend the corrected include path to ensure it's searched first. -->
-      <AdditionalIncludeDirectories>$(_CorrectedClangResourceDir)\include;$(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <IncludePath>$(_CorrectedClangResourceDir)\include;$(IncludePath)</IncludePath>
     </PropertyGroup>
 
     <Message Importance="high"
@@ -69,36 +69,37 @@
              Text="Shio: Corrected Clang resource path to: $(ClangResourceDir)"/>
   </Target>
 
-  <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
-    <ClCompile Condition="$(Usagi_CppEnableCpp26)">
-      <!-- Shio: This property is used to incrementally build the clang arguments.
+  <PropertyGroup>
+    <!-- Shio: This property is used to incrementally build the clang arguments.
            It can be appended to in project files to add project-specific flags. -->
-      <Usagi_ClangArgs>$(Usagi_ClangArgs)</Usagi_ClangArgs>
+    <Usagi_ClangArgs>$(Usagi_ClangArgs)</Usagi_ClangArgs>
+    <!-- Shio: Base arguments for C++26 support. -->
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -std=c++26</Usagi_ClangArgs>
 
-      <!-- Shio: Base arguments for C++26 support. -->
-      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -std=c++26</Usagi_ClangArgs>
-
-      <!-- Shio: Set the target architecture. Fallback to haswell if not specified.
+    <!-- Shio: Set the target architecture. Fallback to haswell if not specified.
            Haswell is chosen as a baseline for its bit manipulation instructions. -->
-      <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' == ''">$(Usagi_ClangArgs) -march=haswell</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' != ''">$(Usagi_ClangArgs) -march=$(Usagi_TargetArchitecture)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' == ''">$(Usagi_ClangArgs) -march=haswell</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' != ''">$(Usagi_ClangArgs) -march=$(Usagi_TargetArchitecture)</Usagi_ClangArgs>
 
-      <!-- Shio: Add various warning flags and workarounds. -->
-      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
-      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
+    <!-- Shio: Add various warning flags and workarounds. -->
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
 
-      <!-- Shio: Add metaprogramming limits. -->
-      <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
+    <!-- Shio: Add metaprogramming limits. -->
+    <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
 
-      <!-- Shio: Add static reflection flags. -->
-      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3096)</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP1306)</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3289)</Usagi_ClangArgs>
-      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3381)</Usagi_ClangArgs>
+    <!-- Shio: Add static reflection flags. -->
+    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3096)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP1306)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3289)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3381)</Usagi_ClangArgs>
+  </PropertyGroup>
 
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
+    <ClCompile Condition="'$(Usagi_CppEnableCpp26)'=='true'">
       <AdditionalOptions>$(Usagi_ClangArgs) $(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
