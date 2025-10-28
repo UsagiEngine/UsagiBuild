@@ -54,9 +54,35 @@
 
   </Target>
 
-  <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
+<ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile Condition="$(Usagi_CppEnableCpp26)">
-      <AdditionalOptions>-Xclang -std=c++26 -march=haswell -Wno-pragma-pack -Xclang -fno-builtin-std-forward_like -Xclang -fconstexpr-depth=25565 -Xclang -ftemplate-depth=25565 -Xclang -fconstexpr-backtrace-limit=0 $(AdditionalOptions)</AdditionalOptions>
+      <!-- Shio: This property is used to incrementally build the clang arguments. -->
+      <Usagi_ClangArgs>$(Usagi_ClangArgs)</Usagi_ClangArgs>
+
+      <!-- Shio: Base arguments for C++26 support. -->
+      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -std=c++26</Usagi_ClangArgs>
+
+      <!-- Shio: Set the target architecture. Fallback to haswell if not specified.
+           Haswell is chosen as a baseline for its bit manipulation instructions. -->
+      <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' == ''">$(Usagi_ClangArgs) -march=haswell</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' != ''">$(Usagi_ClangArgs) -march=$(Usagi_TargetArchitecture)</Usagi_ClangArgs>
+
+      <!-- Shio: Add various warning flags and workarounds. -->
+      <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
+
+      <!-- Shio: Add metaprogramming limits. -->
+      <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
+      
+      <!-- Shio: Add static reflection flags. -->
+      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3096)</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP1306)</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3289)</Usagi_ClangArgs>
+      <Usagi_ClangArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangArgs) $(Usagi_CppEnableP3381)</Usagi_ClangArgs>
+
+      <AdditionalOptions>$(Usagi_ClangArgs) $(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>

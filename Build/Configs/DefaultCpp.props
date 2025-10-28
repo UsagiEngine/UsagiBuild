@@ -1,17 +1,36 @@
 <Project>
-  <PropertyGroup>
+  <PropertyGroup Label="CppCommon">
+    <!-- Shio: Enables C++26 support. This is required for many of the advanced
+         metaprogramming and reflection features used in the engine. -->
     <Usagi_CppEnableCpp26>true</Usagi_CppEnableCpp26>
-    <Usagi_CppMaximumConstexprDepth>25565</Usagi_CppMaximumConstexprDepth>
-    <Usagi_CppMaximumTemplateDepth>25565</Usagi_CppMaximumTemplateDepth>
-    <Usagi_CppConstexprBacktraceLimit>0</Usagi_CppConstexprBacktraceLimit>
+    <!-- Shio: Disables clang's builtin std::forward_like. This is a workaround
+         for a compiler bug in certain versions of clang where the builtin
+         implementation is incompatible with the standard library's version. -->
     <Usagi_CppDisableBuiltinStdForwardLike>true</Usagi_CppDisableBuiltinStdForwardLike>
   </PropertyGroup>
 
+  <PropertyGroup Label="CppMetaprogramming">
+    <!-- Shio: Sets the maximum recursion depth for constexpr function evaluations.
+         A high value is necessary for complex compile-time computations. -->
+    <Usagi_CppMaximumConstexprDepth>25565</Usagi_CppMaximumConstexprDepth>
+    <!-- Shio: Sets the maximum instantiation depth for templates. This is
+         increased to support advanced template metaprogramming. -->
+    <Usagi_CppMaximumTemplateDepth>25565</Usagi_CppMaximumTemplateDepth>
+    <!-- Shio: Limits the backtrace length for constexpr evaluation errors.
+         Set to 0 to disable the backtrace for cleaner error messages. -->
+    <Usagi_CppConstexprBacktraceLimit>0</Usagi_CppConstexprBacktraceLimit>
+  </PropertyGroup>
+
   <!-- See details at https://github.com/bloomberg/clang-p2996/blob/p2996/P2996.md -->
-  <PropertyGroup>
+  <PropertyGroup Label="CppStaticReflection">
+    <!-- Shio: P3096 - Enables reflection of function parameters. -->
     <Usagi_CppEnableP3096>-fparameter-reflection</Usagi_CppEnableP3096>
+    <!-- Shio: P1306 - Enables expansion statements, allowing for generative metaprogramming. -->
     <Usagi_CppEnableP1306>-fexpansion-statements</Usagi_CppEnableP1306>
+    <!-- Shio: P3289 - Enables consteval blocks, which are blocks of code that are
+         guaranteed to be evaluated at compile time. -->
     <Usagi_CppEnableP3289>-fconsteval-blocks</Usagi_CppEnableP3289>
+    <!-- Shio: P3381 - Enables the new, more concise syntax for reflection. -->
     <Usagi_CppEnableP3381>-freflection-new-syntax</Usagi_CppEnableP3381>
   </PropertyGroup>
 </Project>
