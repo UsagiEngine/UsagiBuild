@@ -1,0 +1,132 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+LineEnding: LF
+ReflowComments: Always
+# Lines and Indentations
+TabWidth: 4
+AccessModifierOffset: -4
+IndentCaseBlocks: true
+IndentWidth: 4
+InsertNewlineAtEOF: true
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+MaxEmptyLinesToKeep: 2
+ContinuationIndentWidth: 4
+# Cannot be used with bin packing
+# InsertTrailingCommas: Wrapped
+SeparateDefinitionBlocks: Always
+IndentWrappedFunctionNames: true
+# Namespaces
+FixNamespaceComments: true
+ShortNamespaceLines: 0 # To always add comments
+# Usings
+SortUsingDeclarations: LexicographicNumeric
+# Alignments
+AlignEscapedNewlines: LeftWithLastLine
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCompound: false
+  AlignFunctionDeclarations: false
+#AlignOperands: AlignAfterOperator
+AlignTrailingComments: true
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: false
+AlignArrayOfStructures: Right
+# Wrapping
+BreakBeforeConceptDeclarations: Always
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+# Constructors
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: CurrentLine
+BreakBeforeBinaryOperators: NonAssignment
+# Inheritance
+BreakInheritanceList: BeforeComma
+# Single Line Short Blocks
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortCompoundRequirementOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+# Templates
+BreakBeforeTemplateCloser: true
+AlwaysBreakTemplateDeclarations: Yes
+# Chop Arguments and Parameters
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+BinPackArguments: false
+BinPackParameters: OnePerLine
+AlignAfterOpenBracket: AlwaysBreak
+# `#include` Blocks
+IncludeCategories:
+  - Regex: '^<.*'
+    Priority: 1
+  - Regex: '^".*'
+    Priority: 2
+  - Regex: '.*'
+    Priority: 3
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+# Pointer and Reference Positions
+PointerAlignment: Right
+ReferenceAlignment: Right
+# Spaces
+SpaceBeforeParens: Never
+SpaceBeforeParensOptions:
+  AfterControlStatements: false
+  AfterForeachMacros: true
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros: true
+  AfterOverloadedOperator: false
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+SpaceInEmptyParentheses: false
+SpacesInAngles: Never
+SpacesInConditionalStatement: false
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+# Only available with Clang 22
+# SpaceInEmptyBraces: Always
+Cpp11BracedListStyle: false
+BitFieldColonSpacing: Both
+# Others
+IntegerLiteralSeparator:
+  Binary: 4
+  Decimal: 3
+  Hex: 4
+...
