@@ -1,7 +1,9 @@
 <Project>
-  <Import Project="Properties/DefaultBuild.props"/>
-  <Import Project="Properties/Vcpkg.props"/>
-  <Import Project="Properties/Clang.props"/>
-  <Import Project="Properties/OptimizeForSpeed.props"/>
-  <Import Project="Properties/Thirdparties.props"/>
+  <Import Project="Build/Configs/DefaultCommon.props"/>
+  <Import Project="Build/Toolchains/Vcpkg.props"/>
+  <Import Project="Build/Configs/DefaultTarget.props"/>
+  <Import Project="Build/Configs/DefaultCpp.props"/>
+  <Import Project="Build/Toolchains/Clang.props"/>
+  <Import Project="Build/Configs/DefaultDebug.props"/>
+  <Import Project="Build/Configs/DefaultRelease.props"/>
 </Project>
