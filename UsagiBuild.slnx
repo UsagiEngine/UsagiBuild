@@ -3,4 +3,17 @@
     <Platform Name="Any CPU" />
     <Platform Name="x64" />
   </Configurations>
+  <Folder Name="/Projects/" />
+  <Folder Name="/Projects/3CM/">
+    <Project Path="Projects\3CM\CaviaUtilities\CaviaNetworkDebugger\CaviaNetworkDebugger.vcxproj">
+      <Configuration Solution="Debug|Any CPU" Project="Debug|x64" />
+      <Configuration Solution="Release|Any CPU" Project="Release|x64" />
+    </Project>
+  </Folder>
+  <Folder Name="/Templates/">
+    <Project Path="Templates\Reference\ConsoleApplication1\ConsoleApplication1.vcxproj">
+      <Configuration Solution="Debug|Any CPU" Project="Debug|Win32" />
+      <Configuration Solution="Release|Any CPU" Project="Release|Win32" />
+    </Project>
+  </Folder>
 </Solution>
