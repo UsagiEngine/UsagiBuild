@@ -16,3 +16,6 @@
 [submodule "Projects/MidakoIsland/MidakoFlow"]
 	path = Projects/MidakoIsland/MidakoFlow
 	url = git@github.com:MidakoIsland/lang.MidakoFlow.git
+[submodule "Projects/3CM"]
+	path = Projects/3CM
+	url = git@github.com:3CM-Games/Monorepo-UsagiProject-3CM.git
