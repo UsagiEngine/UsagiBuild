@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <PropertyGroup>
     <PlatformToolset>ClangCL</PlatformToolset>
@@ -7,69 +8,17 @@
     <!-- Shio: This value now serves as a fallback or design-time default.
          It will be overwritten by the GetClangVersion target at build time.
          A plausible default is needed for IntelliSense to function correctly. -->
+    <!-- todo: this value still has to be correct BEFORE MSBuild runs. -->
     <LLVMToolsVersion>21.0.0</LLVMToolsVersion>
   </PropertyGroup>
 
-  <!-- Shio: This target runs before the build preparation to dynamically determine
-       the Clang version and correct any paths that were set using the default
-       version above. This is necessary because property evaluation occurs before
-       any targets can run. -->
-  <Target Name="GetClangVersionAndCorrectPaths" BeforeTargets="PrepareForBuild" Condition="'$(PlatformToolset)'=='ClangCL'">
-    <!-- Shio: Halt the build if the required environment variable is not set. -->
-    <Error Condition="'$(LLVMInstallDir)' == ''"
-           Text="Shio: The 'LLVM_INSTALL_DIR' environment variable is not set. Please set it to point to the root of your LLVM installation directory."/>
+  <!-- Shio: Import libc++ and reflection settings before defining base Clang properties. -->
+  <Import Project="Clang.libcxx.props"/>
+  <Import Project="Clang.cxx26.props"/>
 
-    <PropertyGroup>
-      <ClangClPath>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClPath>
-    </PropertyGroup>
+  <Import Project="Clang.version.targets"/>
 
-    <!-- Shio: Verify that clang-cl.exe actually exists at the specified path. -->
-    <Error Condition="!Exists('$(ClangClPath)')"
-           Text="Shio: clang-cl.exe was not found at the specified path: '$(ClangClPath)'. Please ensure 'LLVM_INSTALL_DIR' is correct."/>
-
-    <!-- Shio: Execute clang-cl.exe -v. The version information is typically printed to stderr. -->
-    <Exec Command="&quot;$(ClangClPath)&quot; -v"
-          ConsoleToMSBuild="true"
-          IgnoreExitCode="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="ClangVersionRawOutput"/>
-    </Exec>
-
-    <!-- Shio: Use a regular expression to parse the version string from the command output. -->
-    <PropertyGroup>
-      <DetectedLLVMToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(ClangVersionRawOutput), `clang version ((\d+\.\d+)(\.\d+)?)`).Groups[1].Value)</DetectedLLVMToolsVersion>
-    </PropertyGroup>
-
-    <!-- Shio: If a version was successfully parsed, overwrite LLVMToolsVersion. -->
-    <PropertyGroup Condition="'$(DetectedLLVMToolsVersion)' != ''">
-      <LLVMToolsVersion>$(DetectedLLVMToolsVersion)</LLVMToolsVersion>
-      <LLVMIncludeVersion>$([System.Text.RegularExpressions.Regex]::Match($(DetectedLLVMToolsVersion), `(\d+?)\..*`).Groups[1].Value)</LLVMIncludeVersion>
-    </PropertyGroup>
-
-    <!-- Shio: Log the detected version for clarity during the build. -->
-    <Message Importance="high"
-             Condition="'$(DetectedLLVMToolsVersion)' != ''"
-             Text="Shio: Automatically detected Clang version: $(LLVMToolsVersion) from '$(LLVMInstallDir)'"/>
-
-    <!-- Shio: If parsing failed, halt the build with an informative error. -->
-    <Error Condition="'$(DetectedLLVMToolsVersion)' == ''"
-           Text="Shio: Failed to parse the version from clang-cl.exe output. Raw output was: $(ClangVersionRawOutput)"/>
-
-    <!-- Shio: Because this target runs after initial property evaluation, we must
-         now explicitly correct properties that were built with the default version. -->
-    <PropertyGroup>
-      <_CorrectedClangResourceDir>$(LLVMInstallDir)\lib\clang\$(LLVMIncludeVersion)</_CorrectedClangResourceDir>
-      <!-- Shio: Override the Clang resource directory, which contains built-in headers. -->
-      <ClangResourceDir>$(_CorrectedClangResourceDir)</ClangResourceDir>
-      <!-- Shio: Prepend the corrected include path to ensure it's searched first. -->
-      <IncludePath>$(_CorrectedClangResourceDir)\include;$(IncludePath)</IncludePath>
-    </PropertyGroup>
-
-    <Message Importance="high"
-             Condition="'$(DetectedLLVMToolsVersion)' != ''"
-             Text="Shio: Corrected Clang resource path to: $(ClangResourceDir)"/>
-  </Target>
-
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <!-- Shio: This property is used to incrementally build the clang arguments.
            It can be appended to in project files to add project-specific flags. -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs)</Usagi_ClangArgs>
@@ -86,31 +35,15 @@
     <!-- clang does not really support this argument and it assumes utf-8 input by default. -->
     <!-- <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs> -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) /source-charset:utf-8</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">$(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
-
-    <!-- Shio: Add metaprogramming limits. -->
-    <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppDisableBuiltinStdForwardLike)' == 'true'">
+      $(Usagi_ClangArgs) -Xclang -fno-builtin-std-forward_like</Usagi_ClangArgs>
   </PropertyGroup>
 
-  <!-- Shio: Add static reflection flags. -->
-  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' != ''">
-    <Usagi_ClangReflectionArgs>-Xclang $(Usagi_CppEnableReflection)</Usagi_ClangReflectionArgs>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' == ''">
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3096)</Usagi_ClangReflectionArgs>
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP1306)</Usagi_ClangReflectionArgs>
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3381)</Usagi_ClangReflectionArgs>
-  </PropertyGroup>
-  <PropertyGroup>
-    <Usagi_ClangArgs Condition="'$(Usagi_ClangReflectionArgs)' != ''">$(Usagi_ClangArgs) -Xclang -freflection $(Usagi_ClangReflectionArgs)</Usagi_ClangArgs>
-  </PropertyGroup>
+  <Import Project="Clang.metaprogramming.props"/>
 
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile Condition="'$(Usagi_CppEnableCpp26)'=='true'">
-      <AdditionalOptions>$(Usagi_ClangArgs) $(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>$(Usagi_ClangArgs) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>

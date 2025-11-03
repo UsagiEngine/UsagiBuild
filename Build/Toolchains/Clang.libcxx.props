@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Shio: Properties and settings for using libc++ with Clang. -->
+  <PropertyGroup Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <!--
+      Shio: This points to the installation directory of our custom-built libc++.
+            It is sourced from the LIBCXX_INSTALL_DIR environment variable.
+            e.g. C:\@Data.Transient\Dev\toolchains\llvm-project\build-libcxx
+    -->
+    <LIBCXXInstallDir>$(LIBCXX_INSTALL_DIR)</LIBCXXInstallDir>
+  </PropertyGroup>
+
+  <!--
+    Shio: This target injects a check into the build process to ensure that if
+          libc++ is enabled, the path to it is actually set.
+  -->
+  <Target Name="VerifyLibCxxConfiguration" BeforeTargets="PrepareForBuild" Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <Error Condition="'$(LIBCXXInstallDir)' == ''"
+           Text="Shio: 'Usagi_CppEnableLibCxx' is true, but 'LIBCXX_INSTALL_DIR' is not set. Please point it to your libc++ build output directory."/>
+  </Target>
+
+  <!--
+    Shio: This section configures the compiler and linker to use libc++ instead
+          of the default MSVC standard library.
+  -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <ClCompile>
+      <!-- Shio: Tells the Clang frontend to exclude MSVC's STL include paths. -->
+      <!-- libc++ headers will cause unused-local-typedef warnings. -->
+      <AdditionalOptions>%(AdditionalOptions) -Xclang -nostdinc++ -Wno-unused-local-typedef</AdditionalOptions>
+      <!-- Shio: Add the libc++ header path. -->
+      <AdditionalIncludeDirectories>$(LIBCXXInstallDir)\include\c++\v1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <!-- Shio: Tells the linker (lld-link) not to link the default MSVC standard library. -->
+      <!-- <AdditionalOptions>%(AdditionalOptions) &#45;&#45;nostdlib++</AdditionalOptions>-->
+      <!-- Shio: Specify the name of the library to link. -->
+      <AdditionalDependencies>libc++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--
+        Flag: /NODEFAULTLIB:c++.lib
+        Tells the linker to ignore the implicit dependency on "c++.lib"
+        which is added by "clang-cl -stdlib=libc++". We provide
+        "libc++.lib" ourselves via AdditionalDependencies.
+      -->
+      <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:c++.lib</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Shio: Linker library paths for different configurations. -->
+
+  <!-- x64|Debug -->
+  <ItemDefinitionGroup Condition="'$(Platform)|$(Configuration)'=='x64|Debug' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!--
+        Flag: /NODEFAULTLIB:msvcprtd.lib
+        Tells the linker not to link the default MSVC standard debug library.
+      -->
+      <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprtd.lib</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- x64|Release & RelWithDebInfo -->
+  <ItemDefinitionGroup Condition="(('$(Platform)|$(Configuration)'=='x64|Release') or ('$(Platform)|$(Configuration)'=='x64|RelWithDebInfo')) and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <Link>
+      <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\RelWithDebInfo;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <!--
+        Flag: /NODEFAULTLIB:msvcprt.lib
+        Tells the linker not to link the default MSVC standard release library.
+      -->
+      <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprt.lib</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

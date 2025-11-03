@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- Shio: Properties and settings for C++ Static Reflection with Clang. -->
+
+  <!--
+    Shio: These properties assemble the necessary compiler flags for enabling
+          static reflection features based on individual proposal flags.
+  -->
+  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' != '' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <Usagi_ClangReflectionArgs>-Xclang $(Usagi_CppEnableReflection)</Usagi_ClangReflectionArgs>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' == ''">
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3096)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP1306)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3381)</Usagi_ClangReflectionArgs>
+  </PropertyGroup>
+
+  <!--
+    Shio: This property group conditionally adds the -freflection flag if any
+          reflection-related arguments have been defined.
+  -->
+  <PropertyGroup>
+    <Usagi_ClangArgs Condition="'$(Usagi_ClangReflectionArgs)' != ''">$(Usagi_ClangArgs) -Xclang -freflection $(Usagi_ClangReflectionArgs)</Usagi_ClangArgs>
+  </PropertyGroup>
+</Project>
