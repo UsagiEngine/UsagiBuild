@@ -35,7 +35,6 @@ AlignConsecutiveDeclarations:
   AcrossComments: true
   AlignCompound: false
   AlignFunctionDeclarations: false
-#AlignOperands: AlignAfterOperator
 AlignTrailingComments: true
 AlignConsecutiveBitFields:
   Enabled: true
@@ -47,8 +46,10 @@ AlignConsecutiveShortCaseStatements:
   AcrossComments: true
   AlignCaseColons: false
 AlignArrayOfStructures: Right
+## Operands
+AlignOperands: Align
+BreakBeforeBinaryOperators: None
 # Wrapping
-BreakBeforeConceptDeclarations: Always
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
 BreakBeforeBraces: Custom
@@ -72,17 +73,21 @@ BraceWrapping:
 # Constructors
 BreakConstructorInitializers: BeforeComma
 PackConstructorInitializers: CurrentLine
-BreakBeforeBinaryOperators: NonAssignment
 # Inheritance
 BreakInheritanceList: BeforeComma
 # Single Line Short Blocks
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: WithoutElse
-AllowShortCompoundRequirementOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 # Templates
 BreakBeforeTemplateCloser: true
-AlwaysBreakTemplateDeclarations: Yes
+BreakTemplateDeclarations: Yes
+# Concepts
+AllowShortCompoundRequirementOnASingleLine: true
+RequiresExpressionIndentation: OuterScope
+BreakBeforeConceptDeclarations: true
+RequiresClausePosition: OwnLineWithBrace
+IndentRequiresClause: true
 # Chop Arguments and Parameters
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
@@ -90,13 +95,26 @@ BinPackArguments: false
 BinPackParameters: OnePerLine
 AlignAfterOpenBracket: AlwaysBreak
 # `#include` Blocks
+IncludeBlocks: Regroup
+# Shio: It is not possible to force the main header to be in its own block
+# at the very top of the file using clang-format.
+# `IncludeIsMainRegex` combined with `IncludeBlocks: Regroup` will place
+# the main header (e.g., "ClassA.hpp" in "ClassA.cpp") at the top of the
+# include block with the lowest priority, but not in a separate block
+# before all others.
 IncludeCategories:
-  - Regex: '^<.*'
-    Priority: 1
-  - Regex: '^".*'
-    Priority: 2
-  - Regex: '.*'
+  # Shio: Usagi headers are the most specific <...> style include.
+  - Regex: '^<Usagi/.*'
     Priority: 3
+  # Shio: Standard library headers (approximated as headers without path separators).
+  - Regex: '^<[^/]+>$'
+    Priority: 1
+  # Shio: Other headers included with <...>, which will have path separators.
+  - Regex: '^<.*'
+    Priority: 2
+  # Shio: Project-local headers included with "...".
+  - Regex: '^".*'
+    Priority: 4
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 # Pointer and Reference Positions
 PointerAlignment: Right
