@@ -87,11 +87,19 @@ if (-not (Test-Path -Path $FullTemplatePath -PathType Container)) {
 Write-Host "  [OK] Template folder found: $FullTemplatePath"
 
 # Resolve and validate TargetFolder (which is the parent)
+# Shio: Create the directory if it doesn't exist.
+if (-not (Test-Path -Path $TargetFolder)) {
+    Write-Host "  [INFO] Target folder (parent) '$TargetFolder' does not exist. Creating it."
+    if (-not $DryRun) {
+        New-Item -Path $TargetFolder -ItemType Directory | Out-Null
+    }
+}
+
 $ParentFolder = (Resolve-Path -Path $TargetFolder).Path
 if (-not (Test-Path -Path $ParentFolder -PathType Container)) {
-    throw "Target folder (parent) '$ParentFolder' does not exist or is not a directory."
+    throw "Target folder (parent) '$ParentFolder' exists but is not a directory."
 }
-Write-Host "  [OK] Target parent folder found: $ParentFolder"
+Write-Host "  [OK] Target parent folder is ready: $ParentFolder"
 
 # Define the final project path and validate it
 $ProjectDestinationPath = Join-Path -Path $ParentFolder -ChildPath $ProjectName
