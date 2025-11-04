@@ -47,7 +47,7 @@ AlignConsecutiveShortCaseStatements:
   AlignCaseColons: false
 AlignArrayOfStructures: Right
 ## Operands
-AlignOperands: Align
+AlignOperands: DontAlign
 BreakBeforeBinaryOperators: None
 # Wrapping
 BreakBeforeTernaryOperators: true
