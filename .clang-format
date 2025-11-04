@@ -93,7 +93,9 @@ AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 BinPackArguments: false
 BinPackParameters: OnePerLine
-AlignAfterOpenBracket: AlwaysBreak
+# Setting this to `Align` would cause unwanted long indentations when
+# wrapping things.
+AlignAfterOpenBracket: DontAlign
 # `#include` Blocks
 IncludeBlocks: Regroup
 # Shio: It is not possible to force the main header to be in its own block
