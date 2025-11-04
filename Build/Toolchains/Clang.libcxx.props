@@ -26,8 +26,23 @@
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
     <ClCompile>
       <!-- Shio: Tells the Clang frontend to exclude MSVC's STL include paths. -->
+      <AdditionalOptions>%(AdditionalOptions) -Xclang -nostdinc++</AdditionalOptions>
       <!-- libc++ headers will cause unused-local-typedef warnings. -->
-      <AdditionalOptions>%(AdditionalOptions) -Xclang -nostdinc++ -Wno-unused-local-typedef</AdditionalOptions>
+      <AdditionalOptions>%(AdditionalOptions) -Wno-unused-local-typedef</AdditionalOptions>
+      <!--
+        Flag: /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1
+        Forces the C Runtime to use C99-compliant wide-character
+        printf/scanf format specifiers. This must match how libc++ was compiled.
+      -->
+      <AdditionalOptions>%(AdditionalOptions) /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1</AdditionalOptions>
+
+      <!--
+        Flag: /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS
+        NEW: Tells the libc++ headers they are being linked as a
+        static library, which removes the incorrect __declspec(dllimport).
+      -->
+      <AdditionalOptions>%(AdditionalOptions) /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS</AdditionalOptions>
+
       <!-- Shio: Add the libc++ header path. -->
       <AdditionalIncludeDirectories>$(LIBCXXInstallDir)\include\c++\v1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
@@ -50,25 +65,51 @@
 
   <!-- x64|Debug -->
   <ItemDefinitionGroup Condition="'$(Platform)|$(Configuration)'=='x64|Debug' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <!--
+      Set the C Runtime to Static Debug (/MTd).
+      This matches the static libc++.lib you just built.
+    -->
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
     <Link>
+      <!--
+        NEW: Add the VC++ Runtime Library (Debug)
+        This provides the exception handling ABI functions.
+      -->
+      <AdditionalDependencies>msvcprtd.lib;libvcruntimed.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <!--
         Flag: /NODEFAULTLIB:msvcprtd.lib
         Tells the linker not to link the default MSVC standard debug library.
       -->
-      <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprtd.lib</AdditionalOptions>
+      <!-- This library is required for exception handling. -->
+      <!-- <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprtd.lib</AdditionalOptions>-->
     </Link>
   </ItemDefinitionGroup>
 
   <!-- x64|Release & RelWithDebInfo -->
   <ItemDefinitionGroup Condition="(('$(Platform)|$(Configuration)'=='x64|Release') or ('$(Platform)|$(Configuration)'=='x64|RelWithDebInfo')) and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <!--
+      Set the C Runtime to Static Release (/MT).
+      This matches the static libc++.lib you just built.
+    -->
+    <ClCompile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
     <Link>
+      <!--
+        NEW: Add the VC++ Runtime Library (Release)
+        This provides the exception handling ABI functions.
+      -->
+      <AdditionalDependencies>msvcprt.lib;libvcruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\RelWithDebInfo;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <!--
         Flag: /NODEFAULTLIB:msvcprt.lib
         Tells the linker not to link the default MSVC standard release library.
       -->
-      <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprt.lib</AdditionalOptions>
+      <!-- This library is required for exception handling. -->
+      <!-- <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprt.lib</AdditionalOptions>-->
     </Link>
   </ItemDefinitionGroup>
 </Project>
