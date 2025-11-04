@@ -9,7 +9,9 @@
   <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' != '' and '$(Usagi_CppEnableLibCxx)' == 'true'">
     <Usagi_ClangReflectionArgs>-Xclang $(Usagi_CppEnableReflection)</Usagi_ClangReflectionArgs>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' == ''">
+  <!-- For some reason, `-freflection-latest` is not enabling `-fexpansion-statements`. -->
+  <!-- <PropertyGroup Condition="'$(Usagi_CppEnableReflection)' == ''">-->
+  <PropertyGroup>
     <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3096)</Usagi_ClangReflectionArgs>
     <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP1306)</Usagi_ClangReflectionArgs>
     <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>

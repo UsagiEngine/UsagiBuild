@@ -25,8 +25,17 @@
   -->
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
     <ClCompile>
+      <!-- Flag: /X -->
+      <!-- Tells the clang-cl driver to ignore standard include paths (MSVC STL). -->
+      <!-- <AdditionalOptions>%(AdditionalOptions) /X</AdditionalOptions> -->
+
       <!-- Shio: Tells the Clang frontend to exclude MSVC's STL include paths. -->
       <AdditionalOptions>%(AdditionalOptions) -Xclang -nostdinc++</AdditionalOptions>
+
+      <!-- Flag: -stdlib=libc++ -->
+      <!-- Tells Clang to use the libc++ standard library. -->
+      <AdditionalOptions>%(AdditionalOptions) -Xclang -stdlib=libc++</AdditionalOptions>
+
       <!-- libc++ headers will cause unused-local-typedef warnings. -->
       <AdditionalOptions>%(AdditionalOptions) -Wno-unused-local-typedef</AdditionalOptions>
       <!--
