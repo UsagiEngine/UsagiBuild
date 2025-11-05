@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1cd86858-a353-44e6-9cd6-8efb03cbca72}</ProjectGuid>
+    <RootNamespace>UsagiBuild</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Configs\DefaultCommon.props" />
+    <Content Include="Configs\DefaultCpp.props" />
+    <Content Include="Configs\DefaultDebug.props" />
+    <Content Include="Configs\DefaultRelease.props" />
+    <Content Include="Configs\DefaultTarget.props" />
+    <Content Include="Properties\Thirdparties_.props" />
+    <Content Include="Toolchains\Clang.cxx26.props" />
+    <Content Include="Toolchains\Clang.libcxx.props" />
+    <Content Include="Toolchains\Clang.metaprogramming.props" />
+    <Content Include="Toolchains\Clang.props" />
+    <Content Include="Toolchains\Clang.version.props" />
+    <Content Include="Toolchains\Vcpkg.props" />
+  </ItemGroup>
+</Project>

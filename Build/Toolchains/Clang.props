@@ -8,15 +8,15 @@
     <!-- Shio: This value now serves as a fallback or design-time default.
          It will be overwritten by the GetClangVersion target at build time.
          A plausible default is needed for IntelliSense to function correctly. -->
-    <!-- todo: this value still has to be correct BEFORE MSBuild runs. -->
-    <LLVMToolsVersion>21.0.0</LLVMToolsVersion>
+    <!-- Now `Clang.version.props` figures out the correct LLVM toolchain version. -->
+    <!-- <LLVMToolsVersion>21.0.0</LLVMToolsVersion>-->
   </PropertyGroup>
+
+  <Import Project="Clang.version.props"/>
 
   <!-- Shio: Import libc++ and reflection settings before defining base Clang properties. -->
   <Import Project="Clang.libcxx.props"/>
   <Import Project="Clang.cxx26.props"/>
-
-  <Import Project="Clang.version.targets"/>
 
   <PropertyGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <!-- Shio: This property is used to incrementally build the clang arguments.
@@ -42,7 +42,7 @@
   <Import Project="Clang.metaprogramming.props"/>
 
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
-    <ClCompile Condition="'$(Usagi_CppEnableCpp26)'=='true'">
+    <ClCompile>
       <AdditionalOptions>$(Usagi_ClangArgs) %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!-- We need `$([System.Diagnostics.FileVersionInfo]::GetVersionInfo` to get the correct version of Clang. -->
+  <!-- However, it is by default not in the allowed function list to be called. -->
+  <!-- Setting environment variable `MSBUILDENABLEALLPROPERTYFUNCTIONS=1` is a workaround. -->
+  <!-- If we cannot correctly decide the LLVM version, our compilation may fail due to the bundled toolchain is used. -->
+  <!-- See: https://github.com/dotnet/msbuild/issues/3457 -->
+  <PropertyGroup Condition="'$(PlatformToolset)' == 'ClangCL' and '$(MSBUILDENABLEALLPROPERTYFUNCTIONS)' == '1'">
+    <!-- Shio: Define the expected path to the clang-cl compiler executable. -->
+    <ClangClPath>$(LLVMInstallDir)\bin\clang-cl.exe</ClangClPath>
+    <!-- Shio: Read the product version directly from the clang-cl.exe file
+     metadata. This is significantly faster than executing the compiler. -->
+    <_ClangProductVersion>$([System.Diagnostics.FileVersionInfo]::GetVersionInfo($(ClangClPath)).ProductVersion)</_ClangProductVersion>
+    <!-- Shio: Extract the version number (e.g., 17.0.1) from the product
+         version string using a regular expression. -->
+    <LLVMToolsVersion>$([System.Text.RegularExpressions.Regex]::Match($(_ClangProductVersion), `(\d+\.\d+\.\d+)`).Value)</LLVMToolsVersion>
+    <!-- Shio: Extract only the major version number (e.g., 17), which is
+     needed to construct the path to Clang's internal resource directory. -->
+    <LLVMIncludeVersion>$([System.Text.RegularExpressions.Regex]::Match($(LLVMToolsVersion), `(\d+?)\..*`).Groups[1].Value)</LLVMIncludeVersion>
+  </PropertyGroup>
+
+  <!-- Shio: This target runs just before the build starts to validate the
+       properties determined above and adjust final build paths. -->
+  <Target Name="ValidateClangVersionAndPaths"
+          BeforeTargets="PrepareForBuild"
+          Condition="'$(PlatformToolset)' == 'ClangCL' and '$(LLVMToolsVersion)' != ''">
+    <Message Importance="high"
+             Text="Shio: Automatically detected Clang version: $(LLVMToolsVersion) from '$(LLVMInstallDir)'"/>
+
+    <!-- Shio: Now that LLVMToolsVersion is correctly set, we can construct the
+         correct path to Clang's resource directory, which contains built-in
+         headers like <stddef.h>. -->
+    <PropertyGroup>
+      <_CorrectedClangResourceDir>$(LLVMInstallDir)\lib\clang\$(LLVMIncludeVersion)</_CorrectedClangResourceDir>
+      <ClangResourceDir>$(_CorrectedClangResourceDir)</ClangResourceDir>
+      <!-- Shio: Prepend the Clang resource include directory to the main
+           IncludePath to ensure it is searched first by the compiler. -->
+      <IncludePath>$(_CorrectedClangResourceDir)\include;$(IncludePath)</IncludePath>
+    </PropertyGroup>
+
+    <Message Importance="high"
+             Text="Shio: Corrected Clang resource path to: $(ClangResourceDir)"/>
+  </Target>
+
+  <!-- Shio: This final error triggers if version detection failed for any
+       reason, providing feedback on what was (or wasn't) read. -->
+  <Target Name="ErrorOnMissingClangVersion"
+          BeforeTargets="PrepareForBuild"
+          Condition="'$(PlatformToolset)' == 'ClangCL' and ('$(LLVMToolsVersion)' == '' or '$(MSBUILDENABLEALLPROPERTYFUNCTIONS)' != '1')">
+    <Error Text="Shio: Failed to determine Clang version from '$(ClangClPath)'. Raw ProductVersion was '$(__ClangProductVersion)'. Ensure MSBUILDENABLEALLPROPERTYFUNCTIONS=1 environment variable is set. Otherwise we cannot determine the correct LLVM version."/>
+  </Target>
+</Project>
