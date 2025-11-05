@@ -6,6 +6,7 @@
          international characters. It corresponds to using wchar_t for strings
          and calling the wide-character versions of Windows APIs. -->
     <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
 
   <!-- Shio: Settings specific to the Release configuration. -->
@@ -81,6 +82,8 @@
            column where the issue was found, making errors easier to locate.
            Corresponds to the /diagnostics:caret compiler flag. -->
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <StringPooling>true</StringPooling>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <!-- Shio: Instructs the linker to generate a Program Database (.pdb) file,
@@ -105,5 +108,11 @@
            factors and to handle DPI changes dynamically. -->
       <EnableDpiAwareness>PerMonitorHighDPIAwareV2</EnableDpiAwareness>
     </Manifest>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
+    <ClCompile>
+      <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
 </Project>

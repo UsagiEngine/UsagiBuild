@@ -75,7 +75,7 @@ if ($matchedTypes.Count -eq 0) {
 if ($matchedTypes.Count -gt 1) {
     throw "Ambiguous ProjectType '$ProjectType'. It matches: $($matchedTypes -join ', '). Please be more specific."
 }
-$ConfigurationType = $matchedTypes[0] # Use the canonical name
+$ConfigurationType = $matchedTypes #[0] # Use the canonical name # `[0]` causes the `ConfigurationType` only have the first character.
 Write-Host "  [INFO] Matched project type: $ConfigurationType"
 
 # Resolve and validate TemplateFolder
