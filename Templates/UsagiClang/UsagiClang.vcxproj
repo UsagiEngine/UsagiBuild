@@ -22,6 +22,7 @@
     <ConfigurationType>$StaticLibrary|Application$</ConfigurationType>
     <IncludePath>$(Usagi_IncludePaths);$(IncludePath)</IncludePath>
     <LibraryPath>$(Usagi_LibraryPaths);$(LibraryPath)</LibraryPath>
+    <ExternalIncludeDirectories>$(ProjectDir);$(ExternalIncludeDirectories)</ExternalIncludeDirectories>
   </PropertyGroup>
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
