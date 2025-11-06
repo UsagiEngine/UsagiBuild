@@ -7,7 +7,7 @@
     <!-- Shio: Disables clang's builtin std::forward_like. This is a workaround
          for a compiler bug in certain versions of clang where the builtin
          implementation is incompatible with the standard library's version. -->
-    <Usagi_CppDisableBuiltinStdForwardLike>true</Usagi_CppDisableBuiltinStdForwardLike>
+    <Usagi_CppDisableBuiltinStdForwardLike>false</Usagi_CppDisableBuiltinStdForwardLike>
   </PropertyGroup>
 
   <PropertyGroup Label="CppMetaprogramming">

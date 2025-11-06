@@ -3,6 +3,7 @@
   <Import Project="Build/Toolchains/Vcpkg.props"/>
   <Import Project="Build/Configs/DefaultTarget.props"/>
   <Import Project="Build/Configs/DefaultCpp.props"/>
+  <Import Project="Build/Configs/DefaultPaths.props"/>
   <Import Project="Build/Toolchains/Clang.props"/>
   <Import Project="Build/Configs/DefaultDebug.props"/>
   <Import Project="Build/Configs/DefaultRelease.props"/>

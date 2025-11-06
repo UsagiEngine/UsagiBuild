@@ -10,7 +10,7 @@
     <Content Include="Configs\DefaultDebug.props" />
     <Content Include="Configs\DefaultRelease.props" />
     <Content Include="Configs\DefaultTarget.props" />
-    <Content Include="Properties\Thirdparties_.props" />
+    <Content Include="Configs\DefaultPaths.props" />
     <Content Include="Toolchains\Clang.cxx26.props" />
     <Content Include="Toolchains\Clang.libcxx.props" />
     <Content Include="Toolchains\Clang.metaprogramming.props" />

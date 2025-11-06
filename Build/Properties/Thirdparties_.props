@@ -1,6 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <Dir_IncludePath>$(VULKAN_SDK)\Include;$(SolutionDir)Thirdparties\include\;$(Dir_IncludePath)</Dir_IncludePath>
-    <Dir_LibraryPath>$(SolutionDir)Thirdparties\lib\;$(Dir_LibraryPath)</Dir_LibraryPath>
-  </PropertyGroup>
-</Project>
