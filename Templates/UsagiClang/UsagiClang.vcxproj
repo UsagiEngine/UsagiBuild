@@ -16,16 +16,19 @@
     <RootNamespace>$safeprojectname$</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
   <PropertyGroup>
     <!-- ConfigurationType MUST be specified BEFORE importing Microsoft.Cpp.props. -->
     <!-- Otherwise all projects become Application. -->
     <ConfigurationType>$StaticLibrary|Application$</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <!-- But include paths must be defined AFTER importing Microsoft.Cpp.props. -->
+  <PropertyGroup>
     <IncludePath>$(Usagi_IncludePaths);$(IncludePath)</IncludePath>
     <LibraryPath>$(Usagi_LibraryPaths);$(LibraryPath)</LibraryPath>
     <ExternalIncludeDirectories>$(ProjectDir);$(ExternalIncludeDirectories)</ExternalIncludeDirectories>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
@@ -34,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>
