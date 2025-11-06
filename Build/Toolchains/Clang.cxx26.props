@@ -14,8 +14,10 @@
   <PropertyGroup>
     <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3096)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3096)</Usagi_ClangReflectionArgs>
     <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP1306)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP1306)</Usagi_ClangReflectionArgs>
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>
-    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3381)</Usagi_ClangReflectionArgs>
+    <!-- removed flag -->
+    <!--<Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3289)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3289)</Usagi_ClangReflectionArgs>-->
+    <!-- removed flag -->
+    <!--<Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableP3381)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableP3381)</Usagi_ClangReflectionArgs>-->
   </PropertyGroup>
 
   <!--
