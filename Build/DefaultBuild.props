@@ -1,0 +1,10 @@
+<Project>
+  <Import Project="Configs/DefaultCommon.props"/>
+  <Import Project="Toolchains/Vcpkg.props"/>
+  <Import Project="Configs/DefaultTarget.props"/>
+  <Import Project="Configs/DefaultCpp.props"/>
+  <Import Project="Configs/DefaultPaths.props"/>
+  <Import Project="Toolchains/Clang.props"/>
+  <Import Project="Configs/DefaultDebug.props"/>
+  <Import Project="Configs/DefaultRelease.props"/>
+</Project>

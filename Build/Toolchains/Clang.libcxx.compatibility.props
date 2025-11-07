@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <!-- Compatibility flags for commonly used thirdparty libraries to avoid linking errors. -->
+  <PropertyGroup Label="Clang">
+    <_usagiClangCompatibilityMacros>FMT_HEADER_ONLY;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros>
+    <_usagiClangCompatibilityMacros>SPDLOG_USE_STD_FORMAT;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros>
+    <!--
+      Flag: /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1
+      Forces the C Runtime to use C99-compliant wide-character
+      printf/scanf format specifiers. This must match how libc++ was compiled.
+    -->
+    <!-- libc++ by default has /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1 which could be incompatible -->
+    <!-- with libs built by vcpkg, etc. -->
+    <_usagiClangCompatibilityMacros>_CRT_STDIO_ISO_WIDE_SPECIFIERS=1;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros>
+    <!--
+      Flag: /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS
+      NEW: Tells the libc++ headers they are being linked as a
+      static library, which removes the incorrect __declspec(dllimport).
+    -->
+    <_usagiClangCompatibilityMacros>_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Clang">
+    <!-- libc++ headers will cause unused-local-typedef warnings. -->
+    <_usagiClangAdditonalOptions>$(_usagiClangAdditonalOptions) -Wno-unused-local-typedef</_usagiClangAdditonalOptions>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+    <ClCompile>
+      <AdditionalOptions>$(_usagiClangAdditonalOptions) %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>$(_usagiClangCompatibilityMacros)%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+</Project>

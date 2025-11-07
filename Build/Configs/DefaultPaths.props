@@ -1,0 +1,10 @@
+<Project>
+  <!-- Prevent Engine from including Module files. -->
+  <PropertyGroup Condition="'$(_usagiIsEngineProject)' == ''">
+    <Usagi_IncludePaths>$(SolutionDir)Modules;$(Usagi_IncludeDirs)</Usagi_IncludePaths>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Usagi_IncludePaths>$(SolutionDir)Engine;$(Usagi_IncludeDirs)</Usagi_IncludePaths>
+    <Usagi_LibraryPaths>$(SolutionDir)$(Platform)\$(Configuration);$(Usagi_LibraryPaths)</Usagi_LibraryPaths>
+  </PropertyGroup>
+</Project>

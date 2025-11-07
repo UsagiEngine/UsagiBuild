@@ -12,10 +12,13 @@
     <Content Include="Configs\DefaultTarget.props" />
     <Content Include="Configs\DefaultPaths.props" />
     <Content Include="Toolchains\Clang.cxx26.props" />
+    <Content Include="Toolchains\Clang.libcxx.compatibility.props" />
     <Content Include="Toolchains\Clang.libcxx.props" />
     <Content Include="Toolchains\Clang.metaprogramming.props" />
     <Content Include="Toolchains\Clang.props" />
     <Content Include="Toolchains\Clang.version.props" />
     <Content Include="Toolchains\Vcpkg.props" />
+    <Content Include="Toolchains\x64-win-llvm-static.cmake" />
+    <Content Include="Toolchains\x64-windows-static-wide.cmake" />
   </ItemGroup>
 </Project>

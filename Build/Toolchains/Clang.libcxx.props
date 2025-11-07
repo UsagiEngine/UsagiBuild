@@ -19,6 +19,8 @@
            Text="Shio: 'Usagi_CppEnableLibCxx' is true, but 'LIBCXX_INSTALL_DIR' is not set. Please point it to your libc++ build output directory."/>
   </Target>
 
+  <Import Project="Clang.libcxx.compatibility.props"/>
+
   <!--
     Shio: This section configures the compiler and linker to use libc++ instead
           of the default MSVC standard library.
@@ -35,24 +37,6 @@
       <!-- Flag: -stdlib=libc++ -->
       <!-- Tells Clang to use the libc++ standard library. -->
       <AdditionalOptions>%(AdditionalOptions) -Xclang -stdlib=libc++</AdditionalOptions>
-
-      <!-- libc++ headers will cause unused-local-typedef warnings. -->
-      <AdditionalOptions>%(AdditionalOptions) -Wno-unused-local-typedef</AdditionalOptions>
-      <!--
-        Flag: /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1
-        Forces the C Runtime to use C99-compliant wide-character
-        printf/scanf format specifiers. This must match how libc++ was compiled.
-      -->
-      <!-- libc++ by default has /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1 which could be incompatible -->
-      <!-- with libs built by vcpkg, etc. -->
-      <AdditionalOptions>%(AdditionalOptions) /D_CRT_STDIO_ISO_WIDE_SPECIFIERS=1</AdditionalOptions>
-
-      <!--
-        Flag: /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS
-        NEW: Tells the libc++ headers they are being linked as a
-        static library, which removes the incorrect __declspec(dllimport).
-      -->
-      <AdditionalOptions>%(AdditionalOptions) /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS</AdditionalOptions>
 
       <!-- Shio: Add the libc++ header path. -->
       <AdditionalIncludeDirectories>$(LIBCXXInstallDir)\include\c++\v1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

@@ -2,6 +2,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"
           Condition="'' != $([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"/>
   <PropertyGroup>
+    <_usagiIsEngineProject>true</_usagiIsEngineProject>
     <Usagi_IncludePaths>$(Usagi_IncludeDirs)</Usagi_IncludePaths>
   </PropertyGroup>
 </Project>
