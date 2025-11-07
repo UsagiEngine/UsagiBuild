@@ -3,10 +3,9 @@ Language: Cpp
 BasedOnStyle: LLVM
 LineEnding: LF
 ReflowComments: Always
-# Lines and Indentations
+## Lines and Indentations
 TabWidth: 4
 AccessModifierOffset: -4
-IndentCaseBlocks: true
 IndentWidth: 4
 InsertNewlineAtEOF: true
 MacroBlockBegin: ''
@@ -17,12 +16,12 @@ ContinuationIndentWidth: 4
 # InsertTrailingCommas: Wrapped
 SeparateDefinitionBlocks: Always
 IndentWrappedFunctionNames: true
-# Namespaces
+## Namespaces
 FixNamespaceComments: true
 ShortNamespaceLines: 0 # To always add comments
-# Usings
+## Usings
 SortUsingDeclarations: LexicographicNumeric
-# Alignments
+## Alignments
 AlignEscapedNewlines: LeftWithLastLine
 AlignConsecutiveAssignments:
   Enabled: true
@@ -40,16 +39,21 @@ AlignConsecutiveBitFields:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
+## switch-case
+IndentCaseBlocks: false
+IndentCaseLabels: true
 AlignConsecutiveShortCaseStatements:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
-  AlignCaseColons: false
+  AlignCaseColons: true
+AllowShortCaseLabelsOnASingleLine: true
+## Structs
 AlignArrayOfStructures: Right
 ## Operands
 AlignOperands: DontAlign
 BreakBeforeBinaryOperators: None
-# Wrapping
+## Wrapping
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
 BreakBeforeBraces: Custom
@@ -70,33 +74,32 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-# Constructors
+## Constructors
 BreakConstructorInitializers: BeforeComma
 PackConstructorInitializers: CurrentLine
-# Inheritance
+## Inheritance
 BreakInheritanceList: BeforeComma
-# Single Line Short Blocks
+## Single Line Short Blocks
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: WithoutElse
-AllowShortCaseLabelsOnASingleLine: true
-# Templates
+## Templates
 BreakBeforeTemplateCloser: true
 BreakTemplateDeclarations: Yes
-# Concepts
+## Concepts
 AllowShortCompoundRequirementOnASingleLine: true
 RequiresExpressionIndentation: OuterScope
 BreakBeforeConceptDeclarations: true
 RequiresClausePosition: OwnLineWithBrace
 IndentRequiresClause: true
-# Chop Arguments and Parameters
-AllowAllArgumentsOnNextLine: false
-AllowAllParametersOfDeclarationOnNextLine: false
-BinPackArguments: false
+## Chop Arguments and Parameters
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackArguments: true
 BinPackParameters: OnePerLine
 # Setting this to `Align` would cause unwanted long indentations when
 # wrapping things.
 AlignAfterOpenBracket: DontAlign
-# `#include` Blocks
+## `#include` Blocks
 IncludeBlocks: Regroup
 # Shio: It is not possible to force the main header to be in its own block
 # at the very top of the file using clang-format.
@@ -118,10 +121,10 @@ IncludeCategories:
   - Regex: '^".*'
     Priority: 4
 IncludeIsMainRegex: '([-_](test|unittest))?$'
-# Pointer and Reference Positions
+## Pointer and Reference Positions
 PointerAlignment: Right
 ReferenceAlignment: Right
-# Spaces
+## Spaces
 SpaceBeforeParens: Never
 SpaceBeforeParensOptions:
   AfterControlStatements: false
@@ -140,10 +143,15 @@ SpacesInAngles: Never
 SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
+## Initializer lists
 # Only available with Clang 22
 # SpaceInEmptyBraces: Always
 Cpp11BracedListStyle: false
+BracedInitializerIndentWidth: 4
 BitFieldColonSpacing: Both
+## Lambdas
+LambdaBodyIndentation: Signature
+AllowShortLambdasOnASingleLine: Inline
 # Others
 IntegerLiteralSeparator:
   Binary: 4
