@@ -3,6 +3,6 @@
           Condition="'' != $([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))"/>
   <PropertyGroup>
     <_usagiIsEngineProject>true</_usagiIsEngineProject>
-    <Usagi_IncludePaths>$(Usagi_IncludeDirs)</Usagi_IncludePaths>
+    <Usagi_IncludePaths>$(Usagi_IncludePaths)</Usagi_IncludePaths>
   </PropertyGroup>
 </Project>
