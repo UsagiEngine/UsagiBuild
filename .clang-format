@@ -16,7 +16,7 @@ ContinuationIndentWidth: 4
 # Cannot be used with bin packing
 # InsertTrailingCommas: Wrapped
 SeparateDefinitionBlocks: Always
-IndentWrappedFunctionNames: true
+IndentWrappedFunctionNames: false
 ## Namespaces
 FixNamespaceComments: true
 ShortNamespaceLines: 0 # To always add comments
@@ -81,7 +81,7 @@ PackConstructorInitializers: CurrentLine
 ## Inheritance
 BreakInheritanceList: BeforeComma
 ## Single Line Short Blocks
-AllowShortFunctionsOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortIfStatementsOnASingleLine: WithoutElse
 ## Templates
 BreakBeforeTemplateCloser: true
@@ -99,7 +99,7 @@ BinPackArguments: true
 BinPackParameters: OnePerLine
 # Setting this to `Align` would cause unwanted long indentations when
 # wrapping things.
-AlignAfterOpenBracket: DontAlign
+AlignAfterOpenBracket: AlwaysBreak
 ## `#include` Blocks
 IncludeBlocks: Regroup
 # Shio: It is not possible to force the main header to be in its own block
@@ -126,8 +126,8 @@ IncludeCategories:
     Priority: 5
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 ## Pointer and Reference Positions
-PointerAlignment: Right
-ReferenceAlignment: Right
+PointerAlignment: Middle
+ReferenceAlignment: Middle
 ## Spaces
 SpaceBeforeParens: Never
 SpaceBeforeParensOptions:
@@ -158,10 +158,10 @@ LambdaBodyIndentation: Signature
 AllowShortLambdasOnASingleLine: Inline
 # Others
 KeepEmptyLinesAtTheStartOfBlocks: true
-PenaltyBreakAssignment: 20
-PenaltyBreakBeforeFirstCallParameter: 100
-PenaltyExcessCharacter: 1000000
-PenaltyReturnTypeOnItsOwnLine: 60
+#PenaltyBreakAssignment: 20
+#PenaltyBreakBeforeFirstCallParameter: 100
+#PenaltyExcessCharacter: 1000000
+#PenaltyReturnTypeOnItsOwnLine: 60
 IntegerLiteralSeparator:
   Binary: 4
   Decimal: 3
