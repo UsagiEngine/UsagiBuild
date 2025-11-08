@@ -1,5 +1,6 @@
 ---
 Language: Cpp
+Standard: Latest
 BasedOnStyle: LLVM
 LineEnding: LF
 ReflowComments: Always
@@ -108,18 +109,21 @@ IncludeBlocks: Regroup
 # include block with the lowest priority, but not in a separate block
 # before all others.
 IncludeCategories:
-  # Shio: Usagi headers are the most specific <...> style include.
-  - Regex: '^<Usagi/.*'
-    Priority: 3
-  # Shio: Standard library headers (approximated as headers without path separators).
-  - Regex: '^<[^/]+>$'
+  # Shio: C++ Standard library headers (no file extension, no path).
+  - Regex: '^<[^./]+>$'
     Priority: 1
+  # Shio: C-style and other library headers with file extensions but no path.
+  - Regex: '^<[^/]+\..+>$'
+    Priority: 2
+  # Shio: Usagi headers are a specific form of <...> include with a path.
+  - Regex: '^<Usagi/.*'
+    Priority: 4
   # Shio: Other headers included with <...>, which will have path separators.
   - Regex: '^<.*'
-    Priority: 2
+    Priority: 3
   # Shio: Project-local headers included with "...".
   - Regex: '^".*'
-    Priority: 4
+    Priority: 5
 IncludeIsMainRegex: '([-_](test|unittest))?$'
 ## Pointer and Reference Positions
 PointerAlignment: Right
@@ -153,6 +157,11 @@ BitFieldColonSpacing: Both
 LambdaBodyIndentation: Signature
 AllowShortLambdasOnASingleLine: Inline
 # Others
+KeepEmptyLinesAtTheStartOfBlocks: true
+PenaltyBreakAssignment: 20
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
 IntegerLiteralSeparator:
   Binary: 4
   Decimal: 3
