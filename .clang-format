@@ -20,6 +20,7 @@ IndentWrappedFunctionNames: false
 ## Namespaces
 FixNamespaceComments: true
 ShortNamespaceLines: 0 # To always add comments
+CompactNamespaces: true
 ## Usings
 SortUsingDeclarations: LexicographicNumeric
 ## Alignments
@@ -35,7 +36,9 @@ AlignConsecutiveDeclarations:
   AcrossComments: true
   AlignCompound: false
   AlignFunctionDeclarations: false
-AlignTrailingComments: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
 AlignConsecutiveBitFields:
   Enabled: true
   AcrossEmptyLines: true
