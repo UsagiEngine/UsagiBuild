@@ -39,10 +39,12 @@ AlignConsecutiveDeclarations:
 AlignTrailingComments:
   Kind: Always
   OverEmptyLines: 1
+## bit-fields
 AlignConsecutiveBitFields:
   Enabled: true
   AcrossEmptyLines: true
   AcrossComments: true
+BitFieldColonSpacing: Both
 ## switch-case
 IndentCaseBlocks: false
 IndentCaseLabels: true
@@ -52,11 +54,16 @@ AlignConsecutiveShortCaseStatements:
   AcrossComments: true
   AlignCaseColons: true
 AllowShortCaseLabelsOnASingleLine: true
+## if-else
+#BreakAfterOpenBracketIf: true - clang 22
 ## Structs
 AlignArrayOfStructures: Right
 ## Operands
 AlignOperands: DontAlign
 BreakBeforeBinaryOperators: None
+## Enums
+AllowShortEnumsOnASingleLine: false
+EnumTrailingComma: Insert
 ## Wrapping
 BreakBeforeTernaryOperators: true
 BreakStringLiterals: true
@@ -86,6 +93,7 @@ BreakInheritanceList: BeforeComma
 ## Single Line Short Blocks
 AllowShortFunctionsOnASingleLine: InlineOnly
 AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortBlocksOnASingleLine: Empty
 ## Templates
 BreakBeforeTemplateCloser: true
 BreakTemplateDeclarations: Yes
@@ -102,7 +110,8 @@ BinPackArguments: true
 BinPackParameters: OnePerLine
 # Setting this to `Align` would cause unwanted long indentations when
 # wrapping things.
-AlignAfterOpenBracket: AlwaysBreak
+# todo: currently it seems this options will cause misalignment of parenthesis around `template if`
+AlignAfterOpenBracket: BlockIndent
 ## `#include` Blocks
 IncludeBlocks: Regroup
 # Shio: It is not possible to force the main header to be in its own block
@@ -143,19 +152,20 @@ SpaceBeforeParensOptions:
   AfterRequiresInClause: false
   AfterRequiresInExpression: false
   BeforeNonEmptyParentheses: false
-SpaceBeforeCpp11BracedList: true
 SpaceBeforeCtorInitializerColon: true
 SpaceInEmptyParentheses: false
 SpacesInAngles: Never
 SpacesInConditionalStatement: false
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
-## Initializer lists
+## Initializer/braced lists
 # Only available with Clang 22
 # SpaceInEmptyBraces: Always
+SpaceBeforeCpp11BracedList: true
 Cpp11BracedListStyle: false
 BracedInitializerIndentWidth: 4
-BitFieldColonSpacing: Both
+# clang 22
+#BreakAfterOpenBracketBracedList: ture
 ## Lambdas
 LambdaBodyIndentation: Signature
 AllowShortLambdasOnASingleLine: Inline
