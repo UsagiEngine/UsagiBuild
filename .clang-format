@@ -16,7 +16,7 @@ ContinuationIndentWidth: 4
 # Cannot be used with bin packing
 # InsertTrailingCommas: Wrapped
 SeparateDefinitionBlocks: Always
-IndentWrappedFunctionNames: false
+IndentWrappedFunctionNames: true
 ## Namespaces
 FixNamespaceComments: true
 ShortNamespaceLines: 0 # To always add comments
