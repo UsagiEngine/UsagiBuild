@@ -9,6 +9,10 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="UnitTest|x64">
+      <Configuration>UnitTest</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
@@ -21,6 +25,9 @@
     <!-- ConfigurationType MUST be specified BEFORE importing Microsoft.Cpp.props. -->
     <!-- Otherwise all projects become Application. -->
     <ConfigurationType>$StaticLibrary|Application$</ConfigurationType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='UnitTest'">
+    <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
   <!-- But include paths must be defined AFTER importing Microsoft.Cpp.props. -->

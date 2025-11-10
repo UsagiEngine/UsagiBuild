@@ -10,6 +10,10 @@
     <Usagi_CppDisableBuiltinStdForwardLike>false</Usagi_CppDisableBuiltinStdForwardLike>
   </PropertyGroup>
 
+  <PropertyGroup Label="UnitTesting">
+    <Usagi_UnitTestUseConfiguration>Debug</Usagi_UnitTestUseConfiguration>
+  </PropertyGroup>
+
   <PropertyGroup Label="CppMetaprogramming">
     <!-- Shio: Sets the maximum recursion depth for constexpr function evaluations.
          A high value is necessary for complex compile-time computations. -->

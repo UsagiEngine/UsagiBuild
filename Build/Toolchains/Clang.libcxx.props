@@ -59,7 +59,7 @@
   <!-- Shio: Linker library paths for different configurations. -->
 
   <!-- x64|Debug -->
-  <ItemDefinitionGroup Condition="'$(Platform)|$(Configuration)'=='x64|Debug' and '$(Usagi_CppEnableLibCxx)' == 'true'">
+  <ItemDefinitionGroup Condition="'$(Platform)|$(Usagi_SolutionLinkConfiguration)'=='x64|Debug' and '$(Usagi_CppEnableLibCxx)' == 'true'">
     <!--
       Set the C Runtime to Static Debug (/MTd).
       This matches the static libc++.lib you just built.
@@ -73,7 +73,6 @@
         This provides the exception handling ABI functions.
       -->
       <AdditionalDependencies>msvcprtd.lib;libvcruntimed.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <!--
         Flag: /NODEFAULTLIB:msvcprtd.lib
         Tells the linker not to link the default MSVC standard debug library.
@@ -84,7 +83,7 @@
   </ItemDefinitionGroup>
 
   <!-- x64|Release & RelWithDebInfo -->
-  <ItemDefinitionGroup Condition="(('$(Platform)|$(Configuration)'=='x64|Release') or ('$(Platform)|$(Configuration)'=='x64|RelWithDebInfo')) and '$(Usagi_CppEnableLibCxx)' == 'true'">
+  <ItemDefinitionGroup Condition="(('$(Platform)|$(Usagi_SolutionLinkConfiguration)'=='x64|Release') or ('$(Platform)|$(Configuration)'=='x64|RelWithDebInfo')) and '$(Usagi_CppEnableLibCxx)' == 'true'">
     <!--
       Set the C Runtime to Static Release (/MT).
       This matches the static libc++.lib you just built.
@@ -101,13 +100,18 @@
       <!-- As a workaround, I must go to libc++'s `exception_msvc.ipp` and comment out its -->
       <!-- function definition. -->
       <AdditionalDependencies>msvcprt.lib;libvcruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\RelWithDebInfo;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <!--
         Flag: /NODEFAULTLIB:msvcprt.lib
         Tells the linker not to link the default MSVC standard release library.
       -->
       <!-- This library is required for exception handling. -->
       <!-- <AdditionalOptions>%(AdditionalOptions) /NODEFAULTLIB:msvcprt.lib</AdditionalOptions>-->
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalLibraryDirectories>$(LIBCXXInstallDir)\lib\$(Usagi_SolutionLinkConfiguration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

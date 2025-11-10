@@ -1,0 +1,8 @@
+﻿<Project>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>_USAGI_UNIT_TESTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <Import Project="Default$(Usagi_UnitTestUseConfiguration).props"/>
+</Project>

@@ -4,7 +4,16 @@
     <Usagi_IncludePaths>$(SolutionDir)Modules;$(Usagi_IncludePaths)</Usagi_IncludePaths>
   </PropertyGroup>
   <PropertyGroup>
+    <Usagi_SolutionLinkConfiguration>$(Configuration)</Usagi_SolutionLinkConfiguration>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='UnitTest'">
+    <Usagi_SolutionLinkConfiguration>$(Usagi_UnitTestUseConfiguration)</Usagi_SolutionLinkConfiguration>
+  </PropertyGroup>
+  <PropertyGroup Condition="(('$(Configuration)'=='Release') or ('$(Configuration)'=='RelWithDebInfo'))">
+    <Usagi_SolutionLinkConfiguration>Release</Usagi_SolutionLinkConfiguration>
+  </PropertyGroup>
+  <PropertyGroup>
     <Usagi_IncludePaths>$(SolutionDir)Engine;$(Usagi_IncludePaths)</Usagi_IncludePaths>
-    <Usagi_LibraryPaths>$(SolutionDir)$(Platform)\$(Configuration);$(Usagi_LibraryPaths)</Usagi_LibraryPaths>
+    <Usagi_LibraryPaths>$(SolutionDir)$(Platform)\$(Usagi_SolutionLinkConfiguration);$(Usagi_LibraryPaths)</Usagi_LibraryPaths>
   </PropertyGroup>
 </Project>

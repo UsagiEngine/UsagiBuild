@@ -11,6 +11,7 @@
     <Content Include="Configs\DefaultRelease.props" />
     <Content Include="Configs\DefaultTarget.props" />
     <Content Include="Configs\DefaultPaths.props" />
+    <Content Include="Configs\DefaultUnitTest.props" />
     <Content Include="Toolchains\Clang.cxx26.props" />
     <Content Include="Toolchains\Clang.libcxx.compatibility.props" />
     <Content Include="Toolchains\Clang.libcxx.props" />
