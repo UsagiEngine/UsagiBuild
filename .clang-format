@@ -1,72 +1,35 @@
+# Shio: This is a clang-format configuration file for the UsagiBuild project.
+  # The settings are organized by language feature for better readability and
+  # maintenance.
+
 ---
+#==============================================================================
+# Core Style & Formatting
+#==============================================================================
 Language: Cpp
 Standard: Latest
 BasedOnStyle: LLVM
+
+#==============================================================================
+# General: Layout, Whitespace & Wrapping
+#==============================================================================
+# --- Line Endings & File Boundaries ---
 LineEnding: LF
-ReflowComments: Always
-## Lines and Indentations
-TabWidth: 4
-AccessModifierOffset: -4
-IndentWidth: 4
 InsertNewlineAtEOF: true
-MacroBlockBegin: ''
-MacroBlockEnd: ''
-MaxEmptyLinesToKeep: 2
+
+# --- Indentation and Width ---
+TabWidth: 4
+IndentWidth: 4
 ContinuationIndentWidth: 4
+
+# --- Wrapping & Line Breaks ---
+BreakBeforeBinaryOperators: None
+BreakStringLiterals: true
 # Cannot be used with bin packing
 # InsertTrailingCommas: Wrapped
-SeparateDefinitionBlocks: Always
-IndentWrappedFunctionNames: true
-## Namespaces
-FixNamespaceComments: true
-ShortNamespaceLines: 0 # To always add comments
-CompactNamespaces: true
-## Usings
-SortUsingDeclarations: LexicographicNumeric
-## Alignments
-AlignEscapedNewlines: LeftWithLastLine
-AlignConsecutiveAssignments:
-  Enabled: true
-  AcrossEmptyLines: false
-  AcrossComments: true
-  PadOperators: true
-AlignConsecutiveDeclarations:
-  Enabled: true
-  AcrossEmptyLines: false
-  AcrossComments: true
-  AlignCompound: false
-  AlignFunctionDeclarations: false
-AlignTrailingComments:
-  Kind: Always
-  OverEmptyLines: 1
-## bit-fields
-AlignConsecutiveBitFields:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: true
-BitFieldColonSpacing: Both
-## switch-case
-IndentCaseBlocks: false
-IndentCaseLabels: true
-AlignConsecutiveShortCaseStatements:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: true
-  AlignCaseColons: true
-AllowShortCaseLabelsOnASingleLine: true
-## if-else
-#BreakAfterOpenBracketIf: true - clang 22
-## Structs
-AlignArrayOfStructures: Right
-## Operands
-AlignOperands: DontAlign
-BreakBeforeBinaryOperators: None
-## Enums
-AllowShortEnumsOnASingleLine: false
-EnumTrailingComma: Insert
-## Wrapping
-BreakBeforeTernaryOperators: true
-BreakStringLiterals: true
+
+# Shio: We use a custom brace wrapping configuration. All BraceWrapping options
+# are consolidated here.
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterCaseLabel: true
@@ -85,34 +48,55 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
-## Constructors
-BreakConstructorInitializers: BeforeComma
-PackConstructorInitializers: CurrentLine
-## Inheritance
-BreakInheritanceList: BeforeComma
-## Single Line Short Blocks
-AllowShortFunctionsOnASingleLine: InlineOnly
-AllowShortIfStatementsOnASingleLine: WithoutElse
+
+# --- Alignment ---
+AlignEscapedNewlines: LeftWithLastLine
+AlignOperands: DontAlign
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+  AlignCompound: false
+  AlignFunctionDeclarations: false
+
+# --- Spacing ---
+SpaceBeforeParens: Never
+SpaceBeforeParensOptions:
+  AfterControlStatements: false
+  AfterForeachMacros: true
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros: true
+  AfterOverloadedOperator: false
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInConditionalStatement: false
+
+# --- Empty Lines & Blocks ---
+MaxEmptyLinesToKeep: 2
+KeepEmptyLinesAtTheStartOfBlocks: true
+SeparateDefinitionBlocks: Always
 AllowShortBlocksOnASingleLine: Empty
-## Templates
-BreakBeforeTemplateCloser: true
-BreakTemplateDeclarations: Yes
-## Concepts
-AllowShortCompoundRequirementOnASingleLine: true
-RequiresExpressionIndentation: OuterScope
-BreakBeforeConceptDeclarations: true
-RequiresClausePosition: OwnLineWithBrace
-IndentRequiresClause: true
-## Chop Arguments and Parameters
-AllowAllArgumentsOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: true
-BinPackArguments: true
-BinPackParameters: OnePerLine
-# Setting this to `Align` would cause unwanted long indentations when
-# wrapping things.
-# todo: currently it seems this options will cause misalignment of parenthesis around `template if`
-AlignAfterOpenBracket: BlockIndent
-## `#include` Blocks
+
+#==============================================================================
+# General: Comments
+#==============================================================================
+ReflowComments: Always
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
+
+#==============================================================================
+# General: Includes & Usings
+#==============================================================================
 IncludeBlocks: Regroup
 # Shio: It is not possible to force the main header to be in its own block
 # at the very top of the file using clang-format.
@@ -137,46 +121,126 @@ IncludeCategories:
   - Regex: '^".*'
     Priority: 5
 IncludeIsMainRegex: '([-_](test|unittest))?$'
-## Pointer and Reference Positions
+SortUsingDeclarations: LexicographicNumeric
+
+#==============================================================================
+# General: Pointers, References, & Literals
+#==============================================================================
 PointerAlignment: Middle
 ReferenceAlignment: Middle
-## Spaces
-SpaceBeforeParens: Never
-SpaceBeforeParensOptions:
-  AfterControlStatements: false
-  AfterForeachMacros: true
-  AfterFunctionDefinitionName: false
-  AfterFunctionDeclarationName: false
-  AfterIfMacros: true
-  AfterOverloadedOperator: false
-  AfterRequiresInClause: false
-  AfterRequiresInExpression: false
-  BeforeNonEmptyParentheses: false
+IntegerLiteralSeparator:
+  Binary: 4
+  Decimal: 3
+  Hex: 4
+
+#==============================================================================
+# Language: Macros
+#==============================================================================
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+
+#==============================================================================
+# Language: Namespaces
+#==============================================================================
+FixNamespaceComments: true
+ShortNamespaceLines: 0 # To always add comments
+CompactNamespaces: true
+
+#==============================================================================
+# Language: Classes, Structs, Unions, Constructors & Bit-Fields
+#==============================================================================
+AccessModifierOffset: -4
+AlignArrayOfStructures: Right
+BreakInheritanceList: BeforeComma
+
+# --- Constructors ---
+BreakConstructorInitializers: BeforeComma
+PackConstructorInitializers: CurrentLine
 SpaceBeforeCtorInitializerColon: true
-SpaceInEmptyParentheses: false
+
+# --- Bit-Fields ---
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+BitFieldColonSpacing: Both
+
+#==============================================================================
+# Language: Functions & Lambdas
+#==============================================================================
+IndentWrappedFunctionNames: true
+AllowShortFunctionsOnASingleLine: InlineOnly
+
+# --- Parameters & Arguments ---
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackArguments: true
+BinPackParameters: OnePerLine
+# Setting this to `Align` would cause unwanted long indentations when
+# wrapping things.
+# todo: currently it seems this options will cause misalignment of parenthesis around `template if`
+# todo: As of clang-format 22 this option is a bool with the previous option of Align replaced with true, DontAlign replaced with false, and the options of AlwaysBreak and BlockIndent replaced with true and with setting of new style options using BreakAfterOpenBracketBracedList, BreakAfterOpenBracketFunction, BreakAfterOpenBracketIf, BreakBeforeCloseBracketBracedList, BreakBeforeCloseBracketFunction, and BreakBeforeCloseBracketIf.
+AlignAfterOpenBracket: BlockIndent
+
+# --- Lambdas ---
+LambdaBodyIndentation: Signature
+AllowShortLambdasOnASingleLine: Inline
+
+#==============================================================================
+# Language: Templates & Concepts
+#==============================================================================
+BreakBeforeTemplateCloser: true
+BreakTemplateDeclarations: Yes
 SpacesInAngles: Never
-SpacesInConditionalStatement: false
-SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false
-## Initializer/braced lists
-# Only available with Clang 22
-# SpaceInEmptyBraces: Always
+
+# --- Concepts ---
+AllowShortCompoundRequirementOnASingleLine: true
+RequiresExpressionIndentation: OuterScope
+BreakBeforeConceptDeclarations: true
+RequiresClausePosition: OwnLineWithBrace
+IndentRequiresClause: true
+
+#==============================================================================
+# Language: Control Flow (if, switch, for, etc.)
+#==============================================================================
+BreakBeforeTernaryOperators: true
+
+# --- If-Else ---
+AllowShortIfStatementsOnASingleLine: WithoutElse
+#BreakAfterOpenBracketIf: true - clang 22
+
+# --- Switch-Case ---
+IndentCaseBlocks: false
+IndentCaseLabels: true
+AllowShortCaseLabelsOnASingleLine: true
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCaseColons: true
+
+#==============================================================================
+# Language: Enums
+#==============================================================================
+AllowShortEnumsOnASingleLine: false
+EnumTrailingComma: Insert
+
+#==============================================================================
+# Language: C++11 Initializer Lists & Casts
+#==============================================================================
 SpaceBeforeCpp11BracedList: true
 Cpp11BracedListStyle: false
 BracedInitializerIndentWidth: 4
 # clang 22
 #BreakAfterOpenBracketBracedList: ture
-## Lambdas
-LambdaBodyIndentation: Signature
-AllowShortLambdasOnASingleLine: Inline
-# Others
-KeepEmptyLinesAtTheStartOfBlocks: true
+SpacesInCStyleCastParentheses: false
+
+#==============================================================================
+# Miscellaneous
+#==============================================================================
+# --- Penalties (disabled) ---
 #PenaltyBreakAssignment: 20
 #PenaltyBreakBeforeFirstCallParameter: 100
 #PenaltyExcessCharacter: 1000000
 #PenaltyReturnTypeOnItsOwnLine: 60
-IntegerLiteralSeparator:
-  Binary: 4
-  Decimal: 3
-  Hex: 4
 ...
