@@ -21,6 +21,7 @@
     <!-- Shio: Sets the maximum instantiation depth for templates. This is
          increased to support advanced template metaprogramming. -->
     <Usagi_CppMaximumTemplateDepth>25565</Usagi_CppMaximumTemplateDepth>
+    <Usagi_CppMaximumTemplateBacktraceDepth>0</Usagi_CppMaximumTemplateBacktraceDepth>
     <!-- Shio: Limits the backtrace length for constexpr evaluation errors.
          Set to 0 to disable the backtrace for cleaner error messages. -->
     <Usagi_CppConstexprBacktraceLimit>0</Usagi_CppConstexprBacktraceLimit>

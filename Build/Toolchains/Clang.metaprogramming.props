@@ -4,6 +4,7 @@
     <!-- Shio: Add metaprogramming limits. -->
     <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumConstexprDepth)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-depth=$(Usagi_CppMaximumConstexprDepth)</Usagi_ClangArgs>
     <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-depth=$(Usagi_CppMaximumTemplateDepth)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_CppMaximumTemplateBacktraceDepth)' != ''">$(Usagi_ClangArgs) -Xclang -ftemplate-backtrace-limit=$(Usagi_CppMaximumTemplateBacktraceDepth)</Usagi_ClangArgs>
     <Usagi_ClangArgs Condition="'$(Usagi_CppConstexprBacktraceLimit)' != ''">$(Usagi_ClangArgs) -Xclang -fconstexpr-backtrace-limit=$(Usagi_CppConstexprBacktraceLimit)</Usagi_ClangArgs>
   </PropertyGroup>
 </Project>
