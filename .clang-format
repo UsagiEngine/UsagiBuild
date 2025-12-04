@@ -9,6 +9,7 @@
 Language: Cpp
 Standard: Latest
 BasedOnStyle: LLVM
+ColumnLimit: 80
 
 #==============================================================================
 # General: Layout, Whitespace & Wrapping
@@ -26,10 +27,10 @@ ContinuationIndentWidth: 4
 BreakBeforeBinaryOperators: None
 BreakStringLiterals: true
 # Cannot be used with bin packing
-# InsertTrailingCommas: Wrapped
+#InsertTrailingCommas: Wrapped
 
-# Shio: We use a custom brace wrapping configuration. All BraceWrapping options
-# are consolidated here.
+## Shio: We use a custom brace wrapping configuration. All BraceWrapping options
+## are consolidated here.
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterCaseLabel: true
@@ -48,6 +49,7 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
+SpaceInEmptyBraces: Always
 
 # --- Alignment ---
 AlignEscapedNewlines: LeftWithLastLine
@@ -61,11 +63,11 @@ AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: false
   AcrossComments: true
-  AlignCompound: false
+  AlignCompound: true
   AlignFunctionDeclarations: false
 
 # --- Spacing ---
-SpaceBeforeParens: Never
+SpaceBeforeParens: Custom
 SpaceBeforeParensOptions:
   AfterControlStatements: false
   AfterForeachMacros: true
@@ -73,7 +75,7 @@ SpaceBeforeParensOptions:
   AfterFunctionDeclarationName: false
   AfterIfMacros: true
   AfterOverloadedOperator: false
-  AfterRequiresInClause: false
+  AfterRequiresInClause: true
   AfterRequiresInExpression: false
   BeforeNonEmptyParentheses: false
 SpaceInEmptyParentheses: false
@@ -128,6 +130,7 @@ SortUsingDeclarations: LexicographicNumeric
 #==============================================================================
 PointerAlignment: Middle
 ReferenceAlignment: Middle
+QualifierAlignment: Left
 IntegerLiteralSeparator:
   Binary: 4
   Decimal: 3
@@ -150,12 +153,14 @@ CompactNamespaces: true
 # Language: Classes, Structs, Unions, Constructors & Bit-Fields
 #==============================================================================
 AccessModifierOffset: -4
-AlignArrayOfStructures: Right
+# This causes initializer lists to align weirdly
+AlignArrayOfStructures: None
 BreakInheritanceList: BeforeComma
+BreakArrays: true
 
 # --- Constructors ---
 BreakConstructorInitializers: BeforeComma
-PackConstructorInitializers: CurrentLine
+PackConstructorInitializers: NextLineOnly
 SpaceBeforeCtorInitializerColon: true
 
 # --- Bit-Fields ---
@@ -174,17 +179,22 @@ AllowShortFunctionsOnASingleLine: InlineOnly
 # --- Parameters & Arguments ---
 AllowAllArgumentsOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
-BinPackArguments: true
+BinPackArguments: false
 BinPackParameters: OnePerLine
+BreakAfterOpenBracketFunction: true
+BreakBeforeCloseBracketFunction: true
+BreakFunctionDefinitionParameters: false
+
 # Setting this to `Align` would cause unwanted long indentations when
 # wrapping things.
+# It also causes wrong indentation of wrapped initializer list elements.
 # todo: currently it seems this options will cause misalignment of parenthesis around `template if`
 # todo: As of clang-format 22 this option is a bool with the previous option of Align replaced with true, DontAlign replaced with false, and the options of AlwaysBreak and BlockIndent replaced with true and with setting of new style options using BreakAfterOpenBracketBracedList, BreakAfterOpenBracketFunction, BreakAfterOpenBracketIf, BreakBeforeCloseBracketBracedList, BreakBeforeCloseBracketFunction, and BreakBeforeCloseBracketIf.
-AlignAfterOpenBracket: BlockIndent
+AlignAfterOpenBracket: false
 
 # --- Lambdas ---
 LambdaBodyIndentation: Signature
-AllowShortLambdasOnASingleLine: Inline
+AllowShortLambdasOnASingleLine: All
 
 #==============================================================================
 # Language: Templates & Concepts
@@ -197,7 +207,7 @@ SpacesInAngles: Never
 AllowShortCompoundRequirementOnASingleLine: true
 RequiresExpressionIndentation: OuterScope
 BreakBeforeConceptDeclarations: true
-RequiresClausePosition: OwnLineWithBrace
+RequiresClausePosition: OwnLine
 IndentRequiresClause: true
 
 #==============================================================================
@@ -207,7 +217,8 @@ BreakBeforeTernaryOperators: true
 
 # --- If-Else ---
 AllowShortIfStatementsOnASingleLine: WithoutElse
-#BreakAfterOpenBracketIf: true - clang 22
+BreakAfterOpenBracketIf: true
+BreakBeforeCloseBracketIf: false
 
 # --- Switch-Case ---
 IndentCaseBlocks: false
@@ -229,18 +240,20 @@ EnumTrailingComma: Insert
 # Language: C++11 Initializer Lists & Casts
 #==============================================================================
 SpaceBeforeCpp11BracedList: true
-Cpp11BracedListStyle: false
+Cpp11BracedListStyle: Block
 BracedInitializerIndentWidth: 4
-# clang 22
-#BreakAfterOpenBracketBracedList: ture
+BreakAfterOpenBracketBracedList: true
+BreakBeforeCloseBracketBracedList: true
 SpacesInCStyleCastParentheses: false
 
 #==============================================================================
 # Miscellaneous
 #==============================================================================
-# --- Penalties (disabled) ---
+BreakAfterAttributes: Always
+# --- Penalties ---
 #PenaltyBreakAssignment: 20
 #PenaltyBreakBeforeFirstCallParameter: 100
+#PenaltyBreakBeforeMemberAccess: 1000
 #PenaltyExcessCharacter: 1000000
 #PenaltyReturnTypeOnItsOwnLine: 60
-...
+#...
