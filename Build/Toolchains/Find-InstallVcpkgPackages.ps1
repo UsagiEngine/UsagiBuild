@@ -4,8 +4,12 @@
     
 .EXAMPLE
     .\Find-InstallVcpkgPackage.ps1 imgui
+    .\Find-InstallVcpkgPackage.ps1 -ForceReinstall fmt
 #>
 param(
+    [Parameter(Mandatory=$false)]
+    [switch]$ForceReinstall,
+    
     [Parameter(Mandatory=$true, Position=0, ValueFromRemainingArguments=$true)]
     [string[]]$SearchQueries
 )
@@ -32,7 +36,7 @@ foreach ($query in $SearchQueries) {
         $parts = $line.Trim() -split '\s+', 2
         $pkgName = $parts[0]
         
-        # FIXED: Regex now permits brackets [ ] for feature packages
+        # Regex permits brackets [ ] for feature packages
         if ($pkgName -match '^[a-z0-9][a-z0-9_\-\[\]]*$') {
             if (-not $uniqueResults.Contains($pkgName)) {
                 $uniqueResults[$pkgName] = $line
@@ -75,8 +79,22 @@ if ([string]::IsNullOrWhiteSpace($packagesInput)) {
 $packagesToInstall = $packagesInput -split '\s+' | Where-Object { $_ -ne "" }
 
 # --- Step 4: Install ---
-Write-Host "`n>>> Installing: $($packagesToInstall -join ', ')..." -ForegroundColor Cyan
-vcpkg install $packagesToInstall @CommonArgs --recurse
+
+# Handle Force Reinstall Logic
+if ($ForceReinstall) {
+    # FIX: Strip features (everything after and including '[') for removal
+    $packagesToRemove = $packagesToInstall | ForEach-Object {
+        ($_ -split '\[')[0]
+    } | Select-Object -Unique
+    
+    Write-Host "`n>>> ForceReinstall active: Removing base packages ($($packagesToRemove -join ', '))..." -ForegroundColor Yellow
+    vcpkg remove $packagesToRemove --recurse @CommonArgs
+}
+
+Write-Host "`n>>> Installing (with --recurse): $($packagesToInstall -join ', ')..." -ForegroundColor Cyan
+
+# Added --recurse as requested
+vcpkg install $packagesToInstall --recurse @CommonArgs
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`n>>> Installation Complete." -ForegroundColor Green
