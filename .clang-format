@@ -22,6 +22,8 @@ InsertNewlineAtEOF: true
 TabWidth: 4
 IndentWidth: 4
 ContinuationIndentWidth: 4
+IndentExternBlock: NoIndent
+IndentPPDirectives: BeforeHash
 
 # --- Wrapping & Line Breaks ---
 BreakBeforeBinaryOperators: None
