@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.Build.NoTargets">
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1cd86858-a353-44e6-9cd6-8efb03cbca72}</ProjectGuid>
+    <TargetFramework>net10.0</TargetFramework>
+	<Platforms>x64;AnyCPU</Platforms>
+    <IsPackable>false</IsPackable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProjectGuid>{1CD86858-A353-44E6-9CD6-8EFB03CBCA72}</ProjectGuid>
     <RootNamespace>UsagiBuild</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
@@ -18,7 +24,7 @@
     <Content Include="Toolchains\Clang.metaprogramming.props" />
     <Content Include="Toolchains\Clang.props" />
     <Content Include="Toolchains\Clang.version.props" />
-    <Content Include="Toolchains\Find-InstallVcpkgPackages.ps1" />
     <Content Include="Toolchains\Vcpkg.props" />
+    <Content Include="Toolchains\Find-InstallVcpkgPackages.ps1" />
   </ItemGroup>
 </Project>

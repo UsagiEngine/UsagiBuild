@@ -1,19 +1,139 @@
 <Solution>
   <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="RelWithDebInfo" />
+    <BuildType Name="UnitTest" />
     <Platform Name="Any CPU" />
     <Platform Name="x64" />
   </Configurations>
+  <Folder Name="/Build/">
+    <Project Path="Build/UsagiBuild.msbuildproj" Type="C#" Id="1cd86858-a353-44e6-9cd6-8efb03cbca72">
+      <BuildType Project="Debug" />
+      <Platform Solution="*|Any CPU" Project="x86" />
+      <Platform Solution="Release|x64" Project="x86" />
+      <Platform Solution="RelWithDebInfo|x64" Project="x86" />
+      <Platform Solution="UnitTest|x64" Project="x86" />
+      <Build Solution="UnitTest|x64" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Build/LLVM/">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/AST/clangAST.vcxproj" Id="4d3ac14c-ca5a-3192-86fc-7d5009293b72">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Basic/clangBasic.vcxproj" Id="6e6d9263-1867-3842-bffd-5e23c9d4e130">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Driver/clangDriver.vcxproj" Id="6cc3bbe7-a372-3131-8970-fd5d4ff88bd7">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Parse/clangParse.vcxproj" Id="cc7fe4a4-fd1a-301a-83d5-cae0d3377ec2">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Sema/clangSema.vcxproj" Id="0fe0c32f-094b-3742-9d1d-c9e2cea02962">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/tools/driver/clang.vcxproj" Id="a95a56f8-2878-3892-9af4-e934dce7cfc7">
+      <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+  </Folder>
+  <Folder Name="/Demos/">
+    <Project Path="Demos/DemoStaticReflection/DemoStaticReflection.vcxproj" Id="a6ffbbd4-9ef9-4370-9717-c8f2b75d79e1">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Demos/DemoTerminalUI/DemoTerminalUI.vcxproj" Id="6fa38925-2cd3-4409-b85a-9481d0f097b6">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/" />
+  <Folder Name="/Modules/Applications/">
+    <Project Path="Modules/Usagi/Modules/Applications/GeneralApplication/GeneralApplication.vcxproj" Id="625986c0-ae7a-4477-900b-3eb27aa1f280">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Common/">
+    <Project Path="Modules/Usagi/Modules/Common/Color/Color.vcxproj" Id="eb6c6b93-5b69-4056-a2ed-829f0f2fc4de">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Modules/Usagi/Modules/Common/Math/Math.vcxproj" Id="d4e79012-d153-40c0-b62d-fc9b31495442">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Frontend/">
+    <Project Path="Modules/Usagi/Modules/Frontend/ImGuiWindowing/ImGuiWindowing.vcxproj" Id="14b96637-4743-44b0-b761-a924e46e5420">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Gameplay/">
+    <Project Path="Modules/Usagi/Modules/Gameplay/PrefabAssembly/PrefabAssembly.vcxproj" Id="e2b70951-39fb-4f2a-9ea6-925523e1d4d7">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Interop/">
+    <Project Path="Modules/Usagi/Modules/Interop/UnrealEngine/UnrealEngine.vcxproj" Id="e3ca9751-52f8-4f78-abc8-7bca582b389e">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/IO/">
+    <Project Path="Modules/Usagi/Modules/IO/Networking/Networking.vcxproj" Id="d47cd228-b9f8-4458-b600-c5d0bf473f54">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Resources/">
+    <Project Path="Modules/Usagi/Modules/Resources/ResJson/ResJson.vcxproj" Id="b77582cc-ec91-413a-b942-38e38cc90e16">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+      <BuildType Solution="UnitTest|x64" Project="Release" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Runtime/">
+    <Project Path="Modules/Usagi/Modules/Runtime/Logging/Logging.vcxproj" Id="d1b2eab6-a837-45ab-9afd-2e02cb440796">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Modules/Usagi/Modules/Runtime/StateMachines/StateMachines.vcxproj" Id="e33b7ec5-8b79-4893-9c79-4af0f2c71dc9">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Modules/Scripting/" />
+  <Folder Name="/Modules/Scripting/Quirrel/">
+    <Project Path="Modules/Usagi/Modules/Scripting/Quirrel/QuirrelCompiler/QuirrelCompiler.vcxproj" Id="26ac589c-a360-4a72-a8dd-2a54d7fb42a9">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Modules/Usagi/Modules/Scripting/Quirrel/QuirrelLibrary/QuirrelLibrary.vcxproj" Id="454558aa-5fb8-42e1-b7c5-11a833891c7a">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Modules/Usagi/Modules/Scripting/Quirrel/QuirrelScripting.vcxproj" Id="df92a7df-7907-4bd7-8153-ad25f30047b4">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Platforms/">
+    <Project Path="Modules/Usagi/Modules/Platforms/WinCommon/WinCommon.vcxproj" Id="cd325def-b361-4cc5-87ac-bf51588dbf2d">
+      <BuildType Solution="RelWithDebInfo|*" Project="Debug" />
+      <BuildType Solution="UnitTest|*" Project="Release" />
+    </Project>
+  </Folder>
   <Folder Name="/Projects/" />
   <Folder Name="/Projects/3CM/">
-    <Project Path="Projects\3CM\CaviaUtilities\CaviaNetworkDebugger\CaviaNetworkDebugger.vcxproj">
-      <Configuration Solution="Debug|Any CPU" Project="Debug|x64" />
-      <Configuration Solution="Release|Any CPU" Project="Release|x64" />
+    <Project Path="Projects/3CM/CaviaUnifiedGameplay/CaviaUnifiedGameplay.vcxproj" Id="7582581e-f8a6-444e-af52-52f11ef125ed">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+    <Project Path="Projects/3CM/CaviaUtilities/CaviaNetworkDebugger/CaviaNetworkDebugger.vcxproj" Id="68e1ffa1-2244-4840-a4c1-d7988435b8b6">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
   </Folder>
-  <Folder Name="/Templates/">
-    <Project Path="Templates\Reference\ConsoleApplication1\ConsoleApplication1.vcxproj">
-      <Configuration Solution="Debug|Any CPU" Project="Debug|Win32" />
-      <Configuration Solution="Release|Any CPU" Project="Release|Win32" />
+  <Folder Name="/Projects/Tools/">
+    <Project Path="Projects/Tools/System/ToolLocalServiceDaemon/ToolLocalServiceDaemon.vcxproj" Id="adf769e1-fd7f-400e-a3fa-5ae38cce89ed">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
   </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/TestReflection/TestReflection.vcxproj" Id="c06011e4-c57f-47a4-a81f-e5ec70cf7e67">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Project Path="Engine/Usagi/Usagi.vcxproj" Id="f9061c06-bce6-416b-9aeb-31351810b7ba">
+    <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+  </Project>
+  <Project Path="Scripts/Scripts.pssproj" Type="f5034706-568f-408a-b7b3-4d38c6db8a32" Id="6cafc0c6-a428-4d30-a9f9-700e829fea51">
+    <Platform Project="AnyCPU" />
+  </Project>
 </Solution>
