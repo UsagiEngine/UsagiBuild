@@ -32,6 +32,8 @@
 
     <!-- Shio: Add various warning flags and workarounds. -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
+    <!-- Ignore unknown arguments. -->
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-error=unknown-argument</Usagi_ClangArgs>
     <!-- clang does not really support this argument and it assumes utf-8 input by default. -->
     <!-- <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs> -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) /source-charset:utf-8</Usagi_ClangArgs>
