@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="clangDebug.Session.props" Condition="Exists('clangDebug.Session.props')" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{49EF691B-B6DA-4DC9-A144-4AA4EE77C675}</ProjectGuid>
+    <RootNamespace>clangDebug</RootNamespace>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <PropertyGroup Label="Globals" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetProject></TargetProject>
+    <TargetFile></TargetFile>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ItemGroup>
+    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)clangDebug.xml">
+      <Context>Project</Context>
+    </PropertyPageSchema>
+  </ItemGroup>
+  <PropertyGroup>
+    <LocalDebuggerCommand>$(ClangClPath)</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>@"$(MSBuildThisFileDirectory)args.rsp"</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NMakeBuildCommandLine>msbuild "$(MSBuildThisFileFullPath)" /t:Configure /p:Configuration=$(Configuration) /p:Platform=$(Platform) /v:m</NMakeBuildCommandLine>
+    <NMakeReBuildCommandLine>msbuild "$(MSBuildThisFileFullPath)" /t:Configure /p:Configuration=$(Configuration) /p:Platform=$(Platform) /v:m</NMakeReBuildCommandLine>
+    <NMakeCleanCommandLine>del args.rsp</NMakeCleanCommandLine>
+  </PropertyGroup>
+  <Target Name="Configure">
+    <Error Text="Please set 'Target Project' in Property Pages." Condition="'$(TargetProject)'==''" />
+    <Error Text="Please set 'Target File' in Property Pages." Condition="'$(TargetFile)'==''" />
+    <Message Text="Configuring Debug Session for: $(TargetFile)" Importance="High" />
+    <MSBuild Projects="$(TargetProject)" Targets="GenerateSessionProps" Properties="TargetFile=$(TargetFile); ForceImportAfterCppTargets=$(MSBuildThisFileDirectory)GetClangArgs.targets; OutputPropsFile=$(MSBuildThisFileDirectory)temp_args.xml; Configuration=Debug; Platform=x64" />
+    <XmlPeek XmlInputPath="$(MSBuildThisFileDirectory)temp_args.xml" Query="/Project/PropertyGroup/SavedClangArgs/text()">
+      <Output TaskParameter="Result" PropertyName="_ExtractedArgs" />
+    </XmlPeek>
+    <WriteLinesToFile File="$(MSBuildThisFileDirectory)args.rsp" Lines="$(_ExtractedArgs)" Overwrite="true" Encoding="ASCII" />
+    <Delete Files="$(MSBuildThisFileDirectory)temp_args.xml" />
+    <Message Text="SUCCESS: Debug args written to args.rsp." Importance="High" />
+  </Target>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

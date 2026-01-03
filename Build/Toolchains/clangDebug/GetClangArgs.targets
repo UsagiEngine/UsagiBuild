@@ -1,0 +1,41 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="GenerateSessionProps" DependsOnTargets="SelectClCompile">
+
+    <PropertyGroup>
+      <_AbsTargetFile>$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine($(ProjectDir), $(TargetFile)))))</_AbsTargetFile>
+      <_NL>%0A</_NL>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_TargetItem Include="@(ClCompile)" Condition="'%(FullPath)' == '$(_AbsTargetFile)'"/>
+    </ItemGroup>
+
+    <Error Text="Could not find file '$(_AbsTargetFile)' in project '$(MSBuildProjectName)'." Condition="'@(_TargetItem)'==''" />
+
+    <ItemGroup>
+      <_DefItem Include="%(_TargetItem.PreprocessorDefinitions)" />
+      <_IncItem Include="%(_TargetItem.AdditionalIncludeDirectories)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <_DefArgs>@(_DefItem->'/D "%(Identity)"', '$(_NL)')</_DefArgs>
+      <_IncArgs>@(_IncItem->'/I "%(Identity)"', '$(_NL)')</_IncArgs>
+      <_Std Condition="'%(_TargetItem.LanguageStandard)' != ''">/std:%(_TargetItem.LanguageStandard)</_Std>
+
+      <_OptArgs>%(_TargetItem.AdditionalOptions)</_OptArgs>
+
+      <_FullArgs>/c$(_NL)$(_Std)$(_NL)$(_DefArgs)$(_NL)$(_IncArgs)$(_NL)$(_OptArgs)$(_NL)"%(_TargetItem.FullPath)"</_FullArgs>
+
+      <_XmlContent>
+&lt;Project&gt;
+  &lt;PropertyGroup&gt;
+    &lt;SavedClangArgs&gt;$(_FullArgs)&lt;/SavedClangArgs&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;
+      </_XmlContent>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(OutputPropsFile)" Lines="$(_XmlContent)" Overwrite="true" Encoding="utf-8" />
+    <Message Text="[DebugClang] Args generated with Multiline formatting." Importance="High" />
+  </Target>
+</Project>

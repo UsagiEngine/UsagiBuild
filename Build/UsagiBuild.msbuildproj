@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.Build.NoTargets">
   <PropertyGroup Label="Globals">
     <TargetFramework>net10.0</TargetFramework>
-	<Platforms>x64;AnyCPU</Platforms>
+    <Platforms>x64;AnyCPU</Platforms>
     <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDependencyFile>false</GenerateDependencyFile>

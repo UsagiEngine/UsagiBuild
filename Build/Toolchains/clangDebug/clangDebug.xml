@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="http://schemas.microsoft.com/build/2009/properties">
+  <Rule Name="DebugClangSettings" DisplayName="Clang Debug Config" PageTemplate="generic" Description="Configure the target file to extract flags from."
+    xmlns="http://schemas.microsoft.com/build/2009/properties">
+
+    <Rule.DataSource>
+      <DataSource Persistence="ProjectFile" Label="Globals" />
+    </Rule.DataSource>
+
+    <Rule.Categories>
+      <Category Name="General" DisplayName="General" />
+    </Rule.Categories>
+
+    <StringProperty Name="TargetProject" DisplayName="Target Project (.vcxproj)" Description="The project file containing the crashing file." Category="General" Subtype="file">
+    </StringProperty>
+
+    <StringProperty Name="TargetFile" DisplayName="Target Source File (.cpp)" Description="The specific C++ file to debug." Category="General" Subtype="file">
+    </StringProperty>
+
+  </Rule>
+</ProjectSchemaDefinitions>
