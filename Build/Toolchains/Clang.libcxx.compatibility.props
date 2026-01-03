@@ -17,8 +17,9 @@
       Flag: /D_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS
       NEW: Tells the libc++ headers they are being linked as a
       static library, which removes the incorrect __declspec(dllimport).
+      Not used anymore. Defined in <__config_site>.
     -->
-    <_usagiClangCompatibilityMacros>_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros>
+    <!-- <_usagiClangCompatibilityMacros>_LIBCPP_DISABLE_VISIBILITY_ANNOTATIONS;$(_usagiClangCompatibilityMacros)</_usagiClangCompatibilityMacros> -->
   </PropertyGroup>
 
   <PropertyGroup Label="Clang">
