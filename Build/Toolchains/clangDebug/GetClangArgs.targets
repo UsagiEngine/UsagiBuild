@@ -12,19 +12,43 @@
 
     <Error Text="Could not find file '$(_AbsTargetFile)' in project '$(MSBuildProjectName)'." Condition="'@(_TargetItem)'==''" />
 
+    <PropertyGroup>
+      <_EHArg Condition="'%(_TargetItem.ExceptionHandling)' == 'Sync'">/EHsc</_EHArg>
+      <_EHArg Condition="'%(_TargetItem.ExceptionHandling)' == 'Async'">/EHa</_EHArg>
+      <_EHArg Condition="'%(_TargetItem.ExceptionHandling)' == 'SyncCThrow'">/EHs</_EHArg>
+      <_EHArg Condition="'%(_TargetItem.ExceptionHandling)' == 'false'"></_EHArg>
+      <_RTArg Condition="'%(_TargetItem.RuntimeLibrary)' == 'MultiThreaded'">/MT</_RTArg>
+      <_RTArg Condition="'%(_TargetItem.RuntimeLibrary)' == 'MultiThreadedDebug'">/MTd</_RTArg>
+      <_RTArg Condition="'%(_TargetItem.RuntimeLibrary)' == 'MultiThreadedDLL'">/MD</_RTArg>
+      <_RTArg Condition="'%(_TargetItem.RuntimeLibrary)' == 'MultiThreadedDebugDLL'">/MDd</_RTArg>
+
+      <_GRArg Condition="'%(_TargetItem.RuntimeTypeInfo)' == 'true'">/GR</_GRArg>
+      <_GRArg Condition="'%(_TargetItem.RuntimeTypeInfo)' == 'false'">/GR-</_GRArg>
+
+      <_OptArg Condition="'%(_TargetItem.Optimization)' == 'Disabled'">/Od</_OptArg>
+      <_OptArg Condition="'%(_TargetItem.Optimization)' == 'MinSpace'">/O1</_OptArg>
+      <_OptArg Condition="'%(_TargetItem.Optimization)' == 'MaxSpeed'">/O2</_OptArg>
+      <_OptArg Condition="'%(_TargetItem.Optimization)' == 'Full'">/Ox</_OptArg>
+
+      <_GSArg Condition="'%(_TargetItem.BufferSecurityCheck)' == 'true'">/GS</_GSArg>
+      <_GSArg Condition="'%(_TargetItem.BufferSecurityCheck)' == 'false'">/GS-</_GSArg>
+
+      <_StdArg Condition="'%(_TargetItem.LanguageStandard)' != ''">/std:%(_TargetItem.LanguageStandard)</_StdArg>
+    </PropertyGroup>
+
     <ItemGroup>
       <_DefItem Include="%(_TargetItem.PreprocessorDefinitions)" />
       <_IncItem Include="%(_TargetItem.AdditionalIncludeDirectories)" />
+      <_FIItem Include="%(_TargetItem.ForcedIncludeFiles)" />
     </ItemGroup>
 
     <PropertyGroup>
       <_DefArgs>@(_DefItem->'/D "%(Identity)"', '$(_NL)')</_DefArgs>
       <_IncArgs>@(_IncItem->'/I "%(Identity)"', '$(_NL)')</_IncArgs>
-      <_Std Condition="'%(_TargetItem.LanguageStandard)' != ''">/std:%(_TargetItem.LanguageStandard)</_Std>
+      <_FIArgs>@(_FIItem->'/FI "%(Identity)"', '$(_NL)')</_FIArgs>
+      <_AddOpt>%(_TargetItem.AdditionalOptions)</_AddOpt>
 
-      <_OptArgs>%(_TargetItem.AdditionalOptions)</_OptArgs>
-
-      <_FullArgs>/c$(_NL)$(_Std)$(_NL)$(_DefArgs)$(_NL)$(_IncArgs)$(_NL)$(_OptArgs)$(_NL)"%(_TargetItem.FullPath)"</_FullArgs>
+      <_FullArgs>/c$(_NL)$(_EHArg)$(_NL)$(_RTArg)$(_NL)$(_GRArg)$(_NL)$(_OptArg)$(_NL)$(_GSArg)$(_NL)$(_StdArg)$(_NL)$(_DefArgs)$(_NL)$(_IncArgs)$(_NL)$(_FIArgs)$(_NL)$(_AddOpt)$(_NL)"%(_TargetItem.FullPath)"</_FullArgs>
 
       <_XmlContent>
 &lt;Project&gt;
@@ -36,6 +60,6 @@
     </PropertyGroup>
 
     <WriteLinesToFile File="$(OutputPropsFile)" Lines="$(_XmlContent)" Overwrite="true" Encoding="utf-8" />
-    <Message Text="[DebugClang] Args generated with Multiline formatting." Importance="High" />
+    <Message Text="[DebugClang] Args generated with detailed property mapping." Importance="High" />
   </Target>
 </Project>
