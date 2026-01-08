@@ -12,7 +12,8 @@ param(
     [string]$SourceTriplet,
     [string]$TargetTriplet,
     [string]$TripletOverlay,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$Resume # Resume from vcpkg-TRIPLET.lock.yaml
 )
 
 Import-Module "$PSScriptRoot\UsagiVcpkg.psm1" -Force
@@ -31,6 +32,17 @@ if ($TripletOverlay) {
 
 $CommonArgs = $Config.CommonArgs
 
+# --- Step 0: Resume Check ---
+if ($Resume) {
+    Write-Host ">>> Resuming migration for $TargetTriplet..." -ForegroundColor Magenta
+    Invoke-UsagiVcpkgInstall `
+        -Resume `
+        -Triplet $TargetTriplet `
+        -CommonArgs $CommonArgs `
+        -Recurse
+    return
+}
+
 Write-Host ">>> Usagi Vcpkg Migration 🍓" -ForegroundColor Magenta
 Write-Host "    Source: $SourceTriplet" -ForegroundColor Gray
 Write-Host "    Target: $TargetTriplet" -ForegroundColor Gray
@@ -43,7 +55,6 @@ Write-Host "`n>>> scanning installed packages ($SourceTriplet)..." `
 $listOutput = vcpkg list --classic --x-full-desc `
     --triplet $SourceTriplet @CommonArgs 2>$null
 
-# CRITICAL FIX: Handle case where vcpkg returns nothing (clean environment)
 if ($null -eq $listOutput -or $listOutput.Count -eq 0) {
     Write-Host "No packages found for triplet $SourceTriplet. Nothing to migrate." `
         -ForegroundColor Yellow

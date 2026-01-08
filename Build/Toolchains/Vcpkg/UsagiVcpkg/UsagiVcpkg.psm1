@@ -16,7 +16,6 @@ function Get-UsagiVcpkgConfig {
     if (Test-Path $overlayPath) {
         $overlayPath = Resolve-Path $overlayPath
     } else {
-        # Fallback if it doesn't exist yet (keeps the logical path)
         $overlayPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($overlayPath)
     }
 
@@ -48,7 +47,6 @@ function ConvertFrom-VcpkgListOutput {
         if ([string]::IsNullOrWhiteSpace($line)) { continue }
 
         # Regex to capture: Name, Optional [features], and Triplet
-        # Example: imgui[core,docking]:x64-windows
         if ($line -match '^([a-z0-9-]+)(?:\[([^\]]+)\])?:([a-z0-9-]+)') {
             $name     = $matches[1]
             $features = $matches[2]
@@ -74,7 +72,7 @@ function ConvertFrom-VcpkgListOutput {
     return $results
 }
 
-# --- Dependency Resolution (The "Root" Logic) ---
+# --- Dependency Resolution ---
 
 function Resolve-VcpkgRootRequirements {
     param(
@@ -87,7 +85,6 @@ function Resolve-VcpkgRootRequirements {
 
     Write-Host ">>> Analyzing dependency graph..." -ForegroundColor Cyan
 
-    # 1. Build a list of candidate specs "pkg[f1,f2]"
     $candidates = @()
     foreach ($key in $PackageMap.Keys) {
         $features = $PackageMap[$key]
@@ -100,7 +97,6 @@ function Resolve-VcpkgRootRequirements {
 
     if ($candidates.Count -eq 0) { return @() }
 
-    # 2. Identify dependencies
     $nonRoots = [System.Collections.Generic.HashSet[string]]::new()
     $total = $candidates.Count
     $current = 0
@@ -111,13 +107,11 @@ function Resolve-VcpkgRootRequirements {
             -Status "Checking $candidate" `
             -PercentComplete (($current / $total) * 100)
 
-        # 'depend-info' outputs lines like: candidate: dep1, dep2, ...
         $info = vcpkg depend-info $candidate `
             --triplet $TargetTriplet `
             @CommonArgs 2>$null
 
         foreach ($line in $info) {
-            # Looking for dependencies usually after the colon
             if ($line -match ':\s*(.+)$') {
                 $deps = $matches[1] -split ',\s*'
                 foreach ($dep in $deps) {
@@ -132,7 +126,6 @@ function Resolve-VcpkgRootRequirements {
     }
     Write-Progress -Activity "Analyzing Dependencies" -Completed
 
-    # 3. Filter Roots
     $roots = @()
     foreach ($candidate in $candidates) {
         $name = $candidate -split '\[' | Select-Object -First 1
@@ -152,29 +145,101 @@ function Invoke-UsagiVcpkgInstall {
         [string]$Triplet,
         [string[]]$CommonArgs,
         [switch]$Recurse,
-        [switch]$DryRun
+        [switch]$DryRun,
+        [switch]$BestEffort, # Installs one-by-one, ignoring failures
+        [switch]$Resume      # Loads from lock file
     )
+
+    $lockFileName = "vcpkg-${Triplet}.lock.yaml"
+    $lockFilePath = Join-Path $PWD $lockFileName
+
+    # --- Lock File / Resume Logic ---
+    if ($Resume) {
+        if (Test-Path $lockFilePath) {
+            Write-Host ">>> Resuming from $lockFileName..." -ForegroundColor Yellow
+            $content = Get-Content $lockFilePath
+            # Simple YAML parsing: Extract lines starting with "- "
+            $Packages = $content | ForEach-Object {
+                if ($_ -match '^-\s+(.*)$') { $matches[1] }
+            }
+        } else {
+            Write-Host ">>> No lock file ($lockFileName) found to resume." `
+                -ForegroundColor Red
+            return
+        }
+    } elseif (-not $DryRun -and $Packages.Count -gt 0) {
+        # Create/Overwrite Lock File
+        $yamlContent = $Packages | ForEach-Object { "- $_" }
+        $yamlContent | Set-Content $lockFilePath
+    }
 
     if ($Packages.Count -eq 0) {
         Write-Host "No packages to install." -ForegroundColor Yellow
         return
     }
 
-    $cmdArgs = @("install") + $Packages + `
-               "--triplet=$Triplet" + $CommonArgs
-    if ($Recurse) { $cmdArgs += "--recurse" }
+    # --- Best Effort (Iterative) ---
+    if ($BestEffort) {
+        $failed = @()
+        $remaining = [System.Collections.Generic.List[string]]::new($Packages)
 
-    Write-Host "`n>>> Installation Command:" -ForegroundColor Green
-    Write-Host "vcpkg $cmdArgs" -ForegroundColor Gray
+        Write-Host "`n>>> Starting Best-Effort Installation ($($remaining.Count) items)..." `
+            -ForegroundColor Cyan
 
-    if ($DryRun) {
-        Write-Host ">>> (Dry Run) Skipping execution." -ForegroundColor Yellow
-    } else {
-        vcpkg @cmdArgs
-        if ($LASTEXITCODE -eq 0) {
-            Write-Host "`n>>> Success." -ForegroundColor Green
+        foreach ($pkg in $Packages) {
+            Write-Host "`n>>> [BestEffort] Installing $pkg..." -ForegroundColor Cyan
+            $cmdArgs = @("install", $pkg, "--triplet=$Triplet") + $CommonArgs
+            if ($Recurse) { $cmdArgs += "--recurse" }
+
+            if ($DryRun) {
+                Write-Host "vcpkg $cmdArgs" -ForegroundColor Gray
+            } else {
+                vcpkg @cmdArgs
+
+                if ($LASTEXITCODE -eq 0) {
+                    # Update Lock File: Remove successful package
+                    $remaining.Remove($pkg) | Out-Null
+                    if ($remaining.Count -eq 0) {
+                        Remove-Item $lockFilePath -ErrorAction SilentlyContinue
+                    } else {
+                        $yamlContent = $remaining | ForEach-Object { "- $_" }
+                        $yamlContent | Set-Content $lockFilePath
+                    }
+                } else {
+                    Write-Host ">>> Failed to install $pkg. Skipping." -ForegroundColor Red
+                    $failed += $pkg
+                }
+            }
+        }
+
+        if ($failed.Count -gt 0) {
+            Write-Host "`n>>> BestEffort finished with $($failed.Count) failures." `
+                -ForegroundColor Yellow
+            Write-Host "    Failed: $($failed -join ', ')" -ForegroundColor Gray
+            Write-Host "    Pending packages are saved in $lockFileName" -ForegroundColor Gray
         } else {
-            Write-Host "`n>>> Failed." -ForegroundColor Red
+            Write-Host "`n>>> BestEffort All Success." -ForegroundColor Green
+        }
+
+    # --- Standard (Batch) ---
+    } else {
+        $cmdArgs = @("install") + $Packages + "--triplet=$Triplet" + $CommonArgs
+        if ($Recurse) { $cmdArgs += "--recurse" }
+
+        Write-Host "`n>>> Installation Command:" -ForegroundColor Green
+        Write-Host "vcpkg $cmdArgs" -ForegroundColor Gray
+
+        if ($DryRun) {
+            Write-Host ">>> (Dry Run) Skipping execution." -ForegroundColor Yellow
+        } else {
+            vcpkg @cmdArgs
+            if ($LASTEXITCODE -eq 0) {
+                Write-Host "`n>>> Success." -ForegroundColor Green
+                Remove-Item $lockFilePath -ErrorAction SilentlyContinue
+            } else {
+                Write-Host "`n>>> Failed. Progress saved to $lockFileName" `
+                    -ForegroundColor Red
+            }
         }
     }
 }

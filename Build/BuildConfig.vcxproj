@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="ProbeClangArgs"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="ProbeClangArgs" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -44,7 +43,6 @@
     <None Include="Toolchains\Clang\Clang.metaprogramming.props" />
     <None Include="Toolchains\Clang\Clang.props" />
     <None Include="Toolchains\Clang\Clang.version.props" />
-    <None Include="Toolchains\Vcpkg\Find-InstallVcpkgPackages.ps1" />
     <None Include="Toolchains\Vcpkg\Vcpkg.props" />
   </ItemGroup>
   <Target Name="ProbeClangArgs">
