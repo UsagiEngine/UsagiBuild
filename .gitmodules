@@ -19,6 +19,6 @@
 [submodule "Engine/Usagi"]
 	path = Engine/Usagi
 	url = git@github.com:YukinoHayakawa/Usagi.git
-[submodule "Build/Toolchains/vcpkg-overlay-triplets"]
-	path = Build/Toolchains/vcpkg-overlay-triplets
+[submodule "Build/Toolchains/Vcpkg/vcpkg-overlay-triplets"]
+	path = Build/Toolchains/Vcpkg/vcpkg-overlay-triplets
 	url = git@github.com:Neumann-A/my-vcpkg-triplets.git

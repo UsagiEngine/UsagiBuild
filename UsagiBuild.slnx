@@ -8,33 +8,33 @@
     <Platform Name="x64" />
   </Configurations>
   <Folder Name="/Build/">
-    <Project Path="Build/UsagiBuild.msbuildproj" Type="C#" Id="1cd86858-a353-44e6-9cd6-8efb03cbca72">
+    <Project Path="Build/BuildConfig.vcxproj" Id="1cd86858-a353-44e6-9cd6-8efb03cbca72">
       <BuildType Project="Debug" />
-      <Platform Solution="*|Any CPU" Project="x86" />
-      <Platform Solution="Release|x64" Project="x86" />
-      <Platform Solution="RelWithDebInfo|x64" Project="x86" />
-      <Platform Solution="UnitTest|x64" Project="x86" />
-      <Build Solution="UnitTest|x64" Project="false" />
     </Project>
   </Folder>
   <Folder Name="/Build/LLVM/">
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/AST/clangAST.vcxproj" Id="4d3ac14c-ca5a-3192-86fc-7d5009293b72">
+    <File Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/worktrees/yukino-dev-reflection/clang/utils/ClangVisualizers/clang.natvis" />
+    <File Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/worktrees/yukino-dev-reflection/llvm/utils/LLVMVisualizers/llvm.natvis" />
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/AST/clangAST.vcxproj" Id="a8c9f11e-eedc-372f-b7a2-ed6586eeaf54">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
     </Project>
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Basic/clangBasic.vcxproj" Id="6e6d9263-1867-3842-bffd-5e23c9d4e130">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Basic/clangBasic.vcxproj" Id="093b2243-309d-3b5f-88be-03a2c60fe18b">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
     </Project>
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Driver/clangDriver.vcxproj" Id="6cc3bbe7-a372-3131-8970-fd5d4ff88bd7">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Driver/clangDriver.vcxproj" Id="209e7a09-6bc4-3579-b54d-8d6bb6b7be7d">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
     </Project>
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Parse/clangParse.vcxproj" Id="cc7fe4a4-fd1a-301a-83d5-cae0d3377ec2">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Parse/clangParse.vcxproj" Id="59e27931-4753-3b0e-b01c-b5684b891be1">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
     </Project>
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Sema/clangSema.vcxproj" Id="0fe0c32f-094b-3742-9d1d-c9e2cea02962">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/lib/Sema/clangSema.vcxproj" Id="8319289a-ac61-37e8-85d1-ddc269b7df78">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
     </Project>
-    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/tools/driver/clang.vcxproj" Id="a95a56f8-2878-3892-9af4-e934dce7cfc7">
+    <Project Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/sourcetrees/llvm-src/tools/clang/tools/driver/clang.vcxproj" Id="946fc23c-0026-39b0-8fad-7b9e82f62617">
       <BuildType Solution="UnitTest|*" Project="RelWithDebInfo" />
+    </Project>
+    <Project Path="Build/Toolchains/clangDebug/clangDebug.vcxproj" Id="49ef691b-b6da-4dc9-a144-4aa4ee77c675">
+      <BuildType Project="Debug" />
     </Project>
   </Folder>
   <Folder Name="/Demos/">
@@ -124,6 +124,9 @@
     <Project Path="Projects/Tools/System/ToolLocalServiceDaemon/ToolLocalServiceDaemon.vcxproj" Id="adf769e1-fd7f-400e-a3fa-5ae38cce89ed">
       <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
   </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/TestReflection/TestReflection.vcxproj" Id="c06011e4-c57f-47a4-a81f-e5ec70cf7e67">

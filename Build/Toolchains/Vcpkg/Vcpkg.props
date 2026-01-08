@@ -2,6 +2,6 @@
   <PropertyGroup Label="Vcpkg">
     <VcpkgEnableManifest>false</VcpkgEnableManifest>
     <VcpkgUseStatic>true</VcpkgUseStatic>
-    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-win-llvm-lto</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-win-llvm-lto-libcxx</VcpkgTriplet>
   </PropertyGroup>
 </Project>

@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build"
-  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="clangDebug.Session.props" Condition="Exists('clangDebug.Session.props')" />
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="clangDebug.Session.props" />
+    <None Include="GetClangArgs.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="clangDebug.xml" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
@@ -14,20 +19,12 @@
     <RootNamespace>clangDebug</RootNamespace>
     <Keyword>MakeFileProj</Keyword>
   </PropertyGroup>
-  <PropertyGroup Label="Globals" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetProject></TargetProject>
-    <TargetFile></TargetFile>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Makefile</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ItemGroup>
-    <PropertyPageSchema Include="$(MSBuildThisFileDirectory)clangDebug.xml">
-      <Context>Project</Context>
-    </PropertyPageSchema>
-  </ItemGroup>
+  <Import Project="clangDebug.Session.props" Condition="Exists('clangDebug.Session.props')" />
   <PropertyGroup>
     <LocalDebuggerCommand>$(ClangClPath)</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>@"$(MSBuildThisFileDirectory)args.rsp"</LocalDebuggerCommandArguments>

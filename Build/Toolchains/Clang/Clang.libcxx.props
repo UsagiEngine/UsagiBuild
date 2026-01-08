@@ -72,9 +72,9 @@
         NEW: Add the VC++ Runtime Library (Debug)
         This provides the exception handling ABI functions.
       -->
-      <AdditionalDependencies>msvcprtd.lib;libvcruntimed.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcpmtd.lib;libvcruntimed.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <!--
-        Flag: /NODEFAULTLIB:msvcprtd.lib
+        Flag: /NODEFAULTLIB:msvcprtd.lib (DynamicDebug)
         Tells the linker not to link the default MSVC standard debug library.
       -->
       <!-- This library is required for exception handling. -->
@@ -99,9 +99,9 @@
       <!-- Note that both `msvcprt.lib` and `libc++.lib` defines `std::uncaught_exceptions()` -->
       <!-- As a workaround, I must go to libc++'s `exception_msvc.ipp` and comment out its -->
       <!-- function definition. -->
-      <AdditionalDependencies>msvcprt.lib;libvcruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libcpmt.lib;libvcruntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <!--
-        Flag: /NODEFAULTLIB:msvcprt.lib
+        Flag: /NODEFAULTLIB:msvcprt.lib (DynamicDLL)
         Tells the linker not to link the default MSVC standard release library.
       -->
       <!-- This library is required for exception handling. -->

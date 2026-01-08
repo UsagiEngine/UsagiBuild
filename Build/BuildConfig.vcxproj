@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="ProbeClangArgs"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>18.0</VCProjectVersion>
+    <ProjectGuid>{1CD86858-A353-44E6-9CD6-8EFB03CBCA72}</ProjectGuid>
+    <RootNamespace>BuildConfig</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <IncludePath>$(Usagi_IncludePaths);$(IncludePath)</IncludePath>
+    <LibraryPath>$(Usagi_LibraryPaths);$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- This line is a must.
+         Without this, ClCompile flags won't be evaluated. -->
+    <ClCompile Include="dummy.cpp" />
+    <!-- Similarly, this is for evaluating link flags and paths. -->
+    <Link Include="dummy.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configs\DefaultCommon.props" />
+    <None Include="Configs\DefaultCpp.props" />
+    <None Include="Configs\DefaultDebug.props" />
+    <None Include="Configs\DefaultPaths.props" />
+    <None Include="Configs\DefaultRelease.props" />
+    <None Include="Configs\DefaultTarget.props" />
+    <None Include="Configs\DefaultUnitTest.props" />
+    <None Include="DefaultBuild.props" />
+    <None Include="Toolchains\Clang\Clang.cxx26.props" />
+    <None Include="Toolchains\Clang\Clang.libcxx.compatibility.props" />
+    <None Include="Toolchains\Clang\Clang.libcxx.props" />
+    <None Include="Toolchains\Clang\Clang.metaprogramming.props" />
+    <None Include="Toolchains\Clang\Clang.props" />
+    <None Include="Toolchains\Clang\Clang.version.props" />
+    <None Include="Toolchains\Vcpkg\Find-InstallVcpkgPackages.ps1" />
+    <None Include="Toolchains\Vcpkg\Vcpkg.props" />
+  </ItemGroup>
+  <Target Name="ProbeClangArgs">
+    <Message Text="USAGI_PROBE:CLANG_CL=$(LLVMInstallDir)\bin\clang-cl.exe" Importance="High" />
+    <Message Text="USAGI_PROBE:LLVM_LIB=$(LLVMInstallDir)\bin\llvm-lib.exe" Importance="High" />
+    <Message Text="USAGI_PROBE:LLD_LINK=$(LLVMInstallDir)\bin\lld-link.exe" Importance="High" />
+    <Message Text="USAGI_PROBE:FLAGS_OPTS=@(ClCompile->'%(AdditionalOptions)')" Importance="High" />
+    <Message Text="USAGI_PROBE:FLAGS_DEFS=@(ClCompile->'%(PreprocessorDefinitions)')" Importance="High" />
+    <Message Text="USAGI_PROBE:FLAGS_INCS=@(ClCompile->'%(AdditionalIncludeDirectories)')" Importance="High" />
+    <Message Text="USAGI_PROBE:LINK_LIBS=@(Link->'%(AdditionalDependencies)')" Importance="High" />
+    <Message Text="USAGI_PROBE:LINK_DIRS=@(Link->'%(AdditionalLibraryDirectories)')" Importance="High" />
+  </Target>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

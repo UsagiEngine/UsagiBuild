@@ -1,3 +1,9 @@
 <Project>
-  <Import Project="Build/DefaultBuild.props"/>
+  <PropertyGroup>
+    <UsagiBuild_ConfigRoot>$(MSBuildThisFileDirectory)\Build</UsagiBuild_ConfigRoot>
+    <UsagiBuild_ToolchainsRoot>$(UsagiBuild_ConfigRoot)\Toolchains</UsagiBuild_ToolchainsRoot>
+    <UsagiBuild_ToolchainClangRoot>$(UsagiBuild_ToolchainsRoot)\Clang</UsagiBuild_ToolchainClangRoot>
+    <UsagiBuild_ConfigProjectPath>$(UsagiBuild_ConfigRoot)\BuildConfig.vcxproj</UsagiBuild_ConfigProjectPath>
+  </PropertyGroup>
+  <Import Project="$(UsagiBuild_ConfigRoot)\DefaultBuild.props" />
 </Project>
