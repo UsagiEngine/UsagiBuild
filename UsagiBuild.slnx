@@ -11,6 +11,9 @@
     <Project Path="Build/BuildConfig.vcxproj" Id="1cd86858-a353-44e6-9cd6-8efb03cbca72">
       <BuildType Project="Debug" />
     </Project>
+    <Project Path="Build/Toolchains/Vcpkg/UsagiVcpkg/UsagiVcpkg.pssproj" Type="f5034706-568f-408a-b7b3-4d38c6db8a32" Id="dc1770fd-fa50-4de7-9859-5ec97b91ee0e">
+      <Platform Project="AnyCPU" />
+    </Project>
   </Folder>
   <Folder Name="/Build/LLVM/">
     <File Path="../../../../@Data.Transient/Dev/toolchains/llvm-project/worktrees/yukino-dev-reflection/clang/utils/ClangVisualizers/clang.natvis" />
@@ -44,6 +47,16 @@
     <Project Path="Demos/DemoTerminalUI/DemoTerminalUI.vcxproj" Id="6fa38925-2cd3-4409-b85a-9481d0f097b6">
       <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
+  </Folder>
+  <Folder Name="/Engine/">
+    <Project Path="Engine/Usagi/Usagi.vcxproj" Id="f9061c06-bce6-416b-9aeb-31351810b7ba">
+      <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
+    </Project>
+  </Folder>
+  <Folder Name="/Misc/">
+    <File Path=".clang-format" />
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
   </Folder>
   <Folder Name="/Modules/" />
   <Folder Name="/Modules/Applications/">
@@ -125,17 +138,12 @@
       <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
   </Folder>
-  <Folder Name="/Solution Items/">
-    <File Path="Directory.Build.props" />
-  </Folder>
   <Folder Name="/Tests/">
     <Project Path="Tests/TestReflection/TestReflection.vcxproj" Id="c06011e4-c57f-47a4-a81f-e5ec70cf7e67">
       <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
     </Project>
   </Folder>
-  <Project Path="Engine/Usagi/Usagi.vcxproj" Id="f9061c06-bce6-416b-9aeb-31351810b7ba">
-    <BuildType Solution="RelWithDebInfo|*" Project="UnitTest" />
-  </Project>
+  <Folder Name="/Tools/" />
   <Project Path="Scripts/Scripts.pssproj" Type="f5034706-568f-408a-b7b3-4d38c6db8a32" Id="6cafc0c6-a428-4d30-a9f9-700e829fea51">
     <Platform Project="AnyCPU" />
   </Project>
