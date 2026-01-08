@@ -146,8 +146,8 @@ function Invoke-UsagiVcpkgInstall {
         [string[]]$CommonArgs,
         [switch]$Recurse,
         [switch]$DryRun,
-        [switch]$BestEffort, # Installs one-by-one, ignoring failures
-        [switch]$Resume      # Loads from lock file
+        [switch]$BestEffort=$true, # Installs one-by-one, ignoring failures
+        [switch]$Resume            # Loads from lock file
     )
 
     $lockFileName = "vcpkg-${Triplet}.lock.yaml"

@@ -58,8 +58,7 @@ if ($Unattended) {
         -Packages $installList `
         -Triplet $TargetTriplet `
         -CommonArgs $Config.CommonArgs `
-        -Recurse `
-        -BestEffort
+        -Recurse
     return
 }
 
