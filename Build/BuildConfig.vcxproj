@@ -38,6 +38,7 @@
     <None Include="Configs\DefaultUnitTest.props" />
     <None Include="DefaultBuild.props" />
     <None Include="Toolchains\Clang\Clang.cxx26.props" />
+    <None Include="Toolchains\Clang\Clang.cxx26.usagi.props" />
     <None Include="Toolchains\Clang\Clang.libcxx.compatibility.props" />
     <None Include="Toolchains\Clang\Clang.libcxx.props" />
     <None Include="Toolchains\Clang\Clang.metaprogramming.props" />

@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup Label="UsagiExtensions" Condition="'$(UsagiBuild_UsingCustomClang)'=='true'">
+    <Usagi_CppEnableReflTemplates>-fext-usagi-template-reflection</Usagi_CppEnableReflTemplates>
+    <Usagi_ClangReflectionArgs Condition="'$(Usagi_CppEnableReflTemplates)' != ''">$(Usagi_ClangReflectionArgs) -Xclang $(Usagi_CppEnableReflTemplates)</Usagi_ClangReflectionArgs>
+  </PropertyGroup>
+</Project>

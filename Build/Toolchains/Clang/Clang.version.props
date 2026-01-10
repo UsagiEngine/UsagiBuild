@@ -17,6 +17,8 @@
     <!-- Shio: Extract only the major version number (e.g., 17), which is
      needed to construct the path to Clang's internal resource directory. -->
     <LLVMIncludeVersion>$([System.Text.RegularExpressions.Regex]::Match($(LLVMToolsVersion), `(\d+?)\..*`).Groups[1].Value)</LLVMIncludeVersion>
+
+    <UsagiBuild_UsingCustomClang Condition="$(_ClangProductVersion.Contains('usagi'))">true</UsagiBuild_UsingCustomClang>
   </PropertyGroup>
 
   <!-- Shio: This target runs just before the build starts to validate the
@@ -26,6 +28,10 @@
           Condition="'$(PlatformToolset)' == 'ClangCL' and '$(LLVMToolsVersion)' != ''">
     <Message Importance="high"
              Text="Shio: Automatically detected Clang version: $(LLVMToolsVersion) from '$(LLVMInstallDir)'"/>
+
+    <Message Importance="high"
+             Condition="'$(UsagiBuild_UsingCustomClang)' == 'true'"
+             Text="Shio: Verified UsagiEngine Custom Clang Build (Active)." />
 
     <!-- Shio: Now that LLVMToolsVersion is correctly set, we can construct the
          correct path to Clang's resource directory, which contains built-in

@@ -43,6 +43,5 @@
     <!-- <Usagi_CppEnableP3381>-freflection-new-syntax</Usagi_CppEnableP3381> -->
     <Usagi_CppEnableP3394>-fannotation-attributes</Usagi_CppEnableP3394>
     <!-- <Usagi_CppEnableP3XYZ>-fentity-proxy-reflection</Usagi_CppEnableP3XYZ> -->
-    <!-- <Usagi_CppEnableReflTemplates>-fext-yukino-template-reflection</Usagi_CppEnableReflTemplates> -->
   </PropertyGroup>
 </Project>
