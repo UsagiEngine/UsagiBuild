@@ -83,7 +83,6 @@
            Corresponds to the /diagnostics:caret compiler flag. -->
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <StringPooling>true</StringPooling>
-      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <!-- Shio: Instructs the linker to generate a Program Database (.pdb) file,
@@ -110,7 +109,14 @@
     </Manifest>
   </ItemDefinitionGroup>
 
-  <ItemDefinitionGroup Condition="'$(ConfigurationType)' == 'StaticLibrary'">
+  <!-- Clang doesn't support /GT flag. -->
+  <ItemDefinitionGroup Condition="'$(PlatformToolset)'!='ClangCL'">
+    <ClCompile>
+      <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
+    </ClCompile>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(ConfigurationType)'=='StaticLibrary'">
     <ClCompile>
       <PreprocessorDefinitions>_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>

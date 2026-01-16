@@ -1,3 +1,4 @@
+<!-- TODO: These propreties should be defined for Clang only -->
 <Project>
   <PropertyGroup Label="CppCommon">
     <!-- Shio: Enables C++26 support. This is required for many of the advanced

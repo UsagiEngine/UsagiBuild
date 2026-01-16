@@ -27,14 +27,14 @@
 
     <!-- Shio: Set the target architecture. Fallback to haswell if not specified.
            Haswell is chosen as a baseline for its bit manipulation instructions. -->
-    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' == ''">$(Usagi_ClangArgs) -march=haswell</Usagi_ClangArgs>
-    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)' != ''">$(Usagi_ClangArgs) -march=$(Usagi_TargetArchitecture)</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)'==''">$(Usagi_ClangArgs) -march=haswell</Usagi_ClangArgs>
+    <Usagi_ClangArgs Condition="'$(Usagi_TargetArchitecture)'!=''">$(Usagi_ClangArgs) -march=$(Usagi_TargetArchitecture)</Usagi_ClangArgs>
 
     <Usagi_ClangArgs>$(Usagi_ClangArgs) /clang:-ferror-limit=0</Usagi_ClangArgs>
+    <!-- Ignore unknown arguments. -->
+    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-unused-command-line-argument</Usagi_ClangArgs>
     <!-- Shio: Add various warning flags and workarounds. -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-pragma-pack</Usagi_ClangArgs>
-    <!-- Ignore unknown arguments. -->
-    <Usagi_ClangArgs>$(Usagi_ClangArgs) -Wno-error=unknown-argument</Usagi_ClangArgs>
     <!-- clang does not really support this argument and it assumes utf-8 input by default. -->
     <!-- <Usagi_ClangArgs>$(Usagi_ClangArgs) -Xclang -finput-charset=UTF-8</Usagi_ClangArgs> -->
     <Usagi_ClangArgs>$(Usagi_ClangArgs) /source-charset:utf-8</Usagi_ClangArgs>
@@ -44,14 +44,23 @@
 
   <Import Project="Clang.metaprogramming.props"/>
 
+  <!-- Enforce that MSBuild spawns multiple clang processes for multiple files. -->
+  <!-- Because unlike MSVC, clang compiles files single-threaded. -->
+  <PropertyGroup Condition="'$(PlatformToolset)'=='ClangCL'">
+    <UseMultiToolTask>true</UseMultiToolTask>
+    <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
+  </PropertyGroup>
+
   <ItemDefinitionGroup Condition="'$(PlatformToolset)'=='ClangCL'">
     <ClCompile>
       <AdditionalOptions>$(Usagi_ClangArgs) %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_HAS_CXX26;_HAS_CXX23;_HAS_CXX20;_HAS_CXX17;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <!-- TODO: This shouldn't be clang-specific -->
+      <PreprocessorDefinitions>_USAGI_BUILD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
 
   <PropertyGroup Label="Vcpkg" Condition="'$(PlatformToolset)'=='ClangCL'">
     <VcpkgAutoLink>false</VcpkgAutoLink>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-win-llvm-lto-libcxx</VcpkgTriplet>
   </PropertyGroup>
 </Project>
