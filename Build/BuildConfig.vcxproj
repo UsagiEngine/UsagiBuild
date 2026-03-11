@@ -39,12 +39,16 @@
     <None Include="DefaultBuild.props" />
     <None Include="Toolchains\Clang\Clang.cxx26.props" />
     <None Include="Toolchains\Clang\Clang.cxx26.usagi.props" />
+    <None Include="Toolchains\Clang\Clang.ide.props" />
     <None Include="Toolchains\Clang\Clang.libcxx.compatibility.props" />
     <None Include="Toolchains\Clang\Clang.libcxx.props" />
     <None Include="Toolchains\Clang\Clang.metaprogramming.props" />
     <None Include="Toolchains\Clang\Clang.props" />
     <None Include="Toolchains\Clang\Clang.version.props" />
     <None Include="Toolchains\Vcpkg\Vcpkg.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Toolchains\MSBuild\GenerateCppHint\clang_builtin_macros.hpp" />
   </ItemGroup>
   <Target Name="ProbeClangArgs">
     <Message Text="USAGI_PROBE:CLANG_CL=$(LLVMInstallDir)\bin\clang-cl.exe" Importance="High" />

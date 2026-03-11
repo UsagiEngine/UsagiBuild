@@ -59,6 +59,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
 
+  <!-- For ReSharper and IDE things. -->
+  <Import Project="Clang.ide.props"/>
+
   <PropertyGroup Label="Vcpkg" Condition="'$(PlatformToolset)'=='ClangCL'">
     <VcpkgAutoLink>false</VcpkgAutoLink>
     <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-win-llvm-lto-libcxx</VcpkgTriplet>
