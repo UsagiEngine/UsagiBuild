@@ -1,6 +1,7 @@
 # Shio: This is a clang-format configuration file for the UsagiBuild project.
-  # The settings are organized by language feature for better readability and
-  # maintenance.
+# The settings are organized by language feature for better readability and
+# maintenance.
+# clang-format 23 required.
 
 ---
 #==============================================================================
@@ -130,8 +131,8 @@ SortUsingDeclarations: LexicographicNumeric
 #==============================================================================
 # General: Pointers, References, & Literals
 #==============================================================================
-PointerAlignment: Middle
-ReferenceAlignment: Middle
+PointerAlignment: Right
+ReferenceAlignment: Right
 QualifierAlignment: Left
 IntegerLiteralSeparator:
   Binary: 4
@@ -198,6 +199,11 @@ AlignAfterOpenBracket: false
 LambdaBodyIndentation: Signature
 AllowShortLambdasOnASingleLine: All
 
+# --- Operators ---
+BreakBeforeTernaryOperators: true
+BreakBinaryOperations:
+  Default: RespectPrecedence
+
 #==============================================================================
 # Language: Templates & Concepts
 #==============================================================================
@@ -215,7 +221,6 @@ IndentRequiresClause: true
 #==============================================================================
 # Language: Control Flow (if, switch, for, etc.)
 #==============================================================================
-BreakBeforeTernaryOperators: true
 
 # --- If-Else ---
 AllowShortIfStatementsOnASingleLine: WithoutElse
