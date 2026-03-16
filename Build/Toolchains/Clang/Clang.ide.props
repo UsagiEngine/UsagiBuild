@@ -2,7 +2,7 @@
 <Project>
   <ItemDefinitionGroup>
     <ClCompile>
-      <ForcedIncludeFiles>$(UsagiBuild_ToolchainsRoot)/MSBuild/GenerateCppHint/clang_builtin_macros.hpp;$(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>$(UsagiBuild_ToolchainsRoot)/Clang/GenerateClangHeaders/clang_builtin_macros.hpp;$(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
   </ItemDefinitionGroup>
 </Project>

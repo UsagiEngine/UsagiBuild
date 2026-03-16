@@ -18,7 +18,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <ProjectGuid>{b9cde871-cf54-4bf4-b1b0-98eeb8d215bd}</ProjectGuid>
-    <RootNamespace>GenerateCppHint</RootNamespace>
+    <RootNamespace>GenerateClangHeaders</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -59,20 +59,15 @@
       it invokes the project's specific clang-cl.exe (via $(LLVMInstallDir)) with the exact arguments
       configured for the Usagi Engine workspace (via the $(Usagi_ClangArgs) property).
 
-      We explicitly pass -xc++ because piping 'echo.' makes Clang assume we are providing C source
-      code, which throws an error when it sees '-std=c++26'.
+      We delegate the execution to a PowerShell script to avoid race conditions and file locking
+      issues ("The requested operation cannot be performed on a file with a user-mapped section open")
+      that occur when using sequential MSBuild `Exec` redirects (`>` and `>>`).
 
-      Because the $(Usagi_ClangArgs) in this project explicitly includes the '/clang:-dM /E -' flags,
-      piping empty input ('echo. |') forces Clang to evaluate the target architecture (like -march=skylake),
-      dump all resultant predefined macros (like __BMI__, __AVX2__), and pipe the text directly
-      into clang_builtin_macros.hpp.
-
-      We wrap the output in #ifdef __RESHARPER__ so that during normal compilation via forced includes,
-      these macros do not trigger redefinition warnings.
+      The PowerShell script safely pipes an empty string into Clang to trigger the evaluation,
+      captures the stdout cleanly into memory, formats the #ifdef guards, and performs a single,
+      atomic file write.
     -->
-    <Message Importance="High" Text="Generating clang_builtin_macros.hpp from ClangCL definitions..." />
-    <Exec Command="echo #ifdef __RESHARPER__ &gt; &quot;$(MSBuildThisFileDirectory)clang_builtin_macros.hpp&quot;" />
-    <Exec Command="echo. | &quot;$(ClangClPath)&quot; -xc++ $(Usagi_ClangArgs) &gt;&gt; &quot;$(MSBuildThisFileDirectory)clang_builtin_macros.hpp&quot;" />
-    <Exec Command="echo #endif &gt;&gt; &quot;$(MSBuildThisFileDirectory)clang_builtin_macros.hpp&quot;" />
+    <Message Importance="High" Text="Generating clang_builtin_macros.hpp from ClangCL definitions via PowerShell script..." />
+    <Exec Command="pwsh.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)/GenerateMacros.ps1&quot; -ClangClPath &quot;$(ClangClPath)&quot; -ClangArgs &quot;$(Usagi_ClangArgs)&quot; -OutputFile &quot;$(MSBuildProjectDirectory)/clang_builtin_macros.hpp&quot;" />
   </Target>
 </Project>
