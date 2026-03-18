@@ -48,14 +48,26 @@ try {
         exit $LASTEXITCODE
     }
     
-    # Now, write the file cleanly with a single, atomic file operation.
+    # Now, write the file cleanly with a single, atomic file operation ONLY if changed.
     $Content = "#ifdef __RESHARPER__`n"
     $Content += ($Macros -join "`n")
     $Content += "`n#endif`n"
+    $Content = $Content -replace "`r`n", "`n"
     
-    Set-Content -Path $OutputFile -Value $Content -Encoding UTF8 -Force
-    
-    Write-Host "Successfully generated '$OutputFile'."
+    $shouldWrite = $true
+    if (Test-Path $OutputFile) {
+        $existingContent = (Get-Content -Path $OutputFile -Raw -Encoding UTF8) -replace "`r`n", "`n"
+        if ($existingContent -eq $Content) {
+            $shouldWrite = $false
+        }
+    }
+
+    if ($shouldWrite) {
+        Set-Content -Path $OutputFile -Value $Content -Encoding UTF8 -Force
+        Write-Host "Successfully generated '$OutputFile'."
+    } else {
+        Write-Host "'$OutputFile' is up-to-date. Skipping write to preserve timestamp."
+    }
     exit 0
 }
 catch {

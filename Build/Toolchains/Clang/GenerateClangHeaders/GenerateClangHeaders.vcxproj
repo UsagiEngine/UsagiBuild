@@ -52,7 +52,7 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <Target Name="Build">
+  <Target Name="Build" Inputs="$(MSBuildProjectFile);$(MSBuildProjectDirectory)\GenerateMacros.ps1" Outputs="$(MSBuildProjectDirectory)\clang_builtin_macros.stamp">
     <!--
       Shio:
       This target intercepts the standard build process. Instead of compiling source files,
@@ -65,9 +65,14 @@
 
       The PowerShell script safely pipes an empty string into Clang to trigger the evaluation,
       captures the stdout cleanly into memory, formats the #ifdef guards, and performs a single,
-      atomic file write.
+      atomic file write ONLY if the contents have actually changed. This prevents downstream 
+      recompilations caused by untouched cached output headers.
+
+      We use a `.stamp` file as the target Output to ensure MSBuild cache evaluation works
+      correctly while allowing the actual .hpp file to remain untouched if identical.
     -->
     <Message Importance="High" Text="Generating clang_builtin_macros.hpp from ClangCL definitions via PowerShell script..." />
     <Exec Command="pwsh.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)/GenerateMacros.ps1&quot; -ClangClPath &quot;$(ClangClPath)&quot; -ClangArgs &quot;$(Usagi_ClangArgs)&quot; -OutputFile &quot;$(MSBuildProjectDirectory)/clang_builtin_macros.hpp&quot;" />
+    <Touch Files="$(MSBuildProjectDirectory)\clang_builtin_macros.stamp" AlwaysCreate="true" />
   </Target>
 </Project>
