@@ -9,12 +9,15 @@ a markdown checklist grouped by project.
 It supports pipeline input of existing markdown checklist items and merges them gracefully.
 
 .PARAMETER Projects
-An array of project names (without the .vcxproj extension) to query.
+An array of project names (without the .vcxproj extension) to query. Can be passed positionally.
+
+.PARAMETER SlnxFilePath
+Path to the .slnx solution file. Defaults to '..\UsagiBuild.slnx' relative to the script directory.
 
 .PARAMETER SourceFilter
 Filters which files to consider:
+- 'project': (Default) Only files explicitly included in the .vcxproj (ClCompile/ClInclude).
 - 'all': All C/C++ source and header files under the project's directory.
-- 'project': Only files explicitly included in the .vcxproj (ClCompile/ClInclude).
 - 'excluded': Files in the directory but NOT in the .vcxproj.
 
 .PARAMETER FileFilter
@@ -23,17 +26,23 @@ Filters by file extension ('hpp', 'cpp', or 'all'). Exhaustive extensions are co
 .PARAMETER GitFilter
 An array of git status filters. Combinable: 'all', 'modified' (unstaged changes), 'staged', 'untracked'.
 
+.PARAMETER Clip
+If switched, the script acts as if Get-Clipboard was piped into it, and automatically pipes its output back to Set-Clipboard.
+
 .PARAMETER InputObject
 Pipeline input containing markdown checklist text. Used to merge existing checked tasks and subtasks.
 #>
 [CmdletBinding()]
 param (
-    [Parameter(Mandatory=$true, Position=0)]
+    [Parameter(Mandatory=$true, Position=0, ValueFromRemainingArguments=$true)]
     [string[]]$Projects,
 
     [Parameter(Mandatory=$false)]
+    [string]$SlnxFilePath = '..\UsagiBuild.slnx',
+
+    [Parameter(Mandatory=$false)]
     [ValidateSet('all', 'project', 'excluded')]
-    [string]$SourceFilter = 'all',
+    [string]$SourceFilter = 'project',
 
     [Parameter(Mandatory=$false)]
     [ValidateSet('hpp', 'cpp', 'all')]
@@ -42,6 +51,9 @@ param (
     [Parameter(Mandatory=$false)]
     [ValidateSet('all', 'modified', 'untracked', 'staged')]
     [string[]]$GitFilter = @('all'),
+
+    [Parameter(Mandatory=$false)]
+    [switch]$Clip,
 
     [Parameter(ValueFromPipeline=$true)]
     [string]$InputObject
@@ -55,8 +67,21 @@ begin {
     # Calculate workspace root as the parent of the script's directory
     $workspaceRoot = [System.IO.Path]::GetFullPath((Join-Path $scriptDir '..'))
 
+    # Resolve SLNX path relative to script directory
+    $resolvedSlnxPath = [System.IO.Path]::GetFullPath((Join-Path $scriptDir $SlnxFilePath))
+
     # Store lines from pipeline to process later
     $pipedLines = [System.Collections.Generic.List[string]]::new()
+
+    # If -Clip is specified, read clipboard content as if it was piped
+    if ($Clip) {
+        $clipboardText = Get-Clipboard -Raw -ErrorAction SilentlyContinue
+        if (-not [string]::IsNullOrWhiteSpace($clipboardText)) {
+            foreach ($line in $clipboardText -split '\r?\n') {
+                $pipedLines.Add($line)
+            }
+        }
+    }
 
     # Attempt to load PSEverything for blazingly fast file resolution
     Import-Module PSEverything -ErrorAction SilentlyContinue
@@ -161,7 +186,7 @@ end {
             }
             $filePathRaw = $filePathRaw.Trim('"')
             $filePath = $filePathRaw.Replace('/', '\')
-            
+
             $absPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $filePath))
 
             $isUntracked = ($indexStatus -eq '?' -and $treeStatus -eq '?')
@@ -201,9 +226,12 @@ end {
         param([string]$Directory)
 
         # Standard recursive search natively via powershell (fast enough for single project dirs and more reliable)
-        return @(Get-ChildItem -Path $Directory -File -Recurse |
-            Where-Object { Test-FileExtension $_.FullName $FileFilter } |
-            Select-Object -ExpandProperty FullName)
+        if (Test-Path $Directory) {
+            return @(Get-ChildItem -Path $Directory -File -Recurse |
+                Where-Object { Test-FileExtension $_.FullName $FileFilter } |
+                Select-Object -ExpandProperty FullName)
+        }
+        return @()
     }
 
     # Helper: Parses the .vcxproj to find files explicitly included in the project
@@ -366,8 +394,7 @@ end {
     # --- MAIN EXECUTION FLOW ---
 
     # 1. Parse UsagiBuild.slnx to map project names to paths
-    $slnxPath = Join-Path $workspaceRoot 'UsagiBuild.slnx'
-    $projectMap = Get-SlnxProjects -SlnxPath $slnxPath
+    $projectMap = Get-SlnxProjects -SlnxPath $resolvedSlnxPath
 
     # 2. Process each requested project to find relevant files
     $projectResults = @{}
@@ -378,18 +405,18 @@ end {
         }
     }
 
-    # 4. Parse any pipeline input to retrieve existing checklist items
+    # 3. Parse any pipeline input to retrieve existing checklist items
     $pipedTasks = Parse-PipelineTasks
     $mergedTasks = [System.Collections.Generic.Dictionary[string, psobject]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
-    # 5. Integrate newly discovered files with any existing tasks
+    # 4. Integrate newly discovered files with any existing tasks
     foreach ($projName in $projectResults.Keys) {
         $files = $projectResults[$projName].Files
         $projDir = $projectResults[$projName].ProjDir
 
         foreach ($f in $files) {
             $fKey = Normalize-Path $f
-            
+
             # Try to find a matching piped task
             $matchedPipedTask = $null
             foreach ($pt in $pipedTasks) {
@@ -417,7 +444,7 @@ end {
                 # Update existing piped task to associate it with this project header
                 $matchedPipedTask.IsAssigned = $true
                 $matchedPipedTask.SourceProject = $projName
-                
+
                 # Make sure the task takes on the project-relative path cleanly
                 $matchedPipedTask.OriginalRelPath = $f.Substring($projDir.Length).TrimStart('\')
 
@@ -427,7 +454,7 @@ end {
     }
 
     $otherGroup = [System.Collections.Generic.List[psobject]]::new()
-    
+
     # Process remaining piped tasks that were not matched to any found files
     foreach ($pt in $pipedTasks) {
         if (-not $pt.IsAssigned) {
@@ -454,7 +481,7 @@ end {
         }
     }
 
-    # 6. Generate final markdown output
+    # 5. Generate final markdown output
     $finalOutput = [System.Text.StringBuilder]::new()
 
     foreach ($projName in $Projects) {
@@ -480,13 +507,25 @@ end {
     }
 
     if ($otherGroup.Count -gt 0) {
-        [void]$finalOutput.AppendLine('Other files:')
+        [void]$finalOutput.AppendLine('Other files and tasks:')
         [void]$finalOutput.AppendLine()
         Format-TaskList -Tasks $otherGroup -Builder $finalOutput
         [void]$finalOutput.AppendLine()
     }
 
-    # Emit the trimmed string to the pipeline (allows natively piping to Set-Clipboard)
+    # Emit the trimmed string
     $outputText = $finalOutput.ToString().TrimEnd()
-    $outputText
+
+    if ($Clip) {
+        # Print directly to the terminal
+        Write-Host $outputText
+
+        # Send to clipboard
+        Set-Clipboard -Value $outputText
+        Write-Host "Shio: Output was piped back to your clipboard." -ForegroundColor Green
+    }
+    else {
+        # Return to pipeline (will print to console if not piped elsewhere)
+        $outputText
+    }
 }
