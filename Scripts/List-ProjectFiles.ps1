@@ -29,6 +29,9 @@ An array of git status filters. Combinable: 'all', 'modified' (unstaged changes)
 .PARAMETER Clip
 If switched, the script acts as if Get-Clipboard was piped into it, and automatically pipes its output back to Set-Clipboard.
 
+.PARAMETER InputOnly
+If switched, the script skips directory scanning and just prints the piped items grouped.
+
 .PARAMETER InputObject
 Pipeline input containing markdown checklist text. Used to merge existing checked tasks and subtasks.
 #>
@@ -55,25 +58,22 @@ param (
     [Parameter(Mandatory=$false)]
     [switch]$Clip,
 
+    [Parameter(Mandatory=$false)]
+    [switch]$InputOnly,
+
     [Parameter(ValueFromPipeline=$true)]
     [string]$InputObject
 )
 
 begin {
-    # Set up basic variables and import needed modules
     $scriptDir = $PSScriptRoot
     if ([string]::IsNullOrEmpty($scriptDir)) { $scriptDir = $PWD.Path }
 
-    # Calculate workspace root as the parent of the script's directory
     $workspaceRoot = [System.IO.Path]::GetFullPath((Join-Path $scriptDir '..'))
-
-    # Resolve SLNX path relative to script directory
     $resolvedSlnxPath = [System.IO.Path]::GetFullPath((Join-Path $scriptDir $SlnxFilePath))
 
-    # Store lines from pipeline to process later
     $pipedLines = [System.Collections.Generic.List[string]]::new()
 
-    # If -Clip is specified, read clipboard content as if it was piped
     if ($Clip) {
         $clipboardText = Get-Clipboard -Raw -ErrorAction SilentlyContinue
         if (-not [string]::IsNullOrWhiteSpace($clipboardText)) {
@@ -83,12 +83,21 @@ begin {
         }
     }
 
-    # Attempt to load PSEverything for blazingly fast file resolution
     Import-Module PSEverything -ErrorAction SilentlyContinue
+
+    if ($InputOnly) {
+        $filterParams = @('SourceFilter', 'FileFilter', 'GitFilter')
+        $overridden = $false
+        foreach ($p in $filterParams) {
+            if ($PSBoundParameters.ContainsKey($p)) { $overridden = $true }
+        }
+        if ($overridden) {
+            Write-Host "Shio: Warning: -InputOnly overrides filter parameters (-SourceFilter, -FileFilter, -GitFilter)." -ForegroundColor Yellow
+        }
+    }
 }
 
 process {
-    # Accumulate any piped input line by line
     if ($null -ne $InputObject) {
         foreach ($line in $InputObject -split '\r?\n') {
             $pipedLines.Add($line)
@@ -97,12 +106,10 @@ process {
 }
 
 end {
-    # Define exhaustive lists of C/C++ extensions
     $cppExts = @('c', 'cpp', 'cxx', 'cc')
     $hppExts = @('h', 'hpp', 'hxx', 'hh', 'inl', 'ipp')
     $allExts = $cppExts + $hppExts
 
-    # Helper: Build an Everything extension search query
     function Get-EverythingExtFilter {
         param([string]$FilterType)
         if ($FilterType -eq 'hpp') {
@@ -116,7 +123,6 @@ end {
         }
     }
 
-    # Helper: Match an extension using the exhaustive arrays
     function Test-FileExtension {
         param([string]$Path, [string]$FilterType)
         $ext = [System.IO.Path]::GetExtension($Path).TrimStart('.').ToLower()
@@ -125,7 +131,6 @@ end {
         return $ext -in $allExts
     }
 
-    # Helper: Parses UsagiBuild.slnx as XML and builds a map of project names to .vcxproj paths
     function Get-SlnxProjects {
         param([string]$SlnxPath)
 
@@ -136,9 +141,7 @@ end {
         }
 
         try {
-            # Load the solution as XML
             [xml]$slnxXml = Get-Content $SlnxPath -Raw
-            # Find all Project nodes that have a .vcxproj path
             $projectNodes = $slnxXml.SelectNodes("//Project[contains(@Path, '.vcxproj')]")
             foreach ($node in $projectNodes) {
                 $relPath = $node.Path.Replace('/', '\')
@@ -154,7 +157,6 @@ end {
 
     $globalGitMapCache = @{}
 
-    # Helper: Runs git status and builds a status dictionary mapping file paths to their git state
     function Get-GitStatusMapForDir {
         param([string]$TargetDir)
 
@@ -175,12 +177,10 @@ end {
         foreach ($line in $gitStatus) {
             if ($line.Length -lt 4) { continue }
 
-            # The first two characters represent index and working tree states
             $indexStatus = $line[0]
             $treeStatus  = $line[1]
             $filePathRaw = $line.Substring(3)
 
-            # Handle rename syntax 'R  old -> new'
             if ($filePathRaw -match ' -> ') {
                 $filePathRaw = ($filePathRaw -split ' -> ')[-1]
             }
@@ -190,9 +190,7 @@ end {
             $absPath = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $filePath))
 
             $isUntracked = ($indexStatus -eq '?' -and $treeStatus -eq '?')
-            # Staged changes have something other than space or '?' in the index
             $isStaged = ($indexStatus -ne ' ' -and $indexStatus -ne '?')
-            # Unstaged modified changes have something other than space or '?' in the working tree
             $isModified = ($treeStatus -ne ' ' -and $treeStatus -ne '?')
 
             $gitMap[$absPath] = @{
@@ -204,15 +202,13 @@ end {
         return $gitMap
     }
 
-    # Helper: Determines if a file path passes the active Git filters
     function Test-GitStatus {
         param([string]$Path, [hashtable]$GitMap)
 
-        # 'all' means accept everything regardless of git state
         if ('all' -in $GitFilter) { return $true }
 
         $state = $GitMap[$Path]
-        if ($null -eq $state) { return $false } # Tracked but unmodified
+        if ($null -eq $state) { return $false }
 
         if ('untracked' -in $GitFilter -and $state.Untracked) { return $true }
         if ('staged' -in $GitFilter -and $state.Staged) { return $true }
@@ -221,11 +217,8 @@ end {
         return $false
     }
 
-    # Helper: Gets all matching files in the directory recursively
     function Get-AllDirectoryFiles {
         param([string]$Directory)
-
-        # Standard recursive search natively via powershell (fast enough for single project dirs and more reliable)
         if (Test-Path $Directory) {
             return @(Get-ChildItem -Path $Directory -File -Recurse |
                 Where-Object { Test-FileExtension $_.FullName $FileFilter } |
@@ -234,14 +227,12 @@ end {
         return @()
     }
 
-    # Helper: Parses the .vcxproj to find files explicitly included in the project
     function Get-VcxprojFiles {
         param([string]$VcxprojPath, [string]$ProjectDir)
 
         $includedFiles = @()
         try {
             [xml]$xml = Get-Content $VcxprojPath
-            # Look for ClInclude or ClCompile elements typically used for source code
             $nodes = Select-Xml -Xml $xml -XPath "//*[local-name()='ClInclude' or local-name()='ClCompile']"
             foreach ($node in $nodes) {
                 $incPath = $node.Node.Include
@@ -259,7 +250,6 @@ end {
         return $includedFiles
     }
 
-    # Helper: Combines source and git filters for a specific project
     function Get-ProjectSourceFiles {
         param([string]$ProjectName, [hashtable]$ProjectMap)
 
@@ -276,29 +266,29 @@ end {
 
         $projDir = Split-Path $vcxprojPath -Parent
 
-        # Decide which base set of files we need based on SourceFilter
         $targetFiles = @()
-        if ($SourceFilter -eq 'all') {
-            $targetFiles = Get-AllDirectoryFiles $projDir
-        }
-        elseif ($SourceFilter -eq 'project') {
-            $targetFiles = Get-VcxprojFiles $vcxprojPath $projDir
-        }
-        elseif ($SourceFilter -eq 'excluded') {
-            $allFiles = Get-AllDirectoryFiles $projDir
-            $projFiles = Get-VcxprojFiles $vcxprojPath $projDir
+        if (-not $InputOnly) {
+            if ($SourceFilter -eq 'all') {
+                $targetFiles = Get-AllDirectoryFiles $projDir
+            }
+            elseif ($SourceFilter -eq 'project') {
+                $targetFiles = Get-VcxprojFiles $vcxprojPath $projDir
+            }
+            elseif ($SourceFilter -eq 'excluded') {
+                $allFiles = Get-AllDirectoryFiles $projDir
+                $projFiles = Get-VcxprojFiles $vcxprojPath $projDir
 
-            $projSet = @{}
-            foreach ($p in $projFiles) { $projSet[$p] = $true }
+                $projSet = @{}
+                foreach ($p in $projFiles) { $projSet[$p] = $true }
 
-            foreach ($f in $allFiles) {
-                if (-not $projSet.ContainsKey($f)) {
-                    $targetFiles += $f
+                foreach ($f in $allFiles) {
+                    if (-not $projSet.ContainsKey($f)) {
+                        $targetFiles += $f
+                    }
                 }
             }
         }
 
-        # Apply Git status filter to the target files
         $gitMap = Get-GitStatusMapForDir -TargetDir $projDir
         $filteredFiles = @()
         foreach ($f in $targetFiles) {
@@ -307,7 +297,6 @@ end {
             }
         }
 
-        # Return structured project info mapping
         return @{
             Name        = $ProjectName
             VcxprojPath = $vcxprojPath
@@ -316,65 +305,147 @@ end {
         }
     }
 
-    # Helper: Normalizes a path to absolute, lowercased with backslashes
     function Normalize-Path {
         param([string]$Path)
-        return [System.IO.Path]::GetFullPath($Path).Replace('/', '\').ToLower()
+        return [System.IO.Path]::GetFullPath($Path).Replace('/', '\')
     }
 
-    # Helper: Parses pipeline markdown checklist into structured task items
     function Parse-PipelineTasks {
+        param([hashtable]$ProjectMap)
+
         $pipedTasks = [System.Collections.Generic.List[psobject]]::new()
+        $otherHeaderTasks = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[psobject]]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
         if ($pipedLines.Count -eq 0) {
-            return $pipedTasks
+            return @{ Tasks = $pipedTasks; Headers = $otherHeaderTasks }
         }
 
         $currentTask = $null
+        $currentContextHeader = ''
+        $currentContextProjectName = ''
+        $currentContextProjectDir = ''
+
         foreach ($line in $pipedLines) {
-            # Match top-level checklist item: "- [ ] Path/To/File" (no leading spaces)
-            if ($line -match '^-\s*\[([ xX])\]\s*(.+)$') {
+            if ($line -match '^([a-zA-Z0-9_\-\./\\]+\.vcxproj):$') {
+                $currentContextHeader = $Matches[1].Replace('\', '/')
+                $currentContextProjectName = [System.IO.Path]::GetFileNameWithoutExtension($currentContextHeader)
+                if ($ProjectMap.ContainsKey($currentContextProjectName)) {
+                    $currentContextProjectDir = Normalize-Path (Split-Path $ProjectMap[$currentContextProjectName] -Parent)
+                } else {
+                    $currentContextProjectDir = ''
+                }
+                continue
+            }
+            elseif ($line -match '^([^:]+):$') {
+                $currentContextHeader = $Matches[1].Trim()
+                $currentContextProjectName = ''
+                $currentContextProjectDir = ''
+                continue
+            }
+
+            if ($line -match '^[-*]\s*\[([ xX])\]\s*(.+)$') {
                 $isChecked = ($Matches[1].ToLower() -eq 'x')
                 $pathRaw = $Matches[2].Trim()
 
-                # Construct internal task representation
+                $resolvedPath = $null
+                $resolutionFailed = $false
+
+                if ($currentContextProjectDir) {
+                    $parts = $pathRaw.Split('\/')
+                    $found = $false
+                    for ($i = 0; $i -lt $parts.Length; $i++) {
+                        $testSubPath = ($parts[$i..($parts.Length-1)]) -join '\'
+                        $testAbsPath = Normalize-Path (Join-Path $currentContextProjectDir $testSubPath)
+                        if (Test-Path $testAbsPath) {
+                            $resolvedPath = $testAbsPath
+                            $pathRaw = $testSubPath
+                            $found = $true
+                            break
+                        }
+                    }
+                    if (-not $found) {
+                        $resolutionFailed = $true
+                    }
+                }
+                else {
+                    if (Test-Path $pathRaw) {
+                        $resolvedPath = Normalize-Path $pathRaw
+                    }
+                    else {
+                        $fileName = Split-Path $pathRaw -Leaf
+                        if ($fileName) {
+                            $comparePath = $pathRaw.Replace('/', '\')
+
+                            try {
+                                $searchQuery = '"' + $workspaceRoot + '" "' + $fileName + '"'
+                                $searchResults = @(Search-Everything $searchQuery -ErrorAction Stop |
+                                    Where-Object { $_.FullName.EndsWith($comparePath, [StringComparison]::OrdinalIgnoreCase) })
+
+                                if ($searchResults.Count -gt 0) {
+                                    $resolvedPath = $searchResults[0].FullName
+                                } else {
+                                    throw "Not found via Everything"
+                                }
+                            }
+                            catch {
+                                # OMIT Get-ChildItem -Recurse here to vastly improve performance!
+                            }
+
+                            if ($resolvedPath) {
+                                $resolvedPath = Normalize-Path $resolvedPath
+                            }
+                        }
+                    }
+                }
+
                 $taskItem = [pscustomobject]@{
+                    AbsPath         = $resolvedPath
                     OriginalRelPath = $pathRaw
                     IsChecked       = $isChecked
                     Subtasks        = [System.Collections.Generic.List[string]]::new()
-                    SourceProject   = ''
-                    IsAssigned      = $false
+                    SourceProject   = $currentContextProjectName
+                    SourceHeader    = $currentContextHeader
+                    IsAssigned      = ($currentContextProjectName -ne '')
+                }
+
+                if ($resolutionFailed) {
+                    $taskItem.Subtasks.Add("  - [ ] (path cannot be resolved)")
                 }
 
                 $pipedTasks.Add($taskItem)
+
+                $headerKey = if ($currentContextHeader) { $currentContextHeader } else { 'Other files and tasks' }
+                if (-not $otherHeaderTasks.ContainsKey($headerKey)) {
+                    $otherHeaderTasks[$headerKey] = [System.Collections.Generic.List[psobject]]::new()
+                }
+                $otherHeaderTasks[$headerKey].Add($taskItem)
+
                 $currentTask = $taskItem
 
             }
-            elseif ($currentTask -and $line -match '^\s\s+-\s*\[([ xX])\]') {
-                # Match subtasks (indented checkboxes) and tie them to the last currentTask
+            elseif ($currentTask -and $line -match '^\s\s+[-*]\s*\[([ xX])\]') {
                 $currentTask.Subtasks.Add($line.TrimEnd())
             }
         }
 
-        return $pipedTasks
+        return @{ Tasks = $pipedTasks; Headers = $otherHeaderTasks }
     }
 
-    # Helper: Calculates task completion ratio for sorting items cleanly
     function Get-Progress($Task) {
         $total = 1 + $Task.Subtasks.Count
         $ticked = 0
         if ($Task.IsChecked) { $ticked++ }
         foreach ($st in $Task.Subtasks) {
-            if ($st -match '^\s*-\s*\[[xX]\]') { $ticked++ }
+            if ($st -match '^\s*[-*]\s*\[[xX]\]') { $ticked++ }
         }
         return $ticked / $total
     }
 
-    # Helper: Formats a task list as markdown strings based on completion and path
     function Format-TaskList {
         param([array]$Tasks, [System.Text.StringBuilder]$Builder)
 
         $sortedTasks = $Tasks | Sort-Object @(
+            @{Expression= { $_.Subtasks -contains "  - [ ] (path cannot be resolved)" }; Ascending=$true },
             @{Expression= { Get-Progress $_ }; Ascending=$false },
             @{Expression= { $_.OriginalRelPath }; Ascending=$true }
         )
@@ -384,126 +455,167 @@ end {
             $line = "- [$check] $($task.OriginalRelPath)"
             [void]$Builder.AppendLine($line)
             foreach ($st in $task.Subtasks) {
-                # Ensure exactly 2 spaces indentation for subtasks
-                $stClean = $st -replace '^\s+', ''
-                [void]$Builder.AppendLine("  $stClean")
+                $stClean = $st -replace '^\s*[-*]\s*\[', '  - ['
+                [void]$Builder.AppendLine($stClean)
             }
         }
     }
 
     # --- MAIN EXECUTION FLOW ---
 
-    # 1. Parse UsagiBuild.slnx to map project names to paths
     $projectMap = Get-SlnxProjects -SlnxPath $resolvedSlnxPath
 
-    # 2. Process each requested project to find relevant files
     $projectResults = @{}
-    foreach ($projName in $Projects) {
-        $res = Get-ProjectSourceFiles -ProjectName $projName -ProjectMap $projectMap
-        if ($res.Count -gt 0) {
-            $projectResults[$projName] = $res
+    if (-not $InputOnly) {
+        foreach ($projName in $Projects) {
+            $res = Get-ProjectSourceFiles -ProjectName $projName -ProjectMap $projectMap
+            if ($res.Count -gt 0) {
+                $projectResults[$projName] = $res
+            }
+        }
+    } else {
+        foreach ($projName in $Projects) {
+            if ($projectMap.ContainsKey($projName)) {
+                $vcxprojPath = $projectMap[$projName]
+                $projDir = Split-Path $vcxprojPath -Parent
+                $projectResults[$projName] = @{
+                    Name        = $projName
+                    VcxprojPath = $vcxprojPath
+                    ProjDir     = $projDir
+                    Files       = @()
+                }
+            }
         }
     }
 
-    # 3. Parse any pipeline input to retrieve existing checklist items
-    $pipedTasks = Parse-PipelineTasks
+    $pipedData = Parse-PipelineTasks -ProjectMap $projectMap
+    $pipedTasks = $pipedData.Tasks
+    $otherHeaderTasks = $pipedData.Headers
+
     $mergedTasks = [System.Collections.Generic.Dictionary[string, psobject]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
-    # 4. Integrate newly discovered files with any existing tasks
-    foreach ($projName in $projectResults.Keys) {
-        $files = $projectResults[$projName].Files
-        $projDir = $projectResults[$projName].ProjDir
+    foreach ($pt in $pipedTasks) {
+        if ($pt.AbsPath) {
+            $mergedTasks[$pt.AbsPath] = $pt
+        }
+    }
 
-        foreach ($f in $files) {
-            $fKey = Normalize-Path $f
+    if (-not $InputOnly) {
+        foreach ($projName in $projectResults.Keys) {
+            $files = $projectResults[$projName].Files
+            $projDir = $projectResults[$projName].ProjDir
 
-            # Try to find a matching piped task
-            $matchedPipedTask = $null
-            foreach ($pt in $pipedTasks) {
-                if (-not $pt.IsAssigned) {
-                    $comparePath = $pt.OriginalRelPath.Replace('/', '\')
-                    if ($fKey.EndsWith($comparePath, [StringComparison]::OrdinalIgnoreCase)) {
-                        $matchedPipedTask = $pt
-                        break
+            foreach ($f in $files) {
+                $fKey = Normalize-Path $f
+
+                if ($mergedTasks.ContainsKey($fKey)) {
+                    $matchedPipedTask = $mergedTasks[$fKey]
+                    $matchedPipedTask.IsAssigned = $true
+                    $matchedPipedTask.SourceProject = $projName
+                    $matchedPipedTask.OriginalRelPath = $f.Substring($projDir.Length).TrimStart('\')
+                } else {
+                    $matchedPipedTask = $null
+                    foreach ($pt in $pipedTasks) {
+                        if (-not $pt.AbsPath) {
+                            $comparePath = $pt.OriginalRelPath.Replace('/', '\')
+                            if ($fKey.EndsWith($comparePath, [StringComparison]::OrdinalIgnoreCase)) {
+                                $matchedPipedTask = $pt
+                                break
+                            }
+                        }
+                    }
+
+                    if ($null -ne $matchedPipedTask) {
+                        $matchedPipedTask.AbsPath = $fKey
+                        $matchedPipedTask.IsAssigned = $true
+                        $matchedPipedTask.SourceProject = $projName
+                        $matchedPipedTask.OriginalRelPath = $f.Substring($projDir.Length).TrimStart('\')
+                        $mergedTasks[$fKey] = $matchedPipedTask
+                    }
+                    else {
+                        $relPath = $f.Substring($projDir.Length).TrimStart('\')
+                        $mergedTasks[$fKey] = [pscustomobject]@{
+                            AbsPath         = $fKey
+                            OriginalRelPath = $relPath
+                            IsChecked       = $false
+                            Subtasks        = [System.Collections.Generic.List[string]]::new()
+                            SourceProject   = $projName
+                            SourceHeader    = ''
+                            IsAssigned      = $true
+                        }
                     }
                 }
             }
+        }
+    }
 
-            if ($null -eq $matchedPipedTask) {
-                # Create a new unchecked task for this file
-                $relPath = $f.Substring($projDir.Length).TrimStart('\')
-                $mergedTasks[$fKey] = [pscustomobject]@{
-                    AbsPath         = $fKey
-                    OriginalRelPath = $relPath
-                    IsChecked       = $false
-                    Subtasks        = [System.Collections.Generic.List[string]]::new()
-                    SourceProject   = $projName
+    $finalOutput = [System.Text.StringBuilder]::new()
+    $headersToPrint = @{}
+
+    foreach ($header in $otherHeaderTasks.Keys) {
+        if ($header -ne 'Other files and tasks') {
+            $headersToPrint[$header] = [System.Collections.Generic.List[psobject]]::new()
+            foreach ($t in $otherHeaderTasks[$header]) {
+                $headersToPrint[$header].Add($t)
+            }
+        }
+    }
+
+    foreach ($projName in $Projects) {
+        $projTasks = @($mergedTasks.Values | Where-Object { $_.SourceProject -eq $projName })
+        if ($projTasks.Count -gt 0 -or ($projectResults.ContainsKey($projName) -and $projectResults[$projName].Files.Count -gt 0)) {
+            $vcxprojPath = $projectMap[$projName]
+            if ($vcxprojPath) {
+                $headerPath = $vcxprojPath.Substring($workspaceRoot.Length).TrimStart('\').Replace('\', '/')
+                if (-not $headersToPrint.ContainsKey($headerPath)) {
+                    $headersToPrint[$headerPath] = [System.Collections.Generic.List[psobject]]::new()
+                }
+                foreach ($t in $projTasks) {
+                    if (-not $headersToPrint[$headerPath].Contains($t)) {
+                        $headersToPrint[$headerPath].Add($t)
+                    }
                 }
             }
-            else {
-                # Update existing piped task to associate it with this project header
-                $matchedPipedTask.IsAssigned = $true
-                $matchedPipedTask.SourceProject = $projName
+        }
+    }
 
-                # Make sure the task takes on the project-relative path cleanly
-                $matchedPipedTask.OriginalRelPath = $f.Substring($projDir.Length).TrimStart('\')
-
-                $mergedTasks[$fKey] = $matchedPipedTask
+    $sortedHeaders = $headersToPrint.Keys | Sort-Object @(
+        @{Expression= {
+            $h = $_
+            $isQueried = $false
+            foreach ($p in $Projects) {
+                $pattern = $p + "\.vcxproj"
+                if ($h -match $pattern) { $isQueried = $true; break }
             }
+            if ($isQueried) { 0 } else { 1 }
+        }; Ascending=$true},
+        @{Expression= { $_ }; Ascending=$true}
+    )
+
+    foreach ($header in $sortedHeaders) {
+        $list = $headersToPrint[$header]
+        if ($list.Count -gt 0) {
+            [void]$finalOutput.AppendLine("$header`:")
+            [void]$finalOutput.AppendLine()
+            Format-TaskList -Tasks $list -Builder $finalOutput
+            [void]$finalOutput.AppendLine()
         }
     }
 
     $otherGroup = [System.Collections.Generic.List[psobject]]::new()
 
-    # Process remaining piped tasks that were not matched to any found files
-    foreach ($pt in $pipedTasks) {
-        if (-not $pt.IsAssigned) {
-            $assigned = $false
-            foreach ($projName in $projectResults.Keys) {
-                $projDir = $projectResults[$projName].ProjDir
-                # Test if the user provided an absolute path that belongs to this project
-                if ([System.IO.Path]::IsPathRooted($pt.OriginalRelPath)) {
-                    $normPtPath = Normalize-Path $pt.OriginalRelPath
-                    if ($normPtPath.StartsWith($projDir.ToLower())) {
-                        $pt.SourceProject = $projName
-                        # Format clearly relative to project
-                        $pt.OriginalRelPath = $normPtPath.Substring($projDir.Length).TrimStart('\')
-                        $mergedTasks[$normPtPath] = $pt
-                        $assigned = $true
-                        break
-                    }
-                }
-            }
-
-            if (-not $assigned) {
-                $otherGroup.Add($pt)
+    if ($otherHeaderTasks.ContainsKey('Other files and tasks')) {
+        foreach ($t in $otherHeaderTasks['Other files and tasks']) {
+            if (-not $t.IsAssigned -and $t.SourceHeader -eq '') {
+                $otherGroup.Add($t)
             }
         }
     }
 
-    # 5. Generate final markdown output
-    $finalOutput = [System.Text.StringBuilder]::new()
-
-    foreach ($projName in $Projects) {
-        # Group tasks that belong to this project
-        $projTasks = $mergedTasks.Values | Where-Object { $_.SourceProject -eq $projName }
-
-        if ($projTasks.Count -gt 0 -or ($projectResults.ContainsKey($projName) -and $projectResults[$projName].Files.Count -gt 0)) {
-            $vcxprojPath = $projectMap[$projName]
-            if ($vcxprojPath) {
-                $headerPath = $vcxprojPath.Substring($workspaceRoot.Length).TrimStart('\').Replace('\', '/')
-                [void]$finalOutput.AppendLine("$headerPath`:")
-                [void]$finalOutput.AppendLine()
-            }
-
-            Format-TaskList -Tasks $projTasks -Builder $finalOutput
-            [void]$finalOutput.AppendLine()
+    foreach ($t in $mergedTasks.Values) {
+        if (-not $t.SourceProject -and -not $otherGroup.Contains($t) -and -not $t.SourceHeader) {
+            $otherGroup.Add($t)
         }
-    }
-
-    # Format any unassigned/other tasks that couldn't be mapped
-    foreach ($t in ($mergedTasks.Values | Where-Object { -not $_.SourceProject })) {
-        $otherGroup.Add($t)
     }
 
     if ($otherGroup.Count -gt 0) {
@@ -513,19 +625,14 @@ end {
         [void]$finalOutput.AppendLine()
     }
 
-    # Emit the trimmed string
     $outputText = $finalOutput.ToString().TrimEnd()
 
     if ($Clip) {
-        # Print directly to the terminal
         Write-Host $outputText
-
-        # Send to clipboard
         Set-Clipboard -Value $outputText
         Write-Host "Shio: Output was piped back to your clipboard." -ForegroundColor Green
     }
     else {
-        # Return to pipeline (will print to console if not piped elsewhere)
         $outputText
     }
 }
