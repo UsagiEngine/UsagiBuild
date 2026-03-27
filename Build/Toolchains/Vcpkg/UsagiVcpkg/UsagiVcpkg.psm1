@@ -10,20 +10,28 @@ function Get-UsagiVcpkgConfig {
 
     # Defaults tailored for your UsagiBuild environment
     # User requested path relative to parent: ..\vcpkg-overlay-triplets
-    $overlayPath = Join-Path $ScriptRoot "..\vcpkg-overlay-triplets"
+    $tripletOverlayPath = Join-Path $ScriptRoot "..\vcpkg-overlay-triplets"
+    $portsOverlayPath = Join-Path $ScriptRoot "..\vcpkg-overlay-ports"
 
     # Resolve to absolute path to avoid ambiguity with relative paths in vcpkg calls
-    if (Test-Path $overlayPath) {
-        $overlayPath = Resolve-Path $overlayPath
+    if (Test-Path $tripletOverlayPath) {
+        $tripletOverlayPath = Resolve-Path $tripletOverlayPath
     } else {
-        $overlayPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($overlayPath)
+        $tripletOverlayPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($tripletOverlayPath)
+    }
+
+    if (Test-Path $portsOverlayPath) {
+        $portsOverlayPath = Resolve-Path $portsOverlayPath
+    } else {
+        $portsOverlayPath = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($portsOverlayPath)
     }
 
     return [Ordered]@{
-        OverlayPath     = $overlayPath
-        DefaultTriplet  = "x64-win-llvm-lto-libcxx-static"
-        SourceTriplet   = "x64-win-llvm-lto-static"
-        CommonArgs      = @("--overlay-triplets=$overlayPath")
+        TripletOverlayPath = $tripletOverlayPath
+        PortsOverlayPath   = $portsOverlayPath
+        DefaultTriplet     = "x64-win-llvm-lto-libcxx-static"
+        SourceTriplet      = "x64-win-llvm-lto-static"
+        CommonArgs         = @("--overlay-triplets=$tripletOverlayPath", "--overlay-ports=$portsOverlayPath")
     }
 }
 
