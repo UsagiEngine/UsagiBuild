@@ -22,3 +22,6 @@
 [submodule "Build/Toolchains/Vcpkg/vcpkg-overlay-triplets"]
 	path = Build/Toolchains/Vcpkg/vcpkg-overlay-triplets
 	url = git@github.com:Neumann-A/my-vcpkg-triplets.git
+[submodule "Build/Toolchains/Vcpkg/vcpkg-overlay-ports"]
+	path = Build/Toolchains/Vcpkg/vcpkg-overlay-ports
+	url = git@github.com:UsagiEngine/build.vcpkg-overlay-ports.git
